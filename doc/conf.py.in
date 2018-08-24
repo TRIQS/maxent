@@ -1,0 +1,73 @@
+# TRIQS application maxent
+# Copyright (C) 2018 Gernot J. Kraberger
+# Copyright (C) 2018 Simons Foundation
+# Authors: Gernot J. Kraberger and Manuel Zingl
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+
+# -*- coding: utf-8 -*-
+#
+# TRIQS documentation build configuration file
+
+import sys
+sys.path.insert(0, "@TRIQS_SPHINXEXT_PATH@/numpydoc")
+
+extensions = ['sphinx.ext.autodoc',
+              'sphinx.ext.mathjax',
+              'sphinx.ext.intersphinx',
+              'matplotlib.sphinxext.plot_directive',
+              'sphinx.ext.doctest',
+              'sphinx.ext.todo',
+              'sphinx.ext.viewcode',
+              'sphinx.ext.autosummary',
+              'numpydoc']
+
+source_suffix = '.rst'
+
+project = u'TRIQS Analytic Continuation / MaxEnt'
+copyright = u'2017-2018 G. J. Kraberger and M. Zingl'
+version = '@MAXENT_VERSION@'
+release = '@MAXENT_RELEASE@'
+
+mathjax_path = "@TRIQS_MATHJAX_PATH@/MathJax.js?config=default"
+templates_path = ['@CMAKE_SOURCE_DIR@/doc/_templates']
+
+html_theme = 'triqs'
+html_theme_path = ['@TRIQS_THEMES_PATH@']
+html_show_sphinx = False
+html_context = {'header_title': 'maxent',
+                'header_subtitle': 'performing analytic continuation',
+                'header_links': [['Install', 'install'],
+                                 ['Documentation', 'documentation'],
+                                 ['Issues', 'issues'],
+                                 ['About maxent', 'about']
+                                 ]
+                }
+html_static_path = ['@CMAKE_SOURCE_DIR@/doc/_static']
+html_sidebars = {'index': ['sideb.html', 'searchbox.html']}
+
+htmlhelp_basename = 'TRIQSMaxEntdoc'
+
+autodoc_docstring_signature = True
+
+todo_include_todos = True
+
+intersphinx_mapping = {
+    'python': (
+        'http://docs.python.org/2.7', None),
+    'triqslibs': (
+        'https://triqs.ipht.cnrs.fr/1.x', None),
+    'triqscthyb': (
+        'http://ipht.cea.fr/triqs/applications/cthyb', None)}

@@ -1,0 +1,5 @@
+#!/bin/bash
+
+PYTRIQS=@PYTRIQS_PATH@
+
+$PYTRIQS -m triqs_maxent.plot.plot_maxent "$@"
