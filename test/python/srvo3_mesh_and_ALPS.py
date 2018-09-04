@@ -90,13 +90,13 @@ numpy_assert(np.interp(lin_omega, res_lor.omega, res_lor.A[1, :]),
 
 # compare to reference data
 ar = HDFArchive('srvo3_mesh_and_ALPS.ref.h5', 'r')
-numpy_assert(res_lin.omega, ar['A_maxent_lin'][0], 7)
-numpy_assert(res_lor.omega, ar['A_maxent_lor'][0], 7)
-numpy_assert(res_hyp.omega, ar['A_maxent_hyp'][0], 7)
-numpy_assert(res_lor.omega, ar['A_maxspec_ALPS'][0], 7)
+numpy_assert(res_lin.omega, ar['A_maxent_lin'][0], 6)
+numpy_assert(res_lor.omega, ar['A_maxent_lor'][0], 6)
+numpy_assert(res_hyp.omega, ar['A_maxent_hyp'][0], 6)
+numpy_assert(res_lor.omega, ar['A_maxspec_ALPS'][0], 6)
 
-numpy_assert(res_lin.A[1, :], ar['A_maxent_lin'][1], 7)
-numpy_assert(res_lor.A[1, :], ar['A_maxent_lor'][1], 7)
-numpy_assert(res_hyp.A[1, :], ar['A_maxent_hyp'][1], 7)
+numpy_assert(res_lin.A[1, :], ar['A_maxent_lin'][1], 6)
+numpy_assert(res_lor.A[1, :], ar['A_maxent_lor'][1], 6)
+numpy_assert(res_hyp.A[1, :], ar['A_maxent_hyp'][1], 6)
 numpy_assert(res_lor.A[1, :], ar['A_maxspec_ALPS'][1], 2)
 del ar
