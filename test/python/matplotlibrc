@@ -1,1 +1,2 @@
-backend : TkAgg
+backend: TkAgg
+backend_fallback: True
