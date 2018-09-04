@@ -30,7 +30,6 @@ are documented.
 """
 from __future__ import absolute_import, print_function
 import numpy as np
-import matplotlib.pyplot as plt
 from .plot_utils import *
 from .omega_meshes import DataOmegaMesh
 from .alpha_meshes import DataAlphaMesh
