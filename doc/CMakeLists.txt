@@ -30,11 +30,13 @@ endif()
 
 # ------------------------------------------------------------------------------------------------
 # Copy the directory substructure and link all files with relevant extensions
-# cp_rs is a script in cpp2py/bin, it mimics cp -rs on Linux
-# and filters the relevant extension
 # ------------------------------------------------------------------------------------------------
-set(EXT_FOR_DOC "rst png txt css_t conf css js gif jpg py html bib md")
-execute_process(COMMAND cp_rs ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR} ${EXT_FOR_DOC})
+FILE(GLOB_RECURSE DOCFILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.rst *.png *.txt *.css_t *.conf *.css *.js *.gif *.jpg *.py *.html *.bib *.md)
+foreach(f ${DOCFILES})
+    get_filename_component(fd ${CMAKE_CURRENT_BINARY_DIR}/${f} DIRECTORY)
+    file(MAKE_DIRECTORY ${fd})
+    execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink "${CMAKE_CURRENT_SOURCE_DIR}/${f}" "${CMAKE_CURRENT_BINARY_DIR}/${f}")
+endforeach()
 
 # install
 install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/html/ COMPONENT documentation DESTINATION ${DOC_DEST}
