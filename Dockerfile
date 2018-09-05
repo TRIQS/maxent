@@ -1,6 +1,8 @@
 # See ../triqs/packaging for other options
 FROM flatironinstitute/triqs:master-ubuntu-clang
 
+RUN apt-get install -y python-decorator || yum install -y python-decorator
+
 ARG APPNAME
 COPY . $SRC/$APPNAME
 WORKDIR $BUILD/$APPNAME
