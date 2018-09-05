@@ -21,6 +21,9 @@ from __future__ import absolute_import, print_function
 import numpy as np
 from .analyzer import Analyzer, AnalyzerResult
 
+if not hasattr(np, 'full'):
+    # polyfill full for older numpy:
+    np.full = lambda a, f: np.zeros(a) + f
 
 def fit_piecewise(logx, logy, p2_deg=0):
     """ piecewise linear fit (e.g. for chi2)
