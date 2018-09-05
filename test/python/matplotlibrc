@@ -1,2 +1,2 @@
-backend: TkAgg
+backend: PDF
 backend_fallback: True
