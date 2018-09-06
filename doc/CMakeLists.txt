@@ -31,7 +31,7 @@ endif()
 # ------------------------------------------------------------------------------------------------
 # Copy the directory substructure and link all files with relevant extensions
 # ------------------------------------------------------------------------------------------------
-FILE(GLOB_RECURSE DOCFILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.rst *.png *.txt *.css_t *.conf *.css *.js *.gif *.jpg *.py *.html *.bib *.md)
+FILE(GLOB_RECURSE DOCFILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.*)
 foreach(f ${DOCFILES})
     get_filename_component(fd ${CMAKE_CURRENT_BINARY_DIR}/${f} DIRECTORY)
     file(MAKE_DIRECTORY ${fd})
