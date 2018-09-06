@@ -93,6 +93,8 @@ class EntropyAnalyzer(Analyzer):
         res['dS_dalpha'][1:-1] = ((elem(maxent_result.S)[2:] - elem(maxent_result.S)[:-2]) / (
             np.log(maxent_result.alpha[2:]) - np.log(maxent_result.alpha[:-2])))
         res['alpha_index'] = np.nanargmin(res['dS_dalpha']**2)
+        if np.isnan(res['alpha_index']):
+            raise ValueError('dS_dalpha is all NaN')
 
         res['A_out'] = elem(maxent_result.A)[res['alpha_index']]
         res['name'] = self.name

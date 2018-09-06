@@ -120,6 +120,8 @@ class Chi2CurvatureAnalyzer(Analyzer):
         res['curvature'], dchi2_1, dchi2_2 = curv(
             self.gamma * np.log10(maxent_result.alpha), np.log10(elem(maxent_result.chi2)))
         res['alpha_index'] = np.nanargmax(res['curvature'])
+        if np.isnan(res['alpha_index']):
+            raise ValueError('curvature is all NaN')
         res['A_out'] = elem(maxent_result.A)[res['alpha_index']]
         res['gamma'] = self.gamma
         res['name'] = self.name
