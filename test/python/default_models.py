@@ -27,7 +27,7 @@ w = HyperbolicOmegaMesh(omega_min=-10, omega_max=10, n_points=100)
 D1 = FlatDefaultModel(omega=w)
 assert np.all(np.abs(D1.D / w.delta - 1.0 / 20.0) < 1.e-15), \
     "flat default model is wrong"
-assert np.sum(D1.D) - 1.0 < 1.e-15, "flat default model integral is wrong"
+assert np.sum(D1.D) - 1.0 < 2.e-15, "flat default model integral is wrong"
 
 D2 = DataDefaultModel(D1.D / w.delta, w)
 assert np.all(D1.D == D2.D), "data default model is wrong"
