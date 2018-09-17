@@ -1,10 +1,7 @@
 def projectName = "maxent" /* set to app/repo name */
 
 /* which platform to build documentation on */
-def documentationPlatform = "ubuntu-clang"
-/* depend on triqs upstream branch/project */
-def triqsBranch = env.CHANGE_TARGET ?: env.BRANCH_NAME
-def triqsProject = '/TRIQS/triqs/' + triqsBranch.replaceAll('/', '%2F')
+def documentationPlatform = "ubuntu-clang-unstable"
 /* whether to publish the results (disabled for template project) */
 def publish = !env.BRANCH_NAME.startsWith("PR-") && projectName != "app4triqs"
 
@@ -14,7 +11,7 @@ properties([
   pipelineTriggers([
     upstream(
       threshold: 'SUCCESS',
-      upstreamProjects: triqsProject
+      upstreamProjects: '/TRIQS/triqs/unstable,/TRIQS/triqs/master'
     )
   ])
 ])
@@ -24,11 +21,18 @@ def platforms = [:]
 
 /****************** linux builds (in docker) */
 /* Each platform must have a cooresponding Dockerfile.PLATFORM in triqs/packaging */
-def dockerPlatforms = ["ubuntu-clang", "ubuntu-gcc", "centos-gcc"]
+def dockerPlatforms = [
+  ['unstable', 'ubuntu-clang'],
+  ['unstable', 'ubuntu-gcc'],
+  ['master',   'ubuntu-gcc'],
+  ['unstable', 'centos-gcc']
+]
 /* .each is currently broken in jenkins */
 for (int i = 0; i < dockerPlatforms.size(); i++) {
-  def platform = dockerPlatforms[i]
-  platforms[platform] = { -> node('docker') {
+  def triqsPlatform = dockerPlatforms[i]
+  def triqsBranch = triqsPlatform[0]
+  def platform = triqsPlatform[1]
+  platforms["${platform}-${triqsBranch}"] = { -> node('docker') {
     stage(platform) { timeout(time: 1, unit: 'HOURS') {
       checkout scm
       /* construct a Dockerfile for this base */
@@ -37,8 +41,8 @@ for (int i = 0; i < dockerPlatforms.size(); i++) {
         mv -f Dockerfile.jenkins Dockerfile
       """
       /* build and tag */
-      def img = docker.build("flatironinstitute/${projectName}:${env.BRANCH_NAME}-${env.STAGE_NAME}", "--build-arg APPNAME=${projectName} --build-arg BUILD_DOC=${platform==documentationPlatform} .")
-      if (!publish || platform != documentationPlatform) {
+      def img = docker.build("flatironinstitute/${projectName}:${env.BRANCH_NAME}-${env.STAGE_NAME}", "--build-arg APPNAME=${projectName} --build-arg BUILD_DOC=${env.STAGE_NAME==documentationPlatform} .")
+      if (!publish || env.STAGE_NAME != documentationPlatform) {
         /* but we don't need the tag so clean it up (except for documentation) */
         sh "docker rmi --no-prune ${img.imageName()}"
       }
