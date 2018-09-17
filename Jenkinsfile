@@ -33,7 +33,7 @@ for (int i = 0; i < dockerPlatforms.size(); i++) {
   def triqsBranch = triqsPlatform[0]
   def platform = triqsPlatform[1]
   platforms["${platform}-${triqsBranch}"] = { -> node('docker') {
-    stage(platform) { timeout(time: 1, unit: 'HOURS') {
+    stage("${platform}-${triqsBranch}") { timeout(time: 1, unit: 'HOURS') {
       checkout scm
       /* construct a Dockerfile for this base */
       sh """
@@ -52,14 +52,15 @@ for (int i = 0; i < dockerPlatforms.size(); i++) {
 
 /****************** osx builds (on host) */
 def osxPlatforms = [
-  ["gcc", ['CC=gcc-7', 'CXX=g++-7']],
-  ["clang", ['CC=$BREW/opt/llvm/bin/clang', 'CXX=$BREW/opt/llvm/bin/clang++', 'CXXFLAGS=-I$BREW/opt/llvm/include', 'LDFLAGS=-L$BREW/opt/llvm/lib']]
+  ['unstable', 'gcc', ['CC=gcc-7', 'CXX=g++-7']],
+  ['unstable', 'clang', ['CC=$BREW/opt/llvm/bin/clang', 'CXX=$BREW/opt/llvm/bin/clang++', 'CXXFLAGS=-I$BREW/opt/llvm/include', 'LDFLAGS=-L$BREW/opt/llvm/lib']]
 ]
 for (int i = 0; i < osxPlatforms.size(); i++) {
   def platformEnv = osxPlatforms[i]
-  def platform = platformEnv[0]
-  platforms["osx-$platform"] = { -> node('osx && triqs') {
-    stage("osx-$platform") { timeout(time: 1, unit: 'HOURS') {
+  def triqsBranch = platformEnv[0]
+  def platform = platformEnv[1]
+  platforms["osx-${platform}-${triqsBranch}"] = { -> node('osx && triqs') {
+    stage("osx-${platform}-${triqsBranch}") { timeout(time: 1, unit: 'HOURS') {
       def srcDir = pwd()
       def tmpDir = pwd(tmp:true)
       def buildDir = "$tmpDir/build"
@@ -70,7 +71,7 @@ for (int i = 0; i < osxPlatforms.size(); i++) {
       }
 
       checkout scm
-      dir(buildDir) { withEnv(platformEnv[1].collect { it.replace('\$BREW', env.BREW) } + [
+      dir(buildDir) { withEnv(platformEnv[2].collect { it.replace('\$BREW', env.BREW) } + [
         "PATH=$triqsDir/bin:${env.BREW}/bin:/usr/bin:/bin:/usr/sbin",
         "CPATH=$triqsDir/include:${env.BREW}/include",
         "LIBRARY_PATH=$triqsDir/lib:${env.BREW}/lib",
