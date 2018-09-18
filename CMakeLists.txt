@@ -42,6 +42,9 @@ elseif(${USE_TRIQS}) # search for TRIQS 2.0 - if not found default to USE_TRIQS=
 	message(STATUS "Defaulting back to installation without TRIQS")
 	set(USE_TRIQS OFF)
   endif()
+else()
+  # Handle USE_TRIQS= blank case
+  set(USE_TRIQS OFF)
 endif()
 
 if(NOT ${USE_TRIQS})
