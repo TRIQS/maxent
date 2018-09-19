@@ -73,6 +73,8 @@ class ClassicAnalyzer(Analyzer):
             return res
 
         res['alpha_index'] = np.nanargmax(elem(maxent_result.probability))
+        if np.isnan(res['alpha_index']):
+            raise ValueError('probability is all NaN')
 
         res['A_out'] = elem(maxent_result.A)[res['alpha_index']]
         res['info'] = 'Ideal alpha (classic): {} (= index {} zero-based)'.format(

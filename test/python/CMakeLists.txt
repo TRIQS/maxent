@@ -7,6 +7,7 @@ file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/${all_h5_files} DESTINATION ${CMAKE_CURREN
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/${all_dat_files} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/${all_ref_files} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/${all_npz_files} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/matplotlibrc DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 set(general_tests omega_meshes minimizer_cubefun minimizer_circlefun
     minimizer_sin cached_view plus_minus_entropy maxent_cost_function_lazy

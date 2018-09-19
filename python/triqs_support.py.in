@@ -20,7 +20,12 @@
 from __future__ import absolute_import, print_function
 import sys
 from functools import update_wrapper
-from decorator import decorate
+try:
+    from decorator import decorate
+except ImportError:
+    # for old versions of the decorator library
+    from decorator import decorator
+    decorate = lambda a, b: decorator(b, a)
 
 
 def if_triqs_2():

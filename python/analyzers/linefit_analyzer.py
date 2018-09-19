@@ -21,6 +21,9 @@ from __future__ import absolute_import, print_function
 import numpy as np
 from .analyzer import Analyzer, AnalyzerResult
 
+if not hasattr(np, 'full'):
+    # polyfill full for older numpy:
+    np.full = lambda a, f: np.zeros(a) + f
 
 def fit_piecewise(logx, logy, p2_deg=0):
     """ piecewise linear fit (e.g. for chi2)
@@ -71,9 +74,17 @@ def fit_piecewise(logx, logy, p2_deg=0):
             p2[i] = np.nan
             chi2[i] = np.nan
     i = np.nanargmin(chi2)
+    if np.isnan(i):
+        raise ValueError('chi2 is all NaN')
+
     X_x = ((p2[i][1] if p2_deg == 1 else p2[i][0]) - p1[i][1]) / \
         (p1[i][0] - (p2[i][0] if p2_deg == 1 else 0.0))
-    return np.nanargmin(np.abs(logx - X_x)), (p1[i], p2[i])
+    idx = np.nanargmin(np.abs(logx - X_x))
+
+    if np.isnan(idx):
+        raise ValueError('abs(logx - X_x) is all NaN')
+
+    return idx, (p1[i], p2[i])
 
 
 class LineFitAnalyzer(Analyzer):
