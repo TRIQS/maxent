@@ -56,6 +56,14 @@ def safelog(A):
     return np.log(A)
 
 
+def view_complex(A):
+    return A.view(np.complex_).reshape(A.shape[:-1])
+
+
+def view_real(A):
+    return A.view(float).reshape(A.shape + (2,))
+
+
 def cached(func):
     """ A descriptor for cached functions """
     @wraps(func)
@@ -335,12 +343,12 @@ class NormalChi2(Chi2):
 
     @cached
     def f(self, A):
-        return sum((np.dot(self.K.K, A) - self.G)**2 / self.err**2)
+        return sum(np.abs(np.dot(self.K.K, A) - self.G)**2 / self.err**2)
 
     @cached
     def d(self, A):
         return np.dot(2 * (np.dot(self.K.K, A) - self.G) /
-                      self.err**2, self.K.K)
+                      self.err**2, np.conjugate(self.K.K))
 
     @cached
     def dd(self, A):
@@ -351,8 +359,61 @@ class NormalChi2(Chi2):
         """ Notify that the parameters (either ``K`` or ``err``) have changed """
         # we calculate the value of the second derivative as it is constant
         if self.K is not None and self.err is not None:
-            self.d2 = 2 * np.einsum('il,ik,i->kl', self.K.K,
+            self.d2 = 2 * np.einsum('il,ik,i->kl', np.conjugate(self.K.K),
                                     self.K.K, 1. / self.err**2)
+
+
+class ComplexChi2(Chi2):
+    r""" A function giving the usual least squares
+
+    This is calculated as
+
+    .. math::
+
+        \chi^2 = \sum_i \frac{|G_i - \sum_j K_{ij} H_j|^2}{\sigma_i^2}
+
+    Note that :math:`H = A\Delta\omega` (in the usual case, see :ref:`preblur` for a different definition).
+
+    Parameters
+    ----------
+    K : :py:class:`.Kernel`
+        the kernel to use
+    G : array
+        the Green function data
+    err : array
+        the error of the Green function data (must have the same length
+        as G)
+    """
+
+    @cached
+    def f(self, A):
+        diff = np.dot(self.K.K, view_complex(A)) - self.G
+        return sum(np.abs(diff)**2 / self.err**2)
+
+    @cached
+    def d(self, A):
+        diff = np.dot(self.K.K, view_complex(A)) - self.G
+        return view_real(2 * np.dot(diff / self.err**2,
+                                    np.conjugate(self.K.K)))
+
+    @cached
+    def dd(self, A):
+        # this is constant
+        return self.d2
+
+    def parameter_change(self):
+        """ Notify that the parameters (either ``K`` or ``err``) have changed """
+        # we calculate the value of the second derivative as it is constant
+        if self.K is not None and self.err is not None:
+            N_w = self.K.K.shape[-1]
+            E = 2 * np.einsum('il,ik,i->kl', np.conjugate(self.K.K),
+                              self.K.K, 1. / self.err**2)
+            self.d2 = np.zeros((N_w, 2, N_w, 2))
+            self.d2[:, 0, :, 0] = np.real(E)
+            self.d2[:, 0, :, 1] = np.imag(E)
+            self.d2[:, 1, :, 1] = -np.imag(E)
+            self.d2[:, 1, :, 1] = np.real(E)
+
 
 # =====================================================================
 #  Entropy
