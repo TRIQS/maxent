@@ -25,6 +25,7 @@ MaxEnt.
 from __future__ import absolute_import, print_function
 
 import numpy as np
+from itertools import product
 from .triqs_support import *
 if if_triqs_1():
     from pytriqs.gf.local import *
@@ -181,18 +182,18 @@ def numder(fun, x, delta=1.e-6):
     """
     x2 = np.empty(x.shape)
     dfun = None
-    for i in range(len(x)):
+    for i in product(*map(range, x.shape)):
         x2[:] = x
         x2[i] += delta
         funplus = fun(x2)
         x2[i] -= 2 * delta
         funminus = fun(x2)
         if dfun is None:
-            try:
-                dfun = np.empty(funplus.shape + (len(x2),))
-            except TypeError:
-                dfun = np.empty((1, len(x2)))
-        dfun[..., i] = (funplus - funminus) / (2.0 * delta)
+            if len(funplus.shape) == 0:
+                dfun = np.empty((1,) + x2.shape, dtype=funplus.dtype)
+            else:
+                dfun = np.empty(funplus.shape + x2.shape, dtype=funplus.dtype)
+        dfun[(Ellipsis,) + i] = (funplus - funminus) / (2.0 * delta)
     return dfun
 
 
