@@ -56,10 +56,10 @@ assert (np.max(np.abs(c2_complex.dd()[:, 0, :, 1]))) < 1.e-14
 assert (np.max(np.abs(c2_complex.dd()[:, 1, :, 0]))) < 1.e-14
 
 D = 0.3 - 0.1j + 0 * A
-chi2_rp.check_derivatives(D.real, chi2_rp.f(D.real))
-chi2_ip.check_derivatives(D.imag, chi2_ip.f(D.imag))
+assert chi2_rp.check_derivatives(D.real, chi2_rp.f(D.real))
+assert chi2_ip.check_derivatives(D.imag, chi2_ip.f(D.imag))
 D_view = D.view(float).reshape(A.shape + (2,))
-chi2_complex.check_derivatives(D_view, chi2_complex.f(D_view))
+assert chi2_complex.check_derivatives(D_view, chi2_complex.f(D_view))
 
 iomega = np.linspace(-(2 * 48 + 1) * np.pi / beta,
                      (2 * 48 + 1) * np.pi / beta, len(tau) - 2)
@@ -72,6 +72,26 @@ err_iw = 1.e-4 * np.ones(len(G_iw_K))
 chi2_iw_rp = NormalChi2(K=K_iw, G=np.dot(K_iw.K, A.real), err=err_iw)
 chi2_iw_ip = NormalChi2(K=K_iw, G=np.dot(K_iw.K, A.imag), err=err_iw)
 chi2_iw_complex = ComplexChi2(K=K_iw, G=G_iw_K, err=err_iw)
-chi2_iw_rp.check_derivatives(D.real, chi2_rp.f(D.real))
-chi2_iw_ip.check_derivatives(D.imag, chi2_ip.f(D.imag))
-chi2_iw_complex.check_derivatives(D_view, chi2_complex.f(D_view))
+assert chi2_iw_rp.check_derivatives(D.real, chi2_rp.f(D.real))
+assert chi2_iw_ip.check_derivatives(D.imag, chi2_ip.f(D.imag))
+assert chi2_iw_complex.check_derivatives(D_view, chi2_complex.f(D_view))
+
+Def = FlatDefaultModel(omega=omega)
+entropy_normal = PlusMinusEntropy(D=Def)
+entropy_complex = ComplexPlusMinusEntropy(D=Def)
+S_rp = entropy_normal(A.real)
+S_ip = entropy_normal(A.imag)
+S_complex = entropy_complex(A.view(float).reshape(A.shape + (2,)))
+assert (np.abs(S_rp.f() + S_ip.f() - S_complex.f())) < 1.e-13
+assert (np.max(np.abs(S_complex.d()[:, 0] - S_rp.d()))) < 1.e-10
+assert (np.max(np.abs(S_complex.d()[:, 1] - S_ip.d()))) < 1.e-10
+assert (S_complex.d().shape == c2_complex.d().shape)
+assert (S_complex.dd().shape == c2_complex.dd().shape)
+assert (np.max(np.abs(S_complex.dd()[:, 0, :, 0] - S_rp.dd()))) < 1.e-14
+assert (np.max(np.abs(S_complex.dd()[:, 1, :, 1] - S_ip.dd()))) < 1.e-14
+assert (np.max(np.abs(S_complex.dd()[:, 0, :, 1]))) < 1.e-14
+assert (np.max(np.abs(S_complex.dd()[:, 1, :, 0]))) < 1.e-14
+
+assert S_rp.check_derivatives(D.real, S_rp.f(D.real))
+assert S_ip.check_derivatives(D.imag, S_ip.f(D.imag))
+assert S_complex.check_derivatives(D_view, S_complex.f(D_view))

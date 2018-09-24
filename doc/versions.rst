@@ -8,8 +8,14 @@ Changes since the last version
 
 The newest version, including changes since the last release, can be obtained using ``git checkout master``.
 
-Right now, there are no changes beyond the last release.
-Maybe there are some feature branches waiting to be explored.
+.. Right now, there are no changes beyond the last release.
+   Maybe there are some feature branches waiting to be explored.
+
+Changes with respect to the last release:
+
+- :py:class:`.IOmegaKernel` for continuing :math:`G(i\omega)`
+  (an object corresponding to :py:class:`.TauMaxEnt` is still missing)
+- :py:class:`.ComplexChi2` and :py:class:`.ComplexPlusMinusEntropy` for continuing complex :math:`A(\omega)`
 
 
 Version 0.9, 2018-08-24

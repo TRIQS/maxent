@@ -165,8 +165,9 @@ class DoublyDerivableFunction(CachedFunction):
         success : bool
             whether the test passed (True) or not (False)
         """
-        return (self.check_d(around, renorm, prec) and
-                self.check_dd(around, renorm, prec))
+        d_success = self.check_d(around, renorm, prec)
+        dd_success = self.check_dd(around, renorm, prec)
+        return (d_success and dd_success)
 
     def check_d(self, around, renorm=False, prec=1.e-8):
         """ check first derivative
@@ -530,8 +531,54 @@ class PlusMinusEntropy(NormalEntropy):
 
     @cached
     def dd(self, A):
-        return super(PlusMinusEntropy, self).dd(
-            self._A_plus(A) + self._A_minus(A))
+        arg = self._A_plus(A) + self._A_minus(A)
+        return super(PlusMinusEntropy, self).dd(arg)
+
+
+class ComplexPlusMinusEntropy(PlusMinusEntropy):
+    """ The Plus-Minus entropy for complex A
+
+    This calculates the entropy as
+
+    .. math ::
+
+        S = S_{plusminus}(\mathrm{Re}\, H) + S_{plusminus}(\mathrm{Im}\, H),
+
+    where :math:`S_{plusminus}` is the :py:class:`.PlusMinusEntropy`.
+
+    Note that :math:`H = A\Delta\omega` (in the usual case, see :ref:`preblur` for a different definition).
+    Also, the default model usually includes the :math:`\Delta\omega`.
+
+    Parameters
+    ----------
+    D : DefaultModel
+        the default model
+    """
+    @cached
+    def f(self, A):
+        A_real = view_complex(A).real
+        A_imag = view_complex(A).imag
+        return super(ComplexPlusMinusEntropy, self).f(A_real) + \
+            super(ComplexPlusMinusEntropy, self).f(A_imag)
+
+    @cached
+    def d(self, A):
+        A_real = view_complex(A).real
+        A_imag = view_complex(A).imag
+        return np.column_stack(
+            (super(ComplexPlusMinusEntropy, self).d(A_real),
+             super(ComplexPlusMinusEntropy, self).d(A_imag)))
+
+    @cached
+    def dd(self, A):
+        A_real = view_complex(A).real
+        A_imag = view_complex(A).imag
+        dd_re = super(ComplexPlusMinusEntropy, self).dd(A_real)
+        dd_im = super(ComplexPlusMinusEntropy, self).dd(A_imag)
+        dd = np.zeros((dd_re.shape[0], 2, dd_re.shape[1], 2))
+        dd[:, 0, :, 0] = dd_re
+        dd[:, 1, :, 1] = dd_im
+        return dd
 
 
 class AbsoluteEntropy(Entropy):
