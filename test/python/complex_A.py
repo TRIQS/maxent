@@ -95,3 +95,19 @@ assert (np.max(np.abs(S_complex.dd()[:, 1, :, 0]))) < 1.e-14
 assert S_rp.check_derivatives(D.real, S_rp.f(D.real))
 assert S_ip.check_derivatives(D.imag, S_ip.f(D.imag))
 assert S_complex.check_derivatives(D_view, S_complex.f(D_view))
+
+v = np.ones(2 * len(K.S))
+H_of_v = ComplexPlusMinusH_of_v(D=Def, K=K)
+H = H_of_v(v)
+assert H.f().shape == (100, 2)
+assert H.check_derivatives(v)
+assert H.check_inv(D_view)
+
+v_iw = np.ones(2 * len(K_iw.S))
+H_of_v_iw = ComplexPlusMinusH_of_v(D=Def, K=K_iw)
+H_iw = H_of_v_iw(v_iw)
+assert H_iw.f().shape == (100, 2)
+assert H_iw.check_derivatives(v_iw)
+# I'm not too happy with the precision but inverting non-bijective functions
+# is always tricky...
+assert H_iw.check_inv(D_view, prec=1.e-2)

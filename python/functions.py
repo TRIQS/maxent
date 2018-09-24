@@ -56,11 +56,15 @@ def safelog(A):
     return np.log(A)
 
 
-def view_complex(A):
+def view_complex(A, reshape=True):
+    if not reshape:
+        return A.view(np.complex_)
     return A.view(np.complex_).reshape(A.shape[:-1])
 
 
-def view_real(A):
+def view_real(A, reshape=True):
+    if not reshape:
+        return A.view(float)
     return A.view(float).reshape(A.shape + (2,))
 
 
@@ -208,16 +212,17 @@ class InvertibleFunction(CachedFunction):
         """ inverse function value """
         raise NotImplementedError()
 
-    def check_inv(self, x, prec=1.e-8):
+    def check_inv(self, y, prec=1.e-8):
         """ check whether inv is really the inverse of f """
-        y = self.f(x)
-        x2 = self.inv(y)
-        if np.max(np.abs(x - x2)) > prec:
-            error_message(
-                """Inverse of function is not correct:
-                   {} - difference: {}
-                """.format(type(self).__name__,
-                           np.max(np.abs(x - x2))))
+        x = self.inv(y)
+        y2 = self.f(x)
+        if np.max(np.abs(y - y2)) > prec:
+            print("""Inverse of function is not correct:
+                     {} - difference: {}
+                  """.format(type(self).__name__,
+                             np.max(np.abs(y - y2))))
+            return False
+        return True
 
 
 class NullFunction(DoublyDerivableFunction):
@@ -747,8 +752,77 @@ class PlusMinusH_of_v(GenericH_of_v):
 
     @cached
     def inv(self, A):
-        return np.dot(self.K.V.transpose(), safelog(
+        return np.dot(self.K.V.transpose().conjugate(), safelog(
             (A + np.sqrt(A**2 + 4 * self.D.D**2)) / (2 * self.D.D)))
+
+
+class ComplexPlusMinusH_of_v(PlusMinusH_of_v):
+    """ Complex plus/minus parametrization H(v)
+
+    This should be used with the :py:class:`.ComplexPlusMinusEntropy`.
+    The parametrization is
+
+    .. math::
+
+        H(v) = D (e^{Vv} - e^{-Vv}) TODO
+
+    where :math:`V` is the matrix of the right-singular vectors of the
+    kernel.
+
+    Parameters
+    ----------
+    D : DefaultModel
+        the default model to use
+    K : :py:class:`.Kernel`
+        the kernel to use
+    """
+
+    @cached
+    def f(self, v):
+        return view_real(
+            super(ComplexPlusMinusH_of_v, self).f(
+                view_complex(v, reshape=False)))
+
+    @cached
+    def d(self, v):
+        v_cplx = view_complex(v, reshape=False)
+        cW = np.cosh(np.dot(self.K.V, v_cplx))
+        ret = np.zeros((len(self.K.V), 2, len(v)))
+        ret[:, 0, ::2] = 2 * self.D.D[:, np.newaxis] * \
+            np.real(self.K.V * cW[:, np.newaxis])
+        ret[:, 0, 1::2] = -2 * self.D.D[:, np.newaxis] * \
+            np.imag(self.K.V * cW[:, np.newaxis])
+        ret[:, 1, ::2] = 2 * self.D.D[:, np.newaxis] * \
+            np.imag(self.K.V * cW[:, np.newaxis])
+        ret[:, 1, 1::2] = 2 * self.D.D[:, np.newaxis] * \
+            np.real(self.K.V * cW[:, np.newaxis])
+        return view_real(ret, reshape=False)
+
+    @cached
+    def dd(self, v):
+        v_cplx = view_complex(v, reshape=False)
+        VVsW = np.einsum('jt,jq,j->jtq', self.K.V, self.K.V,
+                         np.sinh(np.dot(self.K.V, v_cplx)))
+        ret = np.zeros((len(self.K.V), 2, len(v), len(v)))
+        ret[:, 0, ::2, ::2] = 2 * self.D.D[:, np.newaxis, np.newaxis] * \
+            np.real(VVsW)
+        ret[:, 0, 1::2, 1::2] = -ret[:, 0, ::2, ::2]
+        ret[:, 0, ::2, 1::2] = -2 * self.D.D[:, np.newaxis, np.newaxis] * \
+            np.imag(VVsW)
+        ret[:, 0, 1::2, ::2] = ret[:, 0, ::2, 1::2]
+        ret[:, 1, ::2, ::2] = 2 * self.D.D[:, np.newaxis, np.newaxis] * \
+            np.imag(VVsW)
+        ret[:, 1, 1::2, 1::2] = -ret[:, 1, ::2, ::2]
+        ret[:, 1, ::2, 1::2] = 2 * self.D.D[:, np.newaxis, np.newaxis] * \
+            np.real(VVsW)
+        ret[:, 1, 1::2, ::2] = ret[:, 1, ::2, 1::2]
+        return ret
+
+    @cached
+    def inv(self, A):
+        return view_real(
+            super(ComplexPlusMinusH_of_v, self).inv(
+                view_complex(A)), reshape=False)
 
 
 class NoExpH_of_v(GenericH_of_v):
