@@ -102,16 +102,19 @@ class MaxEntCostFunction(CostFunction):
             vector in singular space giving the solution
         """
 
-        dQ_dH = self.dH(v)
+        dQ_dH = self.dH(v).reshape(-1)
 
         if self.d_dv:
             dH_dv = self.H_of_v.d(v)
+            dH_dv = dH_dv.reshape((-1, dH_dv.shape[-1]))
             retval = np.dot(dH_dv.transpose(), dQ_dH)
         else:
             if self.dA_projection == 1:
+                # TODO
                 retval = np.dot(self.chi2.K.V.conjugate().transpose(), dQ_dH)
             elif self.dA_projection == 2:
                 dH_dv = self.H_of_v.d(v)
+                dH_dv = dH_dv.reshape((-1, dH_dv.shape[-1]))
                 retval = np.dot(dH_dv.transpose(), dQ_dH)
             else:
                 retval = dQ_dH
@@ -139,15 +142,20 @@ class MaxEntCostFunction(CostFunction):
 
         ddQ_dHdH = self.ddH(v)
         dH_dv = self.H_of_v.d(v)
+        n_index_H = np.prod(dH_dv.shape[:-1])
+        ddQ_dHdH = ddQ_dHdH.reshape((n_index_H, n_index_H))
+        dH_dv = dH_dv.reshape((n_index_H, -1))
 
         if self.d_dv:
-            dQ_dH = self.dH(v)
-            ddH_dvdv = self.H_of_v.dd(v)
+            dQ_dH = self.dH(v).reshape(-1)
+            ddH_dvdv = self.H_of_v.dd(v).reshape(
+                (-1, dH_dv.shape[-1], dH_dv.shape[-1]))
             # we make use of the fact that the Jacobian is symmetric
             retval = (np.dot(np.dot(ddQ_dHdH, dH_dv).transpose(), dH_dv) +
                       np.einsum('k,kij->ij', dQ_dH, ddH_dvdv))
         else:
             if self.dA_projection == 1:
+                # TODO
                 retval = np.dot(self.chi2.K.V.conjugate().transpose(),
                                 np.dot(ddQ_dHdH, dH_dv))
             elif self.dA_projection == 2:

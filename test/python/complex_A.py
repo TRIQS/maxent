@@ -111,3 +111,13 @@ assert H_iw.check_derivatives(v_iw)
 # I'm not too happy with the precision but inverting non-bijective functions
 # is always tricky...
 assert H_iw.check_inv(D_view, prec=1.e-2)
+
+Q = MaxEntCostFunction(chi2=chi2_complex, S=entropy_complex, H_of_v=H_of_v)
+Q.set_alpha(1.0)
+assert Q.dH(v).shape == (100, 2)
+assert H_of_v.d(v).shape == (100, 2, 200)
+assert Q.d(v).shape == (200,)
+
+assert Q.ddH(v).shape == (100, 2, 100, 2)
+assert H_of_v.dd(v).shape == (100, 2, 200, 200)
+assert Q.dd(v).shape == (200, 200)
