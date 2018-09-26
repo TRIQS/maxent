@@ -324,6 +324,14 @@ class Chi2(DoublyDerivableFunction):
 
     data_variable = property(get_data_variable, set_data_variable)
 
+    @property
+    def input_size(self):
+        return (self.K.K.shape[1],)
+
+    @property
+    def axes_preference(self):
+        return (0,)
+
 
 class NormalChi2(Chi2):
     r""" A function giving the usual least squares
@@ -420,6 +428,14 @@ class ComplexChi2(Chi2):
             self.d2[:, 1, :, 1] = -np.imag(E)
             self.d2[:, 1, :, 1] = np.real(E)
 
+    @property
+    def input_size(self):
+        return (self.K.K.shape[1], 2)
+
+    @property
+    def axes_preference(self):
+        return (0, 1)
+
 
 # =====================================================================
 #  Entropy
@@ -462,6 +478,14 @@ class Entropy(DoublyDerivableFunction):
             self.parameter_change()
 
     omega = property(get_omega, set_omega)
+
+    @property
+    def input_size(self):
+        return (len(self.D.D),)
+
+    @property
+    def axes_preference(self):
+        return (0,)
 
 
 class NormalEntropy(Entropy):
@@ -585,6 +609,14 @@ class ComplexPlusMinusEntropy(PlusMinusEntropy):
         dd[:, 1, :, 1] = dd_im
         return dd
 
+    @property
+    def input_size(self):
+        return (len(self.D.D), 2)
+
+    @property
+    def axes_preference(self):
+        return (0, 1)
+
 
 class AbsoluteEntropy(Entropy):
     """ The entropy with ``|A|``
@@ -675,6 +707,14 @@ class GenericH_of_v(DoublyDerivableFunction, InvertibleFunction):
             self.parameter_change()
 
     omega = property(get_omega, set_omega)
+
+    @property
+    def input_size(self):
+        return (len(self.K.S),)
+
+    @property
+    def axes_preference(self):
+        return (0,)
 
 
 class NormalH_of_v(GenericH_of_v):
@@ -824,6 +864,14 @@ class ComplexPlusMinusH_of_v(PlusMinusH_of_v):
             super(ComplexPlusMinusH_of_v, self).inv(
                 view_complex(A)), reshape=False)
 
+    @property
+    def input_size(self):
+        return (2 * len(self.K.S),)
+
+    @property
+    def axes_preference(self):
+        return (0,)
+
 
 class NoExpH_of_v(GenericH_of_v):
     """ Parametrization H(v) without the exponential """
@@ -898,7 +946,10 @@ class IdentityA_of_H(GenericA_of_H):
 
     @cached
     def f(self, H):
-        return H / self._omega.delta
+        if(H.ndim == 2):
+            return H / self._omega.delta[:, np.newaxis]
+        else:
+            return H / self._omega.delta
 
     @cached
     def d(self, H):
