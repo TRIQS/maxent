@@ -121,3 +121,20 @@ assert Q.d(v).shape == (200,)
 assert Q.ddH(v).shape == (100, 2, 100, 2)
 assert H_of_v.dd(v).shape == (100, 2, 200, 200)
 assert Q.dd(v).shape == (200, 200)
+
+logtaker = Logtaker()
+
+minimizer = LevenbergMinimizer(maxiter=10000)
+
+alpha_values = LogAlphaMesh(alpha_max=6000, alpha_min=8, n_points=5)
+
+ml = MaxEntLoop(cost_function=Q, minimizer=minimizer,
+                alpha_mesh=alpha_values, logtaker=logtaker)
+result = ml.run()
+
+if not if_no_triqs():
+    from pytriqs.archive import HDFArchive
+    with HDFArchive('maxent_loop.h5', 'w') as ar:
+        ar['result_complex'] = result.data
+else:
+    result.data

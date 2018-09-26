@@ -79,6 +79,15 @@ def recursive_map(seq, func):
             yield func(item)
 
 
+def recursive_dtype(seq):
+    """ Get the dtype of the first item of seq. """
+    for item in seq:
+        if isinstance(item, list):
+            return recursive_dtype(item)
+        else:
+            return item.dtype
+
+
 def _get_empty(matrix_structure, fill_with=list, element_wise=True):
     """ Return an empty object that has ``len(matrix_structure)`` dimensions
 
@@ -712,6 +721,8 @@ class MaxEntResult(MaxEntResultData):
         if not isinstance(what, Sequence):
             return func(what)
         li = list(recursive_map(what, func))
+        if dtype is None:
+            dtype = recursive_dtype(li)
         arr = np.empty(_find_shape(li), dtype=dtype)
         _fill_array(arr, li)
 
@@ -862,7 +873,7 @@ class MaxEntResult(MaxEntResultData):
         In the case of an extra transformation (see :py:meth:`.TauMaxEnt.set_cov`)
         this is the transformed G.
         """
-        return self._forevery(lambda r: r.chi2.G)[..., 0, :]
+        return self._forevery(lambda r: r.chi2.G, dtype=None)[..., 0, :]
 
     @saved
     def G_orig(self):
@@ -875,7 +886,7 @@ class MaxEntResult(MaxEntResultData):
         In the case of an extra transformation (see :py:meth:`.TauMaxEnt.set_cov`)
         this is the original G.
         """
-        return self._forevery(lambda r: r.G_orig)[..., 0, :]
+        return self._forevery(lambda r: r.G_orig, dtype=None)[..., 0, :]
 
     @saved
     def data_variable(self):
