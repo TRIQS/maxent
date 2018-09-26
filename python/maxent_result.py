@@ -85,7 +85,10 @@ def recursive_dtype(seq):
         if isinstance(item, list):
             return recursive_dtype(item)
         else:
-            return item.dtype
+            try:
+                return item.dtype
+            except AttributeError:
+                return type(item)
 
 
 def _get_empty(matrix_structure, fill_with=list, element_wise=True):
@@ -713,7 +716,7 @@ class MaxEntResult(MaxEntResultData):
                           element_wise=self._element_wise,
                           fill_with=fill_with)
 
-    def _forevery(self, func, what=None, dtype=float,
+    def _forevery(self, func, what=None, dtype=None,
                   hermiticity_conjugate=False):
         """ apply a function to every result matrix element """
         if what is None:
@@ -873,7 +876,7 @@ class MaxEntResult(MaxEntResultData):
         In the case of an extra transformation (see :py:meth:`.TauMaxEnt.set_cov`)
         this is the transformed G.
         """
-        return self._forevery(lambda r: r.chi2.G, dtype=None)[..., 0, :]
+        return self._forevery(lambda r: r.chi2.G)[..., 0, :]
 
     @saved
     def G_orig(self):
@@ -886,7 +889,7 @@ class MaxEntResult(MaxEntResultData):
         In the case of an extra transformation (see :py:meth:`.TauMaxEnt.set_cov`)
         this is the original G.
         """
-        return self._forevery(lambda r: r.G_orig, dtype=None)[..., 0, :]
+        return self._forevery(lambda r: r.G_orig)[..., 0, :]
 
     @saved
     def data_variable(self):

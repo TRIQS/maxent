@@ -77,7 +77,7 @@ result = ml.run()
 
 if not if_no_triqs():
     from pytriqs.archive import HDFArchive
-    with HDFArchive('maxent_loop.h5', 'w') as ar:
+    with HDFArchive('maxent_loop.h5', 'a') as ar:
         ar['result'] = result.data
 else:
     result.data

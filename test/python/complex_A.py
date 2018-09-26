@@ -22,6 +22,19 @@ import numpy as np
 from triqs_maxent import *
 from triqs_maxent.triqs_support import *
 
+import traceback
+import warnings
+import sys
+
+
+def warn_with_traceback(message, category, filename, lineno,
+                        file=None, line=None):
+    log = file if hasattr(file, 'write') else sys.stderr
+    traceback.print_stack(file=log)
+    log.write(warnings.formatwarning(message, category, filename,
+                                     lineno, line))
+warnings.showwarning = warn_with_traceback
+
 # to make it reproducible
 np.random.seed(658436166)
 
@@ -134,7 +147,37 @@ result = ml.run()
 
 if not if_no_triqs():
     from pytriqs.archive import HDFArchive
-    with HDFArchive('maxent_loop.h5', 'w') as ar:
+    with HDFArchive('maxent_loop.h5', 'a') as ar:
         ar['result_complex'] = result.data
+else:
+    result.data
+
+# try the same with iw
+
+Q = MaxEntCostFunction(chi2=chi2_iw_complex, S=entropy_complex,
+                       H_of_v=H_of_v_iw)
+Q.set_alpha(1.0)
+assert Q.dH(v_iw).shape == (100, 2)
+assert H_of_v_iw.d(v_iw).shape == (100, 2, 196)
+assert Q.d(v_iw).shape == (196,)
+
+assert Q.ddH(v_iw).shape == (100, 2, 100, 2)
+assert H_of_v_iw.dd(v_iw).shape == (100, 2, 196, 196)
+assert Q.dd(v_iw).shape == (196, 196)
+
+logtaker = Logtaker()
+
+minimizer = LevenbergMinimizer(maxiter=10000)
+
+alpha_values = LogAlphaMesh(alpha_max=6000, alpha_min=8, n_points=5)
+
+ml = MaxEntLoop(cost_function=Q, minimizer=minimizer,
+                alpha_mesh=alpha_values, logtaker=logtaker)
+result = ml.run()
+
+if not if_no_triqs():
+    from pytriqs.archive import HDFArchive
+    with HDFArchive('maxent_loop.h5', 'a') as ar:
+        ar['result_complex_iw'] = result.data
 else:
     result.data

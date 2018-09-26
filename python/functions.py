@@ -947,7 +947,7 @@ class IdentityA_of_H(GenericA_of_H):
     @cached
     def f(self, H):
         if(H.ndim == 2):
-            return H / self._omega.delta[:, np.newaxis]
+            return view_complex(H / self._omega.delta[:, np.newaxis])
         else:
             return H / self._omega.delta
 
@@ -961,7 +961,7 @@ class IdentityA_of_H(GenericA_of_H):
 
     @cached
     def inv(self, A):
-        return A * self._omega.delta
+        return view_real(A * self._omega.delta)
 
 
 class PreblurA_of_H(GenericA_of_H):
