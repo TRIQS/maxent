@@ -197,7 +197,7 @@ class MaxEntLoop(object):
         right_side_slice = [np.newaxis] * H.ndim
         for i in self.chi2.axes_preference[:right_side.ndim]:
             right_side_slice[i] = slice(None, None)
-        H[:] = right_side[right_side_slice]
+        H[:] = right_side[tuple(right_side_slice)]
         v = self.H_of_v(H).inv()
 
         # set up result
