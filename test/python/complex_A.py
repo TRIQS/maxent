@@ -125,6 +125,9 @@ assert H_iw.check_derivatives(v_iw)
 # is always tricky...
 assert H_iw.check_inv(D_view, prec=1.e-2)
 
+#######################################################################
+# MaxEnt with complex G(tau)
+#######################################################################
 Q = MaxEntCostFunction(chi2=chi2_complex, S=entropy_complex, H_of_v=H_of_v)
 Q.set_alpha(1.0)
 assert Q.dH(v).shape == (100, 2)
@@ -143,17 +146,56 @@ alpha_values = LogAlphaMesh(alpha_max=6000, alpha_min=8, n_points=5)
 
 ml = MaxEntLoop(cost_function=Q, minimizer=minimizer,
                 alpha_mesh=alpha_values, logtaker=logtaker)
-result = ml.run()
+result_complex = ml.run()
 
 if not if_no_triqs():
     from pytriqs.archive import HDFArchive
     with HDFArchive('maxent_loop.h5', 'a') as ar:
-        ar['result_complex'] = result.data
+        ar['result_complex'] = result_complex.data
 else:
-    result.data
+    result_complex.data
 
-# try the same with iw
+#######################################################################
+# MaxEnt with real part of G(tau)
+#######################################################################
+H_of_v_normal = PlusMinusH_of_v(D=Def, K=K)
+Q = MaxEntCostFunction(chi2=chi2_rp, S=entropy_normal, H_of_v=H_of_v_normal)
+ml = MaxEntLoop(cost_function=Q, minimizer=minimizer,
+                alpha_mesh=alpha_values, logtaker=logtaker)
+result_rp = ml.run()
 
+if not if_no_triqs():
+    from pytriqs.archive import HDFArchive
+    with HDFArchive('maxent_loop.h5', 'a') as ar:
+        ar['result_rp'] = result_rp.data
+else:
+    result_rp.data
+
+#######################################################################
+# MaxEnt with imag part of G(tau)
+#######################################################################
+Q = MaxEntCostFunction(chi2=chi2_ip, S=entropy_normal, H_of_v=H_of_v_normal)
+ml = MaxEntLoop(cost_function=Q, minimizer=minimizer,
+                alpha_mesh=alpha_values, logtaker=logtaker)
+result_ip = ml.run()
+
+if not if_no_triqs():
+    from pytriqs.archive import HDFArchive
+    with HDFArchive('maxent_loop.h5', 'a') as ar:
+        ar['result_ip'] = result_ip.data
+else:
+    result_ip.data
+
+# due to differences in the optimization space, we get different results
+# therefore we have to use a weak criterion
+assert np.sum((result_complex.A.real - result_rp.A)**2) / \
+    result_rp.A.size < 1.e-2
+assert np.sum((result_complex.A.imag - result_ip.A)**2) / \
+    result_rp.A.size < 1.e-2
+
+#######################################################################
+# MaxEnt with "complex" G(iw)
+#######################################################################
 Q = MaxEntCostFunction(chi2=chi2_iw_complex, S=entropy_complex,
                        H_of_v=H_of_v_iw)
 Q.set_alpha(1.0)
@@ -164,16 +206,14 @@ assert Q.d(v_iw).shape == (196,)
 assert Q.ddH(v_iw).shape == (100, 2, 100, 2)
 assert H_of_v_iw.dd(v_iw).shape == (100, 2, 196, 196)
 assert Q.dd(v_iw).shape == (196, 196)
-
-logtaker = Logtaker()
-
-minimizer = LevenbergMinimizer(maxiter=10000)
-
-alpha_values = LogAlphaMesh(alpha_max=6000, alpha_min=8, n_points=5)
-
 ml = MaxEntLoop(cost_function=Q, minimizer=minimizer,
                 alpha_mesh=alpha_values, logtaker=logtaker)
 result = ml.run()
+
+# due to differences in the optimization function, we get different results
+# therefore we have to use an (even) weaker criterion
+assert (np.sum(np.abs(result_complex.A - result.A)**2)
+        / result.A.size) < 0.1
 
 if not if_no_triqs():
     from pytriqs.archive import HDFArchive
