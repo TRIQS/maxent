@@ -79,6 +79,18 @@ def recursive_map(seq, func):
             yield func(item)
 
 
+def recursive_dtype(seq):
+    """ Get the dtype of the first item of seq. """
+    for item in seq:
+        if isinstance(item, list):
+            return recursive_dtype(item)
+        else:
+            try:
+                return item.dtype
+            except AttributeError:
+                return type(item)
+
+
 def _get_empty(matrix_structure, fill_with=list, element_wise=True):
     """ Return an empty object that has ``len(matrix_structure)`` dimensions
 
@@ -704,7 +716,7 @@ class MaxEntResult(MaxEntResultData):
                           element_wise=self._element_wise,
                           fill_with=fill_with)
 
-    def _forevery(self, func, what=None, dtype=float,
+    def _forevery(self, func, what=None, dtype=None,
                   hermiticity_conjugate=False):
         """ apply a function to every result matrix element """
         if what is None:
@@ -712,6 +724,8 @@ class MaxEntResult(MaxEntResultData):
         if not isinstance(what, Sequence):
             return func(what)
         li = list(recursive_map(what, func))
+        if dtype is None:
+            dtype = recursive_dtype(li)
         arr = np.empty(_find_shape(li), dtype=dtype)
         _fill_array(arr, li)
 

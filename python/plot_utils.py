@@ -20,6 +20,7 @@
 from __future__ import absolute_import, print_function
 import matplotlib.pyplot as plt
 from functools import wraps
+import numpy as np
 
 
 def plot_function(func):
@@ -91,6 +92,12 @@ def _plotter(x, y, label=None, x_label=None, y_label=None,
     elif log_y:
         plot_command = plt.semilogy
 
-    plot_command(x, y, label=label)
+    if np.any(np.iscomplex(y)):
+        plot_command(x, y.real,
+                     label='Re ' + label if label is not None else None)
+        plot_command(x, y.imag,
+                     label='Im ' + label if label is not None else None)
+    else:
+        plot_command(x, y, label=label)
     plt.xlabel(x_label)
     plt.ylabel(y_label)

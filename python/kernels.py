@@ -280,6 +280,72 @@ class TauKernel(Kernel):
         self.tau = value
 
 
+class IOmegaKernel(Kernel):
+    r""" A kernel for continuing :math:`G(i\omega)`
+
+    This kernel is defined as
+
+    .. math::
+
+        K(i\omega, \omega) = \frac{1}{i\omega - \omega}
+
+    With this, we have
+
+    .. math::
+
+        G(i\omega) = \int d\omega\, K(i\omega, \omega) A(\omega).
+
+    Parameters
+    ----------
+    iomega : array
+        the :math:`iomega`-mesh where the data is given
+        (as a real array, i.e. it is internally multiplied by ``1.0j``)
+    omega : OmegaMesh
+        the :math:`\omega`-mesh where the spectral function should be
+        calculated
+    beta : float
+        the inverse temperature; if not given, it is taken from the difference
+        of the first two :math:`i\omega` values
+    """
+
+    def __init__(self, iomega, omega, beta=None):
+        super(IOmegaKernel, self).__init__()
+        self.iomega = iomega
+        self.omega = omega
+        self.beta = beta
+        self._fill_values()
+
+    def _fill_values(self):
+        # invalidate U, S, V
+        self._U = None
+        self._S = None
+        self._V = None
+        beta = self.beta
+        if beta is None:
+            beta = 2 * np.pi / (self.iomega[1] - self.iomega[0])
+
+        oomega, iiomega = np.meshgrid(self.omega, self.iomega)
+        self._K = np.empty(oomega.shape)
+        self._K = 1.0 / (1.0j * iiomega - oomega)
+
+        # include trapz integration in the kernel
+        self._K_delta = np.einsum('ij,j->ij', self._K, self.omega.delta)
+
+        T = self._T
+        self._T = None
+        # if self._T is set, the kernel should be transformed
+        self.transform(T)
+
+    @property
+    def data_variable(self):
+        r""" :math:`i\omega` """
+        return self.iomega
+
+    @data_variable.setter
+    def data_variable(self, value):
+        self.iomega = value
+
+
 class PreblurKernel(Kernel):
     """ A kernel for the preblur formalism
 

@@ -25,7 +25,7 @@ from .logtaker import Logtaker
 from .maxent_result import MaxEntResult
 from .analyzers import *
 from .probabilities import NormalLogProbability
-from .functions import PlusMinusEntropy, PlusMinusH_of_v
+from .functions import PlusMinusEntropy, PlusMinusH_of_v, view_real
 from datetime import datetime
 import numpy as np
 
@@ -185,11 +185,19 @@ class MaxEntLoop(object):
 
         # calculate minimal chi2
         A_min = np.linalg.lstsq(self.K.K, self.G, rcond=-1)[0]
+        if(np.any(np.iscomplex(A_min))):
+            A_min = view_real(A_min)
         chi2_min = self.chi2(A_min).f()
         self.logtaker.logged_message("Minimal chi2: {}", chi2_min)
 
         # the initial value of v
-        H = (self.D.D if self.A_init is None else self.A_init) * self.omega.delta
+        H = np.empty(self.chi2.input_size)
+        right_side = (
+            self.D.D if self.A_init is None else self.A_init) * self.omega.delta
+        right_side_slice = [np.newaxis] * H.ndim
+        for i in self.chi2.axes_preference[:right_side.ndim]:
+            right_side_slice[i] = slice(None, None)
+        H[:] = right_side[tuple(right_side_slice)]
         v = self.H_of_v(H).inv()
 
         # set up result

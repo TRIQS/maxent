@@ -56,6 +56,18 @@ def safelog(A):
     return np.log(A)
 
 
+def view_complex(A, reshape=True):
+    if not reshape:
+        return A.view(np.complex_)
+    return A.view(np.complex_).reshape(A.shape[:-1])
+
+
+def view_real(A, reshape=True):
+    if not reshape:
+        return A.view(float)
+    return A.view(float).reshape(A.shape + (2,))
+
+
 def cached(func):
     """ A descriptor for cached functions """
     @wraps(func)
@@ -157,8 +169,9 @@ class DoublyDerivableFunction(CachedFunction):
         success : bool
             whether the test passed (True) or not (False)
         """
-        return (self.check_d(around, renorm, prec) and
-                self.check_dd(around, renorm, prec))
+        d_success = self.check_d(around, renorm, prec)
+        dd_success = self.check_dd(around, renorm, prec)
+        return (d_success and dd_success)
 
     def check_d(self, around, renorm=False, prec=1.e-8):
         """ check first derivative
@@ -199,16 +212,17 @@ class InvertibleFunction(CachedFunction):
         """ inverse function value """
         raise NotImplementedError()
 
-    def check_inv(self, x, prec=1.e-8):
+    def check_inv(self, y, prec=1.e-8):
         """ check whether inv is really the inverse of f """
-        y = self.f(x)
-        x2 = self.inv(y)
-        if np.max(np.abs(x - x2)) > prec:
-            error_message(
-                """Inverse of function is not correct:
-                   {} - difference: {}
-                """.format(type(self).__name__,
-                           np.max(np.abs(x - x2))))
+        x = self.inv(y)
+        y2 = self.f(x)
+        if np.max(np.abs(y - y2)) > prec:
+            print("""Inverse of function is not correct:
+                     {} - difference: {}
+                  """.format(type(self).__name__,
+                             np.max(np.abs(y - y2))))
+            return False
+        return True
 
 
 class NullFunction(DoublyDerivableFunction):
@@ -310,6 +324,14 @@ class Chi2(DoublyDerivableFunction):
 
     data_variable = property(get_data_variable, set_data_variable)
 
+    @property
+    def input_size(self):
+        return (self.K.K.shape[1],)
+
+    @property
+    def axes_preference(self):
+        return (0,)
+
 
 class NormalChi2(Chi2):
     r""" A function giving the usual least squares
@@ -335,12 +357,12 @@ class NormalChi2(Chi2):
 
     @cached
     def f(self, A):
-        return sum((np.dot(self.K.K, A) - self.G)**2 / self.err**2)
+        return sum(np.abs(np.dot(self.K.K, A) - self.G)**2 / self.err**2)
 
     @cached
     def d(self, A):
         return np.dot(2 * (np.dot(self.K.K, A) - self.G) /
-                      self.err**2, self.K.K)
+                      self.err**2, np.conjugate(self.K.K))
 
     @cached
     def dd(self, A):
@@ -351,8 +373,69 @@ class NormalChi2(Chi2):
         """ Notify that the parameters (either ``K`` or ``err``) have changed """
         # we calculate the value of the second derivative as it is constant
         if self.K is not None and self.err is not None:
-            self.d2 = 2 * np.einsum('il,ik,i->kl', self.K.K,
+            self.d2 = 2 * np.einsum('il,ik,i->kl', np.conjugate(self.K.K),
                                     self.K.K, 1. / self.err**2)
+
+
+class ComplexChi2(Chi2):
+    r""" A function giving the usual least squares
+
+    This is calculated as
+
+    .. math::
+
+        \chi^2 = \sum_i \frac{|G_i - \sum_j K_{ij} H_j|^2}{\sigma_i^2}
+
+    Note that :math:`H = A\Delta\omega` (in the usual case, see :ref:`preblur` for a different definition).
+
+    Parameters
+    ----------
+    K : :py:class:`.Kernel`
+        the kernel to use
+    G : array
+        the Green function data
+    err : array
+        the error of the Green function data (must have the same length
+        as G)
+    """
+
+    @cached
+    def f(self, A):
+        diff = np.dot(self.K.K, view_complex(A)) - self.G
+        return sum(np.abs(diff)**2 / self.err**2)
+
+    @cached
+    def d(self, A):
+        diff = np.dot(self.K.K, view_complex(A)) - self.G
+        return view_real(2 * np.dot(diff / self.err**2,
+                                    np.conjugate(self.K.K)))
+
+    @cached
+    def dd(self, A):
+        # this is constant
+        return self.d2
+
+    def parameter_change(self):
+        """ Notify that the parameters (either ``K`` or ``err``) have changed """
+        # we calculate the value of the second derivative as it is constant
+        if self.K is not None and self.err is not None:
+            N_w = self.K.K.shape[-1]
+            E = 2 * np.einsum('il,ik,i->kl', np.conjugate(self.K.K),
+                              self.K.K, 1. / self.err**2)
+            self.d2 = np.zeros((N_w, 2, N_w, 2))
+            self.d2[:, 0, :, 0] = np.real(E)
+            self.d2[:, 0, :, 1] = np.imag(E)
+            self.d2[:, 1, :, 1] = -np.imag(E)
+            self.d2[:, 1, :, 1] = np.real(E)
+
+    @property
+    def input_size(self):
+        return (self.K.K.shape[1], 2)
+
+    @property
+    def axes_preference(self):
+        return (0, 1)
+
 
 # =====================================================================
 #  Entropy
@@ -395,6 +478,14 @@ class Entropy(DoublyDerivableFunction):
             self.parameter_change()
 
     omega = property(get_omega, set_omega)
+
+    @property
+    def input_size(self):
+        return (len(self.D.D),)
+
+    @property
+    def axes_preference(self):
+        return (0,)
 
 
 class NormalEntropy(Entropy):
@@ -469,8 +560,62 @@ class PlusMinusEntropy(NormalEntropy):
 
     @cached
     def dd(self, A):
-        return super(PlusMinusEntropy, self).dd(
-            self._A_plus(A) + self._A_minus(A))
+        arg = self._A_plus(A) + self._A_minus(A)
+        return super(PlusMinusEntropy, self).dd(arg)
+
+
+class ComplexPlusMinusEntropy(PlusMinusEntropy):
+    """ The Plus-Minus entropy for complex A
+
+    This calculates the entropy as
+
+    .. math ::
+
+        S = S_{plusminus}(\mathrm{Re}\, H) + S_{plusminus}(\mathrm{Im}\, H),
+
+    where :math:`S_{plusminus}` is the :py:class:`.PlusMinusEntropy`.
+
+    Note that :math:`H = A\Delta\omega` (in the usual case, see :ref:`preblur` for a different definition).
+    Also, the default model usually includes the :math:`\Delta\omega`.
+
+    Parameters
+    ----------
+    D : DefaultModel
+        the default model
+    """
+    @cached
+    def f(self, A):
+        A_real = view_complex(A).real
+        A_imag = view_complex(A).imag
+        return super(ComplexPlusMinusEntropy, self).f(A_real) + \
+            super(ComplexPlusMinusEntropy, self).f(A_imag)
+
+    @cached
+    def d(self, A):
+        A_real = view_complex(A).real
+        A_imag = view_complex(A).imag
+        return np.column_stack(
+            (super(ComplexPlusMinusEntropy, self).d(A_real),
+             super(ComplexPlusMinusEntropy, self).d(A_imag)))
+
+    @cached
+    def dd(self, A):
+        A_real = view_complex(A).real
+        A_imag = view_complex(A).imag
+        dd_re = super(ComplexPlusMinusEntropy, self).dd(A_real)
+        dd_im = super(ComplexPlusMinusEntropy, self).dd(A_imag)
+        dd = np.zeros((dd_re.shape[0], 2, dd_re.shape[1], 2))
+        dd[:, 0, :, 0] = dd_re
+        dd[:, 1, :, 1] = dd_im
+        return dd
+
+    @property
+    def input_size(self):
+        return (len(self.D.D), 2)
+
+    @property
+    def axes_preference(self):
+        return (0, 1)
 
 
 class AbsoluteEntropy(Entropy):
@@ -563,6 +708,14 @@ class GenericH_of_v(DoublyDerivableFunction, InvertibleFunction):
 
     omega = property(get_omega, set_omega)
 
+    @property
+    def input_size(self):
+        return (len(self.K.S),)
+
+    @property
+    def axes_preference(self):
+        return (0,)
+
 
 class NormalH_of_v(GenericH_of_v):
     """ Bryan's parametrization H(v)
@@ -639,8 +792,85 @@ class PlusMinusH_of_v(GenericH_of_v):
 
     @cached
     def inv(self, A):
-        return np.dot(self.K.V.transpose(), safelog(
+        return np.dot(self.K.V.transpose().conjugate(), safelog(
             (A + np.sqrt(A**2 + 4 * self.D.D**2)) / (2 * self.D.D)))
+
+
+class ComplexPlusMinusH_of_v(PlusMinusH_of_v):
+    """ Complex plus/minus parametrization H(v)
+
+    This should be used with the :py:class:`.ComplexPlusMinusEntropy`.
+    The parametrization is
+
+    .. math::
+
+        H(v) = D (e^{Vv} - e^{-Vv}) TODO
+
+    where :math:`V` is the matrix of the right-singular vectors of the
+    kernel.
+
+    Parameters
+    ----------
+    D : DefaultModel
+        the default model to use
+    K : :py:class:`.Kernel`
+        the kernel to use
+    """
+
+    @cached
+    def f(self, v):
+        return view_real(
+            super(ComplexPlusMinusH_of_v, self).f(
+                view_complex(v, reshape=False)))
+
+    @cached
+    def d(self, v):
+        v_cplx = view_complex(v, reshape=False)
+        cW = np.cosh(np.dot(self.K.V, v_cplx))
+        ret = np.zeros((len(self.K.V), 2, len(v)))
+        ret[:, 0, ::2] = 2 * self.D.D[:, np.newaxis] * \
+            np.real(self.K.V * cW[:, np.newaxis])
+        ret[:, 0, 1::2] = -2 * self.D.D[:, np.newaxis] * \
+            np.imag(self.K.V * cW[:, np.newaxis])
+        ret[:, 1, ::2] = 2 * self.D.D[:, np.newaxis] * \
+            np.imag(self.K.V * cW[:, np.newaxis])
+        ret[:, 1, 1::2] = 2 * self.D.D[:, np.newaxis] * \
+            np.real(self.K.V * cW[:, np.newaxis])
+        return view_real(ret, reshape=False)
+
+    @cached
+    def dd(self, v):
+        v_cplx = view_complex(v, reshape=False)
+        VVsW = np.einsum('jt,jq,j->jtq', self.K.V, self.K.V,
+                         np.sinh(np.dot(self.K.V, v_cplx)))
+        ret = np.zeros((len(self.K.V), 2, len(v), len(v)))
+        ret[:, 0, ::2, ::2] = 2 * self.D.D[:, np.newaxis, np.newaxis] * \
+            np.real(VVsW)
+        ret[:, 0, 1::2, 1::2] = -ret[:, 0, ::2, ::2]
+        ret[:, 0, ::2, 1::2] = -2 * self.D.D[:, np.newaxis, np.newaxis] * \
+            np.imag(VVsW)
+        ret[:, 0, 1::2, ::2] = ret[:, 0, ::2, 1::2]
+        ret[:, 1, ::2, ::2] = 2 * self.D.D[:, np.newaxis, np.newaxis] * \
+            np.imag(VVsW)
+        ret[:, 1, 1::2, 1::2] = -ret[:, 1, ::2, ::2]
+        ret[:, 1, ::2, 1::2] = 2 * self.D.D[:, np.newaxis, np.newaxis] * \
+            np.real(VVsW)
+        ret[:, 1, 1::2, ::2] = ret[:, 1, ::2, 1::2]
+        return ret
+
+    @cached
+    def inv(self, A):
+        return view_real(
+            super(ComplexPlusMinusH_of_v, self).inv(
+                view_complex(A)), reshape=False)
+
+    @property
+    def input_size(self):
+        return (2 * len(self.K.S),)
+
+    @property
+    def axes_preference(self):
+        return (0,)
 
 
 class NoExpH_of_v(GenericH_of_v):
@@ -716,7 +946,10 @@ class IdentityA_of_H(GenericA_of_H):
 
     @cached
     def f(self, H):
-        return H / self._omega.delta
+        if(H.ndim == 2):
+            return view_complex(H / self._omega.delta[:, np.newaxis])
+        else:
+            return H / self._omega.delta
 
     @cached
     def d(self, H):
@@ -728,7 +961,7 @@ class IdentityA_of_H(GenericA_of_H):
 
     @cached
     def inv(self, A):
-        return A * self._omega.delta
+        return view_real(A * self._omega.delta)
 
 
 class PreblurA_of_H(GenericA_of_H):
