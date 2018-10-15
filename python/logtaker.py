@@ -64,15 +64,14 @@ class Logtaker(object):
             self.log_time()
             self.logged_message("MaxEnt run")
             self.logged_message("TRIQS application maxent")
+            self.logged_message("Copyright(C) 2018 Gernot J. Kraberger\n" +
+                                "Copyright(C) 2018 Simons Foundation\n" +
+                                "Authors: Gernot J. Kraberger and Manuel Zingl")
+            self.logged_message("This program comes with ABSOLUTELY NO WARRANTY.\n" +
+                                "This is free software, and you are welcome to redistribute" +
+                                "it under certain conditions; see file LICENSE.")
             self.logged_message(
-                """Copyright(C) 2018 Gernot J. Kraberger
-                Copyright (C) 2018 Simons Foundation
-                Authors: Gernot J. Kraberger and Manuel Zingl""")
-            self.logged_message('''This program comes with ABSOLUTELY NO WARRANTY.
-This is free software, and you are welcome to redistribute it
-under certain conditions; see file LICENSE''')
-            self.logged_message(
-                'Please cite this code and the appropriate original papers (see documentation).\n')
+                "Please cite this code and the appropriate original papers (see documentation).\n")
             self._welcome_message_printed = True
 
     def verbosity_message(self, msg, iserr=False, *args, **kwargs):
