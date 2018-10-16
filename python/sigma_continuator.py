@@ -88,8 +88,8 @@ class SigmaContinuator(object):
                 Aaux_w[name], w_points, *args, **kwargs)) for name in list(self.S_iw.indices)]))
 
         else:
-            if type(Aaux_w).__name__ != 'np.ndarray':
-                raise Exception('Please supply Aaux_w as a np.ndarray.')
+            if type(Aaux_w).__name__ in ['np.ndarray','numpy.ndarray']:
+                raise Exception('Please supply Aaux_w as a numpy.ndarray.')
 
             self.set_Gaux_w(get_G_w_from_A_w(
                 Aaux_w, w_points, *args, **kwargs))
