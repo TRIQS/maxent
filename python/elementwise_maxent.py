@@ -319,12 +319,12 @@ class ElementwiseMaxEnt(object):
             The Green function
         """
 
-        if type(G_tau).__name__ == 'BlockGf':
+        if isinstance(G_tau, BlockGf):
             raise NotImplementedError(
                 'TRIQS BlockGfs are not supported by TauMaxEnt.\n' +
                 'Consider looping over over the blocks and calling TauMaxEnt individually for each GfImTime.')
 
-        if type(G_tau).__name__ != 'GfImTime':
+        if not isinstance(G_tau.mesh, MeshImTime):
             raise Exception(
                 'set_G_tau only accepts TRIQS GfImTime objects.\n' +
                 'Use the appropriate set_* method for other data formats.')

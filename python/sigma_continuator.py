@@ -88,8 +88,8 @@ class SigmaContinuator(object):
                 Aaux_w[name], w_points, *args, **kwargs)) for name in list(self.S_iw.indices)]))
 
         else:
-            if type(Aaux_w).__name__ in ['np.ndarray','numpy.ndarray']:
-                raise Exception('Please supply Aaux_w as a numpy.ndarray.')
+            if not isinstance(Aaux_w, np.ndarray):
+                raise Exception('Please supply Aaux_w as a numpy ndarray.')
 
             self.set_Gaux_w(get_G_w_from_A_w(
                 Aaux_w, w_points, *args, **kwargs))
@@ -224,6 +224,7 @@ class InversionSigmaContinuator(SigmaContinuator):
         self.S_w = self.Gaux_w.copy()
         map(_calculate_s_w, self.S_w) if self._BlockGf else _calculate_s_w(
             ('0', self.S_w))
+
 
 try:
     from pytriqs.archive.hdf_archive_schemes import register_class
