@@ -21,9 +21,11 @@ from __future__ import print_function
 from triqs_maxent.omega_meshes import *
 import numpy as np
 import copy
+from triqs_maxent.triqs_support import assert_text_files_equal
+import sys
+
+
 # the old get_delta function
-
-
 def get_delta(v):
     """ Get the integration delta for arbitrarily-spaced vector
 
@@ -43,37 +45,48 @@ def get_delta(v):
     delta[-1] = (v[-1] - v[-2]) / 2.0
     return delta
 
-for mesh in [LinearOmegaMesh, LorentzianOmegaMesh, LorentzianSmallerOmegaMesh,
-             HyperbolicOmegaMesh]:
-    print(mesh.__name__)
-    m = mesh(omega_min=-10, omega_max=10, n_points=10)
-    for w in m:
-        print('%.8f' % w)
-    print('-' * 80)
 
-    maxdiff = np.max(np.abs(get_delta(m) - m.delta))
-    assert maxdiff < 1.e-15, "delta not correct (diff {})".format(maxdiff)
+def testfunction():
+    for mesh in [LinearOmegaMesh, LorentzianOmegaMesh,
+                 LorentzianSmallerOmegaMesh, HyperbolicOmegaMesh]:
+        print(mesh.__name__)
+        m = mesh(omega_min=-10, omega_max=10, n_points=10)
+        for w in m:
+            print('%.8f' % w)
+        print('-' * 80)
 
-    func = np.random.rand(len(m))
-    integral1 = np.trapz(func, m)
-    integral2 = np.sum(func * m.delta)
-    assert np.abs(integral1 - integral2) < 1.e-14, "integration does not match"
+        maxdiff = np.max(np.abs(get_delta(m) - m.delta))
+        assert maxdiff < 1.e-15, "delta not correct (diff {})".format(maxdiff)
 
-meshcopy = m.copy()
-assert np.all(meshcopy == m), "m.copy(): data not equal"
-assert meshcopy.omega_min == m.omega_min, "m.copy(): omega_min not equal"
-assert meshcopy.omega_max == m.omega_max, "m.copy(): omega_max not equal"
-assert meshcopy.n_points == m.n_points, "m.copy(): n_points not equal"
+        func = np.random.rand(len(m))
+        integral1 = np.trapz(func, m)
+        integral2 = np.sum(func * m.delta)
+        assert np.abs(integral1 - integral2) < 1.e-14,\
+            "integration does not match"
 
-meshcopy = copy.deepcopy(m)
-assert np.all(meshcopy == m), "copy.deepcopy: data not equal"
-assert meshcopy.omega_min == m.omega_min, "copy.deepcopy: omega_min not equal"
-assert meshcopy.omega_max == m.omega_max, "copy.deepcopy: omega_max not equal"
-assert meshcopy.n_points == m.n_points, "copy.deepcopy: n_points not equal"
+    meshcopy = m.copy()
+    assert np.all(meshcopy == m), "m.copy(): data not equal"
+    assert meshcopy.omega_min == m.omega_min, "m.copy(): omega_min not equal"
+    assert meshcopy.omega_max == m.omega_max, "m.copy(): omega_max not equal"
+    assert meshcopy.n_points == m.n_points, "m.copy(): n_points not equal"
 
-# The following does not work. We call it a feature now.
-# meshcopy = np.copy(m)
-# assert np.all(meshcopy == m), "np.copy: data not equal"
-# assert meshcopy.omega_min == m.omega_min, "np.copy: omega_min not equal"
-# assert meshcopy.omega_max == m.omega_max, "np.copy: omega_max not equal"
-# assert meshcopy.n_points == m.n_points, "np.copy: n_points not equal"
+    meshcopy = copy.deepcopy(m)
+    assert np.all(meshcopy == m), "copy.deepcopy: data not equal"
+    assert meshcopy.omega_min == m.omega_min, "copy.deepcopy: omega_min not equal"
+    assert meshcopy.omega_max == m.omega_max, "copy.deepcopy: omega_max not equal"
+    assert meshcopy.n_points == m.n_points, "copy.deepcopy: n_points not equal"
+
+    # The following does not work. We call it a feature now.
+    # meshcopy = np.copy(m)
+    # assert np.all(meshcopy == m), "np.copy: data not equal"
+    # assert meshcopy.omega_min == m.omega_min, "np.copy: omega_min not equal"
+    # assert meshcopy.omega_max == m.omega_max, "np.copy: omega_max not equal"
+    # assert meshcopy.n_points == m.n_points, "np.copy: n_points not equal"
+
+
+with open('omega_meshes.out', 'w') as out:
+    sys.stdout = out
+
+    testfunction()
+
+assert_text_files_equal('omega_meshes.ref', 'omega_meshes.out')

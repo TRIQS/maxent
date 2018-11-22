@@ -19,7 +19,8 @@
 
 from __future__ import absolute_import, print_function
 from triqs_maxent.logtaker import Logtaker, VerbosityFlags
-import hashlib
+from triqs_maxent.triqs_support import assert_text_files_equal
+import sys
 
 logflags = [
     VerbosityFlags.Quiet,                              # 0
@@ -33,32 +34,28 @@ logflags = [
     VerbosityFlags.Default,                            # 8
 ]
 
-l = Logtaker()
-l.open_logfile('logtaker.dat', False)
+with open('logtaker.out', 'w') as out:
+    sys.stdout = out
 
-for i, flag in enumerate(logflags):
-    l.verbose = flag
-    l.message(VerbosityFlags.Quiet, "=== Test #{} ===", i)
-    l.message(VerbosityFlags.Header, "This is a header message.")
-    l.message(VerbosityFlags.ElementInfo, "This is an element info message.")
-    l.message(VerbosityFlags.Timing, "This is a timing message.")
-    l.message(VerbosityFlags.AlphaLoop, "This is an alpha loop message.")
-    l.message(VerbosityFlags.SolverDetails,
-              "This is a solver details message.")
-    l.error_message("This is an error message")
-    l.message(VerbosityFlags.Timing | VerbosityFlags.Header,
-              "This is a header + timing message.")
+    l = Logtaker()
+    l.open_logfile('logtaker.dat', False)
 
-l.close_logfile()
+    for i, flag in enumerate(logflags):
+        l.verbose = flag
+        l.message(VerbosityFlags.Quiet, "=== Test #{} ===", i)
+        l.message(VerbosityFlags.Header, "This is a header message.")
+        l.message(
+            VerbosityFlags.ElementInfo,
+            "This is an element info message.")
+        l.message(VerbosityFlags.Timing, "This is a timing message.")
+        l.message(VerbosityFlags.AlphaLoop, "This is an alpha loop message.")
+        l.message(VerbosityFlags.SolverDetails,
+                  "This is a solver details message.")
+        l.error_message("This is an error message")
+        l.message(VerbosityFlags.Timing | VerbosityFlags.Header,
+                  "This is a header + timing message.")
 
+    l.close_logfile()
 
-def md5(fname):
-    hash_md5 = hashlib.md5()
-    with open(fname, "rb") as f:
-        for chunk in iter(lambda: f.read(4096), b""):
-            hash_md5.update(chunk)
-    return hash_md5.hexdigest()
-
-md5_1 = md5('logtaker.dat')
-md5_2 = md5('logtaker.dat.ref')
-assert md5_1 == md5_2, "logtaker file output differs"
+assert_text_files_equal('logtaker.out', 'logtaker.ref')
+assert_text_files_equal('logtaker.dat', 'logtaker.dat.ref')

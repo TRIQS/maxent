@@ -26,6 +26,7 @@ except ImportError:
     # for old versions of the decorator library
     from decorator import decorator
     decorate = lambda a, b: decorator(b, a)
+import hashlib
 
 
 def if_triqs_2():
@@ -76,3 +77,16 @@ def require_triqs(func):
     new_func = decorate(func, _require_triqs)
     update_wrapper(new_func, func)
     return new_func
+
+def assert_text_files_equal(fname1, fname2):
+
+    def md5(fname):
+        hash_md5 = hashlib.md5()
+        with open(fname, "rb") as f:
+            for chunk in iter(lambda: f.read(4096), b""):
+                hash_md5.update(chunk)
+        return hash_md5.hexdigest()
+
+    md5_1 = md5(fname1)
+    md5_2 = md5(fname2)
+    assert md5_1 == md5_2, "files {} and {} differ".format(fname1, fname2)

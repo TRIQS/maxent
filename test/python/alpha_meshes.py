@@ -19,36 +19,42 @@
 
 from __future__ import print_function
 from triqs_maxent.alpha_meshes import *
+from triqs_maxent.triqs_support import assert_text_files_equal
+import sys
 
-for mesh in [LinearAlphaMesh, LogAlphaMesh]:
+with open('alpha_meshes.out', 'w') as out:
+    sys.stdout = out
+
+    for mesh in [LinearAlphaMesh, LogAlphaMesh]:
+        print(mesh.__name__)
+        m = mesh(alpha_min=1.e-4, alpha_max=1.e2, n_points=10)
+        for w in m:
+            print('%.8f' % w)
+        print('-' * 80)
+
+        try:
+            mesh(alpha_min=2, alpha_max=1)
+            raise Exception('No error thrown when alpha_min > alpha max')
+        except:
+            pass
+
+        try:
+            mesh(alpha_min=-1, alpha_max=2)
+            raise Exception('No error thrown when alpha < 0')
+        except:
+            pass
+
+    mesh = DataAlphaMesh
     print(mesh.__name__)
-    m = mesh(alpha_min=1.e-4, alpha_max=1.e2, n_points=10)
+    m = mesh(np.linspace(1.e-3, 100, 10))
     for w in m:
         print('%.8f' % w)
     print('-' * 80)
 
     try:
-        mesh(alpha_min=2, alpha_max=1)
-        raise Exception('No error thrown when alpha_min > alpha max')
-    except:
-        pass
-
-    try:
-        mesh(alpha_min=-1, alpha_max=2)
+        mesh(np.linspace(-1, 10))
         raise Exception('No error thrown when alpha < 0')
     except:
         pass
 
-
-mesh = DataAlphaMesh
-print(mesh.__name__)
-m = mesh(np.linspace(1.e-3, 100, 10))
-for w in m:
-    print('%.8f' % w)
-print('-' * 80)
-
-try:
-    mesh(np.linspace(-1, 10))
-    raise Exception('No error thrown when alpha < 0')
-except:
-    pass
+assert_text_files_equal('alpha_meshes.out', 'alpha_meshes.ref')
