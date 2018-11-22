@@ -26,6 +26,7 @@ elif if_triqs_2():
 from .tau_maxent import TauMaxEnt
 from .default_models import *
 from .maxent_result import MaxEntResult
+from .logtaker import VerbosityFlags
 import numpy as np
 import copy
 
@@ -191,7 +192,8 @@ class ElementwiseMaxEnt(object):
         self.prepare_maxent_result(overwrite=False)
         i, j = element
         if i == j:  # diagonal
-            self.maxent_diagonal.logtaker.logged_message(
+            self.maxent_diagonal.logtaker.message(
+                VerbosityFlags.ElementInfo,
                 "Calling MaxEnt for element {i} {i}".format(i=i))
             self.set_G_element(self.maxent_diagonal,
                                self.G_mat, (i, i), True)
@@ -201,10 +203,13 @@ class ElementwiseMaxEnt(object):
                                      complex_index=0 if re else 1)
         else:  # off-diagonal
             if (self.use_hermiticity and (i > j)):
-                self.maxent_offdiagonal.logtaker.logged_message(
-                    "Element {} {} not calculated, can be determined from hermiticity".format(i, j))
+                self.maxent_offdiagonal.logtaker.message(
+                    VerbosityFlags.ElementInfo,
+                    "Element {} {} not calculated, "
+                    "can be determined from hermiticity".format(i, j))
                 return self.maxent_result
-            self.maxent_offdiagonal.logtaker.logged_message(
+            self.maxent_offdiagonal.logtaker.message(
+                VerbosityFlags.ElementInfo,
                 "Calling MaxEnt for element {} {} ".format(i, j))
             self.set_G_element(self.maxent_offdiagonal,
                                self.G_mat, (i, j), re)
@@ -226,8 +231,8 @@ class ElementwiseMaxEnt(object):
             (yet)
         """
 
-        self.maxent_diagonal.logtaker.logged_message(
-            "Calculating diagonal elements.")
+        self.maxent_diagonal.logtaker.message(VerbosityFlags.ElementInfo,
+                                              "Calculating diagonal elements.")
         for i in xrange(self.shape[0]):
             self.run_element((i, i))
             if self.use_complex and \
@@ -251,7 +256,8 @@ class ElementwiseMaxEnt(object):
             (yet)
         """
 
-        self.maxent_offdiagonal.logtaker.logged_message(
+        self.maxent_offdiagonal.logtaker.message(
+            VerbosityFlags.ElementInfo,
             "Calculating off-diagonal elements.")
         for i in xrange(self.shape[0]):
             for j in xrange(self.shape[1]):
@@ -621,7 +627,8 @@ class PoormanMaxEnt(ElementwiseMaxEnt):
         """
 
         self.prepare_maxent_result(overwrite=False)
-        self.maxent_offdiagonal.logtaker.logged_message(
+        self.maxent_offdiagonal.logtaker.message(
+            VerbosityFlags.ElementInfo,
             "Calculating off-diagonal elements using default model from diagonal solution")
         for i in xrange(self.shape[0]):
             for j in xrange(self.shape[1]):

@@ -21,7 +21,7 @@ from __future__ import absolute_import, print_function
 from .alpha_meshes import LogAlphaMesh
 from .cost_functions import MaxEntCostFunction, BryanCostFunction
 from .minimizers import LevenbergMinimizer
-from .logtaker import Logtaker
+from .logtaker import Logtaker, VerbosityFlags
 from .maxent_result import MaxEntResult
 from .analyzers import *
 from .probabilities import NormalLogProbability
@@ -188,7 +188,9 @@ class MaxEntLoop(object):
         if(np.any(np.iscomplex(A_min))):
             A_min = view_real(A_min)
         chi2_min = self.chi2(A_min).f()
-        self.logtaker.logged_message("Minimal chi2: {}", chi2_min)
+        self.logtaker.message(VerbosityFlags.Header,
+                              "Minimal chi2: {}",
+                              chi2_min)
 
         # the initial value of v
         H = np.empty(self.chi2.input_size)
@@ -220,11 +222,13 @@ class MaxEntLoop(object):
                 raise Exception(
                     "Unknown value {} for scale_alpha".format(
                         self.scale_alpha))
-            self.logtaker.logged_message(
+            self.logtaker.message(
+                VerbosityFlags.Header,
                 'scaling alpha by a factor {} (number of data points)'.format(scale_alpha))
         else:
             scale_alpha = self.scale_alpha
-            self.logtaker.logged_message(
+            self.logtaker.message(
+                VerbosityFlags.Header,
                 'scaling alpha by a factor {}'.format(scale_alpha))
 
         self.check_consistency()
@@ -241,7 +245,8 @@ class MaxEntLoop(object):
                 v = self.minimizer.minimize(self.cost_function, v)
                 Q_min = self.cost_function(v)
                 # report
-                self.logtaker.logged_message(
+                self.logtaker.message(
+                    VerbosityFlags.AlphaLoop,
                     "alpha[{:" + str(int(np.ceil(np.log10(len(self.alpha_mesh))))) + "d}] = {:16.8e}, chi2 = {:16.8e}, n_iter={:8d}{}",
                     i_alpha,
                     alpha * scale_alpha,
@@ -279,14 +284,15 @@ class MaxEntLoop(object):
                     raise
 
         if any_not_converged:
-            self.logtaker.logged_message(
+            self.logtaker.message(
+                VerbosityFlags.AlphaLoop,
                 "\n! ... The minimizer did not converge. Results might be wrong.\n")
 
         run_time = result.end_timing(matrix_element=matrix_element,
                                      complex_index=complex_index)
 
-        self.logtaker.logged_message("MaxEnt loop finished in {}",
-                                     run_time)
+        self.logtaker.message(VerbosityFlags.Timing,
+                              "MaxEnt loop finished in {}", run_time)
 
         # analyze to get the one true spectral function from A(alpha)
         result.analyze(self.analyzers,
@@ -330,22 +336,50 @@ class MaxEntLoop(object):
         assert np.all(self.H_of_v.D.D == self.D.D)
         assert np.all(self.S.D.D == self.D.D)
 
-    def set_verbosity(self, v):
+    def set_verbosity(self, verbosity=None, add=None, remove=None,
+                      change_callback=True):
         """ Set the verbosity
 
         Parameters
         ----------
-        v : int
-            the verbosity level; 0 means no extra information, 1 means
-            extra information (one line that is continuously updated),
-            2 means extra information (print all lines)
+        verbosity : :py:class:`.VerbosityFlags`
+            if not None, the verbosity is set to this value;
+            e.g.::
+
+                VerbosityFlags.Header | VerbosityFlags.Timing
+
+            to show just the header and the timing information.
+        add : :py:class:`.VerbosityFlags`
+            if not None, the verbosity flags given are added to the
+            verbosity flags already set. If also verbosity is not None,
+            this is performed *after* setting ``verbosity``.
+        remove : :py:class:`.VerbosityFlags`
+            if not None, the verbosity flags given are removed from
+            the verbosity flags already set. If also ``verbosity`` or
+            ``add`` is not None, this is performed after the other two.
+        change_callback : bool
+            whether to turn on/off the callback in the minimizer as needed
+            according to the verbosity flags given (the minimizer is faster
+            if it does not have to produce verbose info)
         """
-        if v == 0:
-            self.minimizer.verbose_callback = None
-            self.logtaker.verbose = v
-        else:
-            self.minimizer.verbose_callback = self.logtaker.verbosity_message
-            self.logtaker.verbose = v
+
+        if verbosity is not None:
+            self.logtaker.verbose = verbosity
+
+        if add is not None:
+            self.logtaker.verbose |= add
+
+        if remove is not None:
+            self.logtaker.verbose &= ~ remove
+
+        # generating the verbose message in the minimizer takes some
+        # time that can be saved, therefore we explicitly set the
+        # callback to None if not needed
+        if change_callback:
+            if self.logtaker.verbose & VerbosityFlags.SolverDetails:
+                self.minimizer.verbose_callback = self.logtaker.solver_verbose_callback
+            else:
+                self.minimizer.verbose_callback = None
 
     def get_K(self):
         return self.cost_function.K

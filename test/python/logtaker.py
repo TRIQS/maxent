@@ -18,14 +18,37 @@
 
 
 from __future__ import absolute_import, print_function
-from triqs_maxent.logtaker import Logtaker
+from triqs_maxent.logtaker import Logtaker, VerbosityFlags
 import hashlib
+
+logflags = [
+    VerbosityFlags.Quiet,                              # 0
+    VerbosityFlags.Header,                             # 1
+    VerbosityFlags.ElementInfo,                        # 2
+    VerbosityFlags.Timing,                             # 3
+    VerbosityFlags.AlphaLoop,                          # 4
+    VerbosityFlags.SolverDetails,                      # 5
+    VerbosityFlags.Errors,                             # 6
+    VerbosityFlags.Header | VerbosityFlags.Timing,     # 7
+    VerbosityFlags.Default,                            # 8
+]
 
 l = Logtaker()
 l.open_logfile('logtaker.dat', False)
-l.error_message("Some error.")
-l.verbosity_message("Some verbose stuff.")
-l.logged_message("Some logged message.")
+
+for i, flag in enumerate(logflags):
+    l.verbose = flag
+    l.message(VerbosityFlags.Quiet, "=== Test #{} ===", i)
+    l.message(VerbosityFlags.Header, "This is a header message.")
+    l.message(VerbosityFlags.ElementInfo, "This is an element info message.")
+    l.message(VerbosityFlags.Timing, "This is a timing message.")
+    l.message(VerbosityFlags.AlphaLoop, "This is an alpha loop message.")
+    l.message(VerbosityFlags.SolverDetails,
+              "This is a solver details message.")
+    l.error_message("This is an error message")
+    l.message(VerbosityFlags.Timing | VerbosityFlags.Header,
+              "This is a header + timing message.")
+
 l.close_logfile()
 
 

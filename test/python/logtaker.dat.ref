@@ -1,2 +1,24 @@
-ERROR: Some error.
-Some logged message.
+=== Test #0 ===
+=== Test #1 ===
+This is a header message.
+=== Test #2 ===
+This is an element info message.
+=== Test #3 ===
+This is a timing message.
+=== Test #4 ===
+This is an alpha loop message.
+=== Test #5 ===
+This is a solver details message.
+=== Test #6 ===
+ERROR: This is an error message
+=== Test #7 ===
+This is a header message.
+This is a timing message.
+This is a header + timing message.
+=== Test #8 ===
+This is a header message.
+This is an element info message.
+This is a timing message.
+This is an alpha loop message.
+ERROR: This is an error message
+This is a header + timing message.
