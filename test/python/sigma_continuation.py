@@ -121,17 +121,14 @@ assert_arrays_are_close(SC3.Gaux_iw['b1'].data, giw.data)
 assert_arrays_are_close(SC3.Gaux_iw['b2'].data, giw.data)
 
 # Write to h5
-ar = HDFArchive('sigma_continuation.out.h5', 'w')
-ar['SC1b'] = SC1b
-ar['SC2b'] = SC2b
-del ar
+with HDFArchive('sigma_continuation.out.h5', 'w') as ar:
+    ar['SC1b'] = SC1b
+    ar['SC2b'] = SC2b
 
 # Read from h5
-ar = HDFArchive('sigma_continuation.out.h5', 'r')
-SC1c = ar['SC1b']
-SC2c = ar['SC2b']
-del ar
-
+with HDFArchive('sigma_continuation.out.h5', 'r') as ar:
+    SC1c = ar['SC1b']
+    SC2c = ar['SC2b']
 
 def object_dict_equal(a, b):
     for key in a:

@@ -71,13 +71,12 @@ tm.alpha_mesh = alpha_mesh
 res_hyp = tm.run()
 
 if generate_ref:
-    ar = HDFArchive('srvo3_mesh_and_ALPS.ref.h5', 'w')
-    alps_data = np.loadtxt('srvo3_mesh_and_ALPS_maxspec.dat')
-    ar['A_maxspec_ALPS'] = [alps_data[:, 0], alps_data[:, 1]]
-    ar['A_maxent_lin'] = [res_lin.omega, res_lin.A[1, :]]
-    ar['A_maxent_hyp'] = [res_hyp.omega, res_hyp.A[1, :]]
-    ar['A_maxent_lor'] = [res_lor.omega, res_lor.A[1, :]]
-    del ar
+    with HDFArchive('srvo3_mesh_and_ALPS.ref.h5', 'w') as ar:
+        alps_data = np.loadtxt('srvo3_mesh_and_ALPS_maxspec.dat')
+        ar['A_maxspec_ALPS'] = [alps_data[:, 0], alps_data[:, 1]]
+        ar['A_maxent_lin'] = [res_lin.omega, res_lin.A[1, :]]
+        ar['A_maxent_hyp'] = [res_hyp.omega, res_hyp.A[1, :]]
+        ar['A_maxent_lor'] = [res_lor.omega, res_lor.A[1, :]]
 
 # compare different meshes
 lin_omega = np.linspace(-om_max, om_max, 500)
@@ -89,14 +88,13 @@ numpy_assert(np.interp(lin_omega, res_lor.omega, res_lor.A[1, :]),
              np.interp(lin_omega, res_hyp.omega, res_hyp.A[1, :]), 2)
 
 # compare to reference data
-ar = HDFArchive('srvo3_mesh_and_ALPS.ref.h5', 'r')
-numpy_assert(res_lin.omega, ar['A_maxent_lin'][0], 6)
-numpy_assert(res_lor.omega, ar['A_maxent_lor'][0], 6)
-numpy_assert(res_hyp.omega, ar['A_maxent_hyp'][0], 6)
-numpy_assert(res_lor.omega, ar['A_maxspec_ALPS'][0], 6)
+with HDFArchive('srvo3_mesh_and_ALPS.ref.h5', 'r') as ar:
+    numpy_assert(res_lin.omega, ar['A_maxent_lin'][0], 6)
+    numpy_assert(res_lor.omega, ar['A_maxent_lor'][0], 6)
+    numpy_assert(res_hyp.omega, ar['A_maxent_hyp'][0], 6)
+    numpy_assert(res_lor.omega, ar['A_maxspec_ALPS'][0], 6)
 
-numpy_assert(res_lin.A[1, :], ar['A_maxent_lin'][1], 6)
-numpy_assert(res_lor.A[1, :], ar['A_maxent_lor'][1], 6)
-numpy_assert(res_hyp.A[1, :], ar['A_maxent_hyp'][1], 6)
-numpy_assert(res_lor.A[1, :], ar['A_maxspec_ALPS'][1], 2)
-del ar
+    numpy_assert(res_lin.A[1, :], ar['A_maxent_lin'][1], 6)
+    numpy_assert(res_lor.A[1, :], ar['A_maxent_lor'][1], 6)
+    numpy_assert(res_hyp.A[1, :], ar['A_maxent_hyp'][1], 6)
+    numpy_assert(res_lor.A[1, :], ar['A_maxspec_ALPS'][1], 2)
