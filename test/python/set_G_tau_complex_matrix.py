@@ -63,19 +63,27 @@ except:
 
 # put it back into TRIQS G_tau and G_iw
 G_tau.data[:, :, :] = G_tau_noise[:, :, :]
-G_iw_rot.set_from_fourier(G_tau)
-level = 13
+
 try:
-    # this is necessary in TRIQS 2.0 but will fail in 1.4
-    from pytriqs.gf.gf_fnt import replace_by_tail
-    tail, err = G_iw_rot.fit_tail(
-        known_moments=np.zeros((1, 2, 2), dtype=np.complex_))
-    replace_by_tail(G_iw_rot, tail, 200)
-    # in TRIQS 2.0 we can only check up to 6 digits because the FT
-    # gives such a high error due to the uncertainty of the tail fit
-    level = 6
+    # this is necessary in TRIQS unstabel but will fail in 1.4
+    # We use the known tail from G_iw_rot for the FT of the noisy data
+    G_iw_rot.set_from_fourier(G_tau, G_iw_rot.fit_tail()[0])
+    level = 9 
 except:
-    pass
+    G_iw_rot.set_from_fourier(G_tau)
+    level = 13
+    try:
+	# this is necessary in TRIQS 2.0 but will fail in 1.4
+	from pytriqs.gf.gf_fnt import replace_by_tail
+	tail, err = G_iw_rot.fit_tail(
+	    known_moments=np.zeros((1, 2, 2), dtype=np.complex_))
+	replace_by_tail(G_iw_rot, tail, 200)
+	# in TRIQS 2.0 we can only check up to 6 digits because the FT
+	# gives such a high error due to the uncertainty of the tail fit
+	level = 6
+    except:
+    	pass
+
 G_tau.set_from_inverse_fourier(G_iw_rot)
 
 save_Gtau = np.zeros((len(tau), 3))
