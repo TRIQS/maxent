@@ -234,10 +234,17 @@ class TauMaxEnt(object):
             supplied ``G_tau`` or as a scalar (then it's the same for
             all :math:`\tau`-values).
         """
+        if not np.all(np.isreal(error)):
+            raise Exception('complex error supplied, only real accepted')
+        else:
+            error = np.real(error)
+
         if isinstance(error, float):
             self.err = error * np.ones(self.G.shape)
-        else:
+        elif len(error) == len(self.G):
             self.err = error
+        else:
+            raise Exception('Supply constant error or with length of G_tau.')
 
         # undo any transformation
         self._transform(None)
