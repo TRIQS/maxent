@@ -239,12 +239,12 @@ class TauMaxEnt(object):
         else:
             error = np.real(error)
 
-        if isinstance(error, float):
+        if not hasattr(error, "__len__"):
             self.err = error * np.ones(self.G.shape)
         elif len(error) == len(self.G):
             self.err = error
         else:
-            raise Exception('Supply constant error or with length of G_tau.')
+            raise Exception('Supply scalar error or with length of G_tau.')
 
         # undo any transformation
         self._transform(None)
