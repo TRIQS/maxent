@@ -117,7 +117,7 @@ try {
           git commit --author='Flatiron Jenkins <jenkins@flatironinstitute.org>' --allow-empty -m 'Generated documentation for ${subdir}' -m '${env.BUILD_TAG} ${commit}'
         """
         // note: credentials used above don't work (need JENKINS-28335)
-        sh "git push origin master"
+        sh "git push origin master || { git pull --rebase origin master && git push origin master ; }"
       }
     } }
   } }
