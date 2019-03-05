@@ -85,7 +85,7 @@ class SigmaContinuator(object):
                     'Indices of Aaux dictionary are not the same as in S_iw')
 
             self.set_Gaux_w(BlockGf(name_block_generator=[(name, get_G_w_from_A_w(
-                Aaux_w[name], w_points, *args, **kwargs)) for name in list(self.S_iw.indices)]))
+                Aaux_w[name], w_points, *args, **kwargs)) for name in list(self.S_iw.indices)], make_copies=False))
 
         else:
             if not isinstance(Aaux_w, np.ndarray):

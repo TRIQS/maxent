@@ -6,6 +6,7 @@ from pytriqs.plot.mpl_interface import oplot
 # load res and SigmaContinuator from h5-file
 res = {}
 with HDFArchive('Sr2RuO4_b37.h5', 'r') as ar:
+    S_iw = ar['S_iw']
     for key in S_iw.indices:
         res[key] = ar['maxent_result_' + key]
     isc = ar['isc']
@@ -21,7 +22,7 @@ isc.set_Gaux_w_from_Aaux_w(Aaux_w, w, np_interp_A=10000,
 
 # save SigmaContinuator again (now it contains S_w)
 with HDFArchive('Sr2RuO4_b37.h5', 'a') as ar:
-    isc = ar['isc']
+    ar['isc'] = isc
 
 # check linfit and plot S_w
 plt.figure()
