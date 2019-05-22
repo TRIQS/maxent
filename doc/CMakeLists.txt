@@ -41,6 +41,6 @@ endforeach()
 # install
 install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/html/ COMPONENT documentation DESTINATION ${DOC_DEST}
  FILES_MATCHING
- REGEX "\\.(html|pdf|png|gif|jpg|js|xsl|css|py|txt|inv|bib)$"
+ REGEX "\\.(html|pdf|png|gif|jpg|js|xsl|css|py|txt|inv|bib|dat|h5)$"
  PATTERN "_*"
 )
