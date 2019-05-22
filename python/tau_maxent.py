@@ -109,7 +109,7 @@ class TauMaxEnt(object):
                 'Please choose one matrix element of G(tau) or use ElementwiseMaxEnt.')
 
         try:
-            # this will work in TRIQS 2.0
+            # this will work in TRIQS 2.1
             tau = np.array(list(G_tau.mesh.values())).real
         except AttributeError:
             # this will work in TRIQS 1.4
@@ -146,8 +146,8 @@ class TauMaxEnt(object):
         G_iw : GfImFreq
             The data for the analytic continuation. A Fourier transform is performed
         np_tau : int
-            Number of target tau points (must be >= ``len(G_iw.mesh)+1)`` or
-            -1; then ``len(G_iw.mesh)+1)`` is chosen)
+            Number of target tau points (must be >= ``(3*len(G_iw.mesh)+1`` or
+            -1; then ``(3*len(G_iw.mesh)+1)`` is chosen)
         **kwargs :
             arguments supplied to :py:meth:`set_G_tau`
         """
@@ -165,9 +165,9 @@ class TauMaxEnt(object):
         if np_tau < 0:
             # this is the shortest mesh that does not provoke an error
             # in set_from_inverse_fourier
-            np_tau = len(G_iw.mesh) + 1
+            np_tau = 3*len(G_iw.mesh)+1
         try:
-            # this will work in TRIQS 2.0
+            # this will work in TRIQS 2.1
             G_tau = GfImTime(beta=G_iw.mesh.beta,
                              target_shape=G_iw.target_shape,
                              n_points=np_tau)

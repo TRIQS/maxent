@@ -11,7 +11,7 @@ if(${TRIQS_V1})
   triqs_prepare_local_pytriqs(${python_destination})
   install(FILES ${CMAKE_CURRENT_BINARY_DIR}/triqs_maxent/version.py DESTINATION ${PYTHON_LIB_DEST})
   install(FILES ${CMAKE_CURRENT_BINARY_DIR}/triqs_maxent/triqs_support.py DESTINATION ${PYTHON_LIB_DEST})
-else() #TRIQS 2.0 and USE_TRIQS=OFF
+else() #TRIQS 2.1 and USE_TRIQS=OFF
   set(package_name "triqs_maxent")
 
   # Create a temporary copy of the python modules so that we can run before installation with the test

@@ -89,7 +89,7 @@ else:
     G_tau_noise[:, 0, 1] = G_tau_noise[:, 1, 0]
     G_tau_noise = G_tau_noise.transpose([1, 2, 0])
     try:
-        # this will work in TRIQS 2.0
+        # this will work in TRIQS 2.1
         tau = np.array(list(G_tau.mesh.values())).real[::10]
     except AttributeError:
         # this will work in TRIQS 1.4

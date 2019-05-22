@@ -19,7 +19,7 @@ example an insulating mock :math:`G(\tau)`, using
 
 .. code-block:: python
 
-    #TRIQS 2.0
+    #TRIQS 2.1
     from pytriqs.gf import *
     #TRIQS 1.4
     from pytriqs.gf.local import *

@@ -39,7 +39,7 @@ else:
     G_iw << SemiCircular(1)
     G_tau = GfImTime(beta=40, indices=[0], n_points=201)
     G_tau.set_from_inverse_fourier(G_iw)
-    # fix for TRIQS 2.0
+    # fix for TRIQS 2.1
     G_tau.data[:] -= G_tau.data.imag * 1.0j
     tm.set_G_tau(G_tau)
     assert np.max(np.abs(tm.G - G_tau.data[:, 0, 0])) < 1.e-14, \

@@ -1,6 +1,6 @@
 from __future__ import absolute_import, print_function
 try:
-    # TRIQS 2.0
+    # TRIQS 2.1
     from pytriqs.gf import *
     GfImFreq
 except NameError:

@@ -37,7 +37,7 @@ if(${TRIQS_V1})
   foreach(t ${all_tests})
     triqs_add_python_test(${t})
   endforeach()
-else() #TRIQS 2.0 and USE_TRIQS=OFF
+else() #TRIQS 2.1 and USE_TRIQS=OFF
   set(python_executable python)
 
   if(${TEST_COVERAGE})

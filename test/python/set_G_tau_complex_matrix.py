@@ -27,13 +27,13 @@ if if_triqs_1():
 elif if_triqs_2():
     from pytriqs.gf import *
 
-noise = 1e-3
-
+noise = 5e-4
+level = 13
 
 def numpy_assert(a, b, dec): return np.testing.assert_almost_equal(
     a, b, decimal=dec)
 
-G_iw = GfImFreq(beta=10, indices=[0, 1], n_points=1000)
+G_iw = GfImFreq(beta=10, indices=[0, 1], n_points=1001)
 G_iw[1, 1] << (4.0 * Flat(0.4) - 2.0 * Flat(0.2)) / 2.0
 G_iw[0, 0] << (8.0 * Flat(0.8) - 2.0 * Flat(0.2)) / 6.0
 
@@ -45,7 +45,7 @@ G_iw_rot = copy.deepcopy(G_iw)
 G_iw_rot.from_L_G_R(R, G_iw, R.conjugate().transpose())
 
 # Generate G_tau_noise
-np_tau = len(G_iw_rot.mesh) + 1
+np_tau = 3*len(G_iw_rot.mesh)+1
 G_tau = GfImTime(beta=G_iw_rot.mesh.beta, indices=G_iw_rot.indices,
                  n_points=np_tau)
 G_tau.set_from_inverse_fourier(G_iw_rot)
@@ -55,7 +55,7 @@ G_tau_noise = G_tau.data + noise * np.random.randn(*np.shape(G_tau.data))
 # Symmetrize G_tau_noise
 G_tau_noise[:, 0, 1] = G_tau_noise[:, 1, 0].conjugate()
 try:
-    # this will work in TRIQS 2.0
+    # this will work in TRIQS 2.1
     tau = np.array(list(G_tau.mesh.values())).real
 except:
     # this will work in TRIQS 1.4
@@ -65,22 +65,17 @@ except:
 G_tau.data[:, :, :] = G_tau_noise[:, :, :]
 
 try:
-    # this is necessary in TRIQS unstabel but will fail in 1.4
+    # this is necessary in TRIQS 2.1 but will fail in 1.4
     # We use the known tail from G_iw_rot for the FT of the noisy data
     G_iw_rot.set_from_fourier(G_tau, G_iw_rot.fit_tail()[0])
-    level = 9 
 except:
     G_iw_rot.set_from_fourier(G_tau)
-    level = 13
     try:
-	# this is necessary in TRIQS 2.0 but will fail in 1.4
+	# this is necessary in TRIQS 2.1 but will fail in 1.4
 	from pytriqs.gf.gf_fnt import replace_by_tail
 	tail, err = G_iw_rot.fit_tail(
 	    known_moments=np.zeros((1, 2, 2), dtype=np.complex_))
 	replace_by_tail(G_iw_rot, tail, 200)
-	# in TRIQS 2.0 we can only check up to 6 digits because the FT
-	# gives such a high error due to the uncertainty of the tail fit
-	level = 6
     except:
     	pass
 
@@ -94,7 +89,6 @@ for i in [0, 1]:
         save_Gtau[:, 1] = np.real(G_tau.data[:, i, j])
         save_Gtau[:, 2] = np.imag(G_tau.data[:, i, j])
         np.savetxt(fn + str(i) + '_' + str(j) + '.dat', save_Gtau)
-
 
 def check_elementwise(ew, dec=13):
     for i in [0, 1]:
@@ -123,7 +117,7 @@ def check_elementwise(ew, dec=13):
 
 # From TRIQS G_iw
 ew0 = ElementwiseMaxEnt(use_hermiticity=True, use_complex=True)
-ew0.set_G_iw(G_iw_rot)
+ew0.set_G_iw(G_iw_rot,np_tau=len(G_tau.mesh))
 check_elementwise(ew0, level)
 
 # From TRIQS G_tau

@@ -4,16 +4,16 @@
 
 
 Installing the TRIQS/maxent package
-======================================
+===================================
 
-For the versions of this code, see :ref:`versions`.
+For the versions of this code, see the :ref:`changelog page <changelog>`.
 
 Prerequisites
 -------------
 
 For using this package, in general, you need the :ref:`TRIQS <triqslibs:welcome>` toolbox. In the following, we will suppose that it is installed in the ``path_to_triqs`` directory.
-Right now, the current TRIQS master version (a.k.a. ``2.0``) is supported as well as the previous master version (a.k.a. ``1.4``).
-Additionally, there is a version with a subset of features that works without TRIQS.
+The code is compatible with TRIQS versions ``1.4`` and ``2.1``. Later versions should also work.
+Additionally, it is possible to install a subset of features that work without a TRIQS installation.
 
 Apart from the packages in the `python standard library <https://docs.python.org/2/library/index.html>`_, the following python packages are needed:
 
@@ -24,16 +24,8 @@ Apart from the packages in the `python standard library <https://docs.python.org
 - `sphinx <http://www.sphinx-doc.org>`_, optional, including extensions and ``numpydoc`` (if ``USE_TRIQS=OFF``) for the documentation, and
 - ``coverage``, optional, for the ``TEST_COVERAGE`` feature.
 
-Installation with TRIQS 2.0 (current master)
---------------------------------------------
-
-.. warning::
-
-    In TRIQS 2.0, the tail fit was changed significantly.
-    This also affects the Fourier transform, which might lead to problems in the ``set_G_iw`` routine.
-    In that case, use ``set_G_tau`` directly and perform the Fourier transform yourself.
-    In the Sigma continuator, the tail is needed, which is taken from a fit in TRIQS 2.0.
-    This can lead to unwanted results if this tail fit fails. Be careful or use an older TRIQS version!
+Installation with TRIQS 2.1
+-----------------------------
 
 #. Download the sources from github::
 
@@ -53,14 +45,13 @@ Installation with TRIQS 2.0 (current master)
      $ cmake ../maxent.src
 
    Do not give the option ``TRIQS_PATH`` as it is used to detect whether
-   TRIQS 2.0 or 1.4 is used.
+   a newer TRIQS version or 1.4 is used.
 
 #. Prepare the code, run the tests and install the application::
 
      $ make
      $ make test
      $ make install
-
 
 For running the code, make sure to source::
 
@@ -95,7 +86,7 @@ Installation with TRIQS 1.4
 
         from pytriqs.applications.dft_tools import *
 
-    However, as ``maxent`` uses the same codebase for TRIQS 1.4 and 2.0,
+    However, as ``maxent`` uses the same codebase for all TRIQS versions,
     we follow the "new" application format, i.e.::
 
         from triqs_maxent import *

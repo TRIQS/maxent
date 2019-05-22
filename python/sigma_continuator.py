@@ -154,10 +154,10 @@ class DirectSigmaContinuator(SigmaContinuator):
                 raise NotImplementedError(
                     'DirectSigmaContinuator not implemented for matrix-valued Sigma')
             try:
-                # this will only work in TRIQS < 1.4
+                # this will only work in TRIQS 1.4
                 tail = g[1].tail
             except:
-                # this will work with TRIQS 2.0
+                # this will work with TRIQS 2.1
                 tail = g[1].fit_tail()[0]
             self._constant_shift[g[0]] = tail[0][0][0]
             self._norm[g[0]] = tail[1][0][0]

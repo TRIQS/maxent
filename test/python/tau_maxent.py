@@ -130,7 +130,6 @@ for field in result1._all_fields:
                                                      getattr(result2, field))
     else:
         numpy_assert(getattr(result1, field), getattr(result2, field))
-
 # check probability
-numpy_assert(result2.probability, [-8476.5281283264321246, -2343.02752795091601, - \
-             704.2831835069059707, -280.2662732287696485, -175.305925543312469], 6)
+numpy_assert(result2.probability, [-24781.17123809, -6875.62358969, \
+        -2038.71744124, -779.74935523, -461.61518625], 6)

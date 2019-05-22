@@ -87,7 +87,7 @@ G_tau_noise = G_tau.data[::10] + noise * \
 G_tau_noise[:, 0, 1] = G_tau_noise[:, 1, 0].conjugate()
 G_tau_noise = G_tau_noise.transpose([1, 2, 0])
 try:
-    # this will work in TRIQS 2.0
+    # this will work in TRIQS 2.1
     tau = np.array(list(G_tau.mesh.values())).real[::10]
 except:
     # this will work in TRIQS 1.4
@@ -157,8 +157,9 @@ try:
     # 0, 0
     A_w_data = -1.0 / np.pi * np.imag(G_w_rot[0, 1].data[:, 0, 0])
 except:
-    # this is for TRIQS 2.0
+    # this is for TRIQS 2.1
     A_w_data = -1.0 / np.pi * np.imag(G_w_rot[0, 1].data[:])
+
 w_pm = np.array(result_pm.omega)
 w_ew = np.array(result_ew.omega)
 A_01_pm = result_pm.analyzer_results[0][1][0]['LineFitAnalyzer']['A_out']

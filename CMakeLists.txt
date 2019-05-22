@@ -26,19 +26,19 @@ if(TRIQS_PATH) # TRIQS 1.4
   set(TRIQS_V2 OFF)
   set(python_destination triqs_maxent)
   set(PYTHON_LIB_DEST ${TRIQS_PYTHON_LIB_DEST_ROOT}/${python_destination})
-elseif(${USE_TRIQS}) # search for TRIQS 2.0 - if not found default to USE_TRIQS=OFF
+elseif(${USE_TRIQS}) # search for TRIQS 2.1 - if not found default to USE_TRIQS=OFF
   # Try to find TRIQS and Cpp2Py
   project(maxent CXX)
   option(BUILD_SHARED_LIBS "Build shared libraries" ON)
   find_package(TRIQS 2.0 QUIET)
   find_package(Cpp2Py 1.5 QUIET)
   if ((TRIQS_FOUND) AND (Cpp2Py_FOUND))
-	message(STATUS "--------- Installing as TRIQS 2.0 package ---------")
+	message(STATUS "--------- Installing as TRIQS ${TRIQS_VERSION} package ---------")
 	set(TRIQS_V1 OFF)
 	set(TRIQS_V2 ON)
 	set(PYTHON_LIB_DEST ${CPP2PY_PYTHON_LIB_DEST_ROOT}/triqs_maxent)
   else()
-	message(STATUS "Cpp2Py 1.5 / TRIQS 2.0 not found.")
+	message(STATUS "Cpp2Py / TRIQS not found.")
 	message(STATUS "Defaulting back to installation without TRIQS")
 	set(USE_TRIQS OFF)
   endif()

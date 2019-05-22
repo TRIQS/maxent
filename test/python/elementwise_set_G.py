@@ -23,15 +23,13 @@ if if_triqs_1():
     from pytriqs.gf.local import *
 elif if_triqs_2():
     from pytriqs.gf import *
-if if_triqs_2():
-    # TRIQS 2.0 gives data with higher error
-    level = 1.e-12
-else:  # 1.0 and USE_TRIQS=OFF
-    level = 1.e-15
+
 from triqs_maxent import *
 from triqs_maxent.elementwise_maxent import *
 from itertools import product
 import numpy as np
+
+level = 1.e-13
 
 em = ElementwiseMaxEnt()
 
@@ -43,7 +41,7 @@ if not if_no_triqs():
     G_tau = GfImTime(beta=40, indices=[0, 1], n_points=2051)
     G_tau.set_from_inverse_fourier(G_iw)
 
-    em.set_G_iw(G_iw)
+    em.set_G_iw(G_iw, np_tau=len(G_tau.mesh))
     for element in product(range(2), range(2)):
         em.set_G_element(em.maxent_diagonal,
                          em.G_mat, element, True)

@@ -14,7 +14,7 @@ if(${TRIQS_V1})
   add_custom_command(OUTPUT ${sphinx_top} DEPENDS ${doc_sources} py_copy
     COMMAND ${CMAKE_BINARY_DIR}/build_pytriqs ${TRIQS_SPHINXBUILD_EXECUTABLE} -c . -b html ${CMAKE_CURRENT_BINARY_DIR} html)
   add_custom_target(doc_sphinx ALL DEPENDS ${sphinx_top})
-else() # TRIQS 2.0 and DOC_WITH_TRIQS=OFF
+else() # TRIQS 2.1 and DOC_WITH_TRIQS=OFF
   add_custom_command(OUTPUT ${sphinx_top} DEPENDS ${doc_sources}
     COMMAND env PYTHONPATH=${CMAKE_BINARY_DIR}/python:$ENV{PYTHONPATH} ${TRIQS_SPHINXBUILD_EXECUTABLE} -c . -j8 -b html ${CMAKE_CURRENT_BINARY_DIR} html)
   add_custom_target(doc_message

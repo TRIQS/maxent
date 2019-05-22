@@ -41,7 +41,7 @@ gt << InverseFourier(giw)
 # Save G_tau to a file
 skip = 1
 try:
-    # this will work in TRIQS 2.0
+    # this will work in TRIQS 2.1
     mesh = np.array(list(gt.mesh.values())).reshape(-1, 1).real
 except AttributeError:
     # this will work in TRIQS 1.4

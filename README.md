@@ -8,14 +8,14 @@ Learn how to use this package in the [documentation](https://triqs.github.io/max
 
 ## Disclaimer
 
-This brand new TRIQS package is currently in **beta** version.
-We have tested the code on multiple problems and made sure
-that the unit tests cover extensive parts of the code.
-However, there is no guarantee that the code is free of bugs.
-Therefore, if you encounter any problems we kindly ask you to
-open an issue report on github. Should you run benchmarks
-and comparison to other analytic continuation packages please
-share your results with us. Any feedback is greatly appreciated.
+   TRIQS/maxent is new TRIQS application made public in 2018.
+   We have tested the code on multiple problems and made sure
+   that the unit tests cover extensive parts of the code.
+   However, there is no guarantee that the code is free of bugs.
+   Therefore, if you encounter any problems we kindly ask you to
+   open an `issue report on github <https://github.com/triqs/maxent/issues>`_.
+   Should you run benchmarks and comparison to other analytic continuation
+   packages please share your results with us. Any feedback is greatly appreciated.
 
 ## Authors
 
