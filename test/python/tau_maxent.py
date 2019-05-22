@@ -37,7 +37,7 @@ if if_no_triqs():
 else:
     G_iw = GfImFreq(beta=40, indices=[0], n_points=100)
     G_iw << SemiCircular(1)
-    tm.set_G_iw(G_iw)
+    tm.set_G_iw(G_iw, np_tau=201)
 # this just adds some artificial noise, usually we wouldn't do that
 tm.set_G_tau_data(tm.tau, tm.G + 1.e-3 * np.random.randn(len(tm.G)))
 # use a thinner alpha mesh for test purposes
@@ -131,5 +131,5 @@ for field in result1._all_fields:
     else:
         numpy_assert(getattr(result1, field), getattr(result2, field))
 # check probability
-numpy_assert(result2.probability, [-24781.17123809, -6875.62358969, \
-        -2038.71744124, -779.74935523, -461.61518625], 6)
+numpy_assert(result2.probability, [-8476.52812836, -2343.02752796, \
+    -704.28318351,  -280.26627323, -175.30592555], 6)
