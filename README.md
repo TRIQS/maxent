@@ -8,7 +8,7 @@ Learn how to use this package in the [documentation](https://triqs.github.io/max
 
 ## Disclaimer
 
-   TRIQS/maxent is new TRIQS application made public in 2018.
+   TRIQS/maxent is a new TRIQS application made public in 2018.
    We have tested the code on multiple problems and made sure
    that the unit tests cover extensive parts of the code.
    However, there is no guarantee that the code is free of bugs.
