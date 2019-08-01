@@ -11,7 +11,7 @@ properties([
   pipelineTriggers([
     upstream(
       threshold: 'SUCCESS',
-      upstreamProjects: '/TRIQS/triqs/unstable,/TRIQS/triqs/master'
+      upstreamProjects: '/TRIQS/triqs/unstable'
     )
   ])
 ])
@@ -24,7 +24,6 @@ def platforms = [:]
 def dockerPlatforms = [
   ['unstable', 'ubuntu-clang'],
   ['unstable', 'ubuntu-gcc'],
-  ['master',   'ubuntu-gcc'],
   ['notriqs',  'ubuntu-gcc'],
   ['unstable', 'centos-gcc']
 ]
