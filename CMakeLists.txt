@@ -3,7 +3,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 message( STATUS "-------- BUILD-TYPE: ${CMAKE_BUILD_TYPE} -------------")
 
-set (MAXENT_VERSION "0.9")
+set (MAXENT_VERSION "0.9.1")
 
 # start configuration
 cmake_minimum_required(VERSION 2.8)
@@ -167,4 +167,23 @@ if(NOT ${USE_TRIQS})
     message(STATUS "In order to use the library, please don't forget to")
     message(STATUS "export PYTHONPATH=\"${CMAKE_INSTALL_PREFIX}:$PYTHONPATH\"")
     message(STATUS "")
+endif()
+
+# #############
+# Debian Package
+
+option(BUILD_DEBIAN_PACKAGE "Build a deb package" OFF)
+if(BUILD_DEBIAN_PACKAGE)
+  if(NOT CMAKE_INSTALL_PREFIX STREQUAL "/usr")
+    message(FATAL_ERROR "CMAKE_INSTALL_PREFIX must be /usr for packaging")
+  endif()
+  set(CPACK_PACKAGE_NAME triqs_maxent)
+  set(CPACK_GENERATOR "DEB")
+  set(CPACK_PACKAGE_VERSION ${MAXENT_VERSION})
+  set(CPACK_PACKAGE_CONTACT "https://github.com/TRIQS/maxent")
+  execute_process(COMMAND dpkg --print-architecture OUTPUT_VARIABLE CMAKE_DEBIAN_PACKAGE_ARCHITECTURE OUTPUT_STRIP_TRAILING_WHITESPACE)
+  set(CPACK_DEBIAN_PACKAGE_DEPENDS "triqs (>= 2.2)")
+  set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
+  set(CPACK_DEBIAN_PACKAGE_GENERATE_SHLIBS ON)
+  include(CPack)
 endif()
