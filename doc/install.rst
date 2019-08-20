@@ -2,11 +2,20 @@
 
 .. _install:
 
-
-Installing the TRIQS/maxent package
-===================================
-
 For the versions of this code, see the :ref:`changelog page <changelog>`.
+
+Packaged Versions of TRIQS/maxent
+=================================
+
+A Docker image including the latest version of TRIQS/maxent is available `here <https://hub.docker.com/r/flatironinstitute/triqs>`_. For more information, please see the page on :ref:`TRIQS Docker <triqslibs:triqs_docker>`.
+
+We further provide a Debian package for the Ubuntu LTS Versions 16.04 (xenial) and 18.04 (bionic), which can be installed by following the steps outlined :ref:`here <triqslibs:triqs_debian>`, and the subsequent command::
+
+        sudo apt-get install -y triqs_maxent
+
+
+Compiling TRIQS/maxent from source
+==================================
 
 Prerequisites
 -------------
@@ -25,7 +34,7 @@ Apart from the packages in the `python standard library <https://docs.python.org
 - ``coverage``, optional, for the ``TEST_COVERAGE`` feature.
 
 Installation with TRIQS 2.1
------------------------------
+---------------------------
 
 #. Download the sources from github::
 
@@ -35,9 +44,8 @@ Installation with TRIQS 2.1
 
      $ mkdir maxent.build && cd maxent.build
 
-#. Make sure that you have added the TRIQS and Cpp2Py installation to your environment variables::
+#. Make sure that you have added the TRIQS installation to your environment variables::
 
-     $ source path_to_triqs/share/cpp2pyvarsh.sh
      $ source path_to_triqs/share/triqsvarsh.sh
 
 #. Run ``cmake``::
