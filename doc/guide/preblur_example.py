@@ -1,4 +1,6 @@
 from __future__ import absolute_import, print_function
+from triqs_maxent.analyzers.linefit_analyzer import fit_piecewise
+
 try:
     # TRIQS 2.1
     from pytriqs.gf import *
