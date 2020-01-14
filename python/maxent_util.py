@@ -98,10 +98,12 @@ def get_G_w_from_A_w(A_w,
         w_points_interp = np.linspace(np.min(w_points),
                                       np.max(w_points), np_interp_A)
         if matrix_valued:
+            A_temp = np.zeros((shape_A[0], shape_A[1], np_interp_A))
             for i in range(shape_A[0]):
                 for j in range(shape_A[1]):
-                    A_w[i, j, :] = np.interp(w_points_interp,
-                                             w_points, A_w[i, j, :])
+                    A_temp[i, j, :] = np.interp(w_points_interp,
+                                                w_points, A_w[i, j, :])
+            A_w = A_temp
         else:
             A_w = np.interp(w_points_interp, w_points, A_w)
         w_points = w_points_interp

@@ -76,3 +76,21 @@ assert_arrays_are_close(gw_rot.data[:, :, :].real,
                         gw_rot_rec.data[:, :, :].real, precision=1e-2)
 assert_arrays_are_close(gw_rot.data[:, :, :].imag,
                         gw_rot_rec.data[:, :, :].imag, precision=1e-2)
+
+# Calculate G_w again, using np_interp_A
+gw_rot_rec = get_G_w_from_A_w(A_w_rot,
+                              w_points,
+                              np_interp_A = int(n_points*1.2),
+                              np_omega=n_points,
+                              w_min=w_min,
+                              w_max=w_max)
+
+w_points_double = np.array([w.real for w in gw_rot_rec.mesh])
+for i in range(n_size):
+    for j in range(n_size):
+        assert_arrays_are_close(gw_rot.data[:, i, j].real,
+                                np.interp(w_points, w_points_double,
+                                gw_rot_rec.data[:, i, j].real), precision=1e-2)
+        assert_arrays_are_close(gw_rot.data[:, i, j].imag,
+                                np.interp(w_points, w_points_double,
+                                gw_rot_rec.data[:, i, j].imag), precision=1e-2)
