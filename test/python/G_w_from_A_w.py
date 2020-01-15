@@ -59,7 +59,7 @@ R = np.array([[np.cos(theta), -np.sin(theta)],
               [np.sin(theta), np.cos(theta)]])
 gw_rot = copy.deepcopy(gw)
 gw_rot.from_L_G_R(R, gw, R.conjugate().transpose())
-A_w_rot = np.zeros((n_size, n_size, n_points))
+A_w_rot = np.zeros((n_size, n_size, n_points), dtype=complex)
 for n in range(n_points):
     A_w_rot[:, :, n] = \
         (-1.0 / (2 * np.pi * 1j)) * (gw_rot.data[n, :, :] -
