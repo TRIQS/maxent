@@ -1,9 +1,11 @@
 # See ../triqs/packaging for other options
-FROM flatironinstitute/triqs:master-ubuntu-clang
+FROM flatironinstitute/triqs:unstable-ubuntu-clang
+ARG APPNAME=maxent
 
 RUN apt-get install -y python-decorator || yum install -y python-decorator
+COPY requirements.txt /src/$APPNAME/requirements.txt
+RUN pip install -r /src/$APPNAME/requirements.txt
 
-ARG APPNAME
 COPY . $SRC/$APPNAME
 WORKDIR $BUILD/$APPNAME
 RUN chown build .
