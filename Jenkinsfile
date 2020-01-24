@@ -131,7 +131,7 @@ try {
           [[ -d triqs_\$dir ]] && dir=triqs_\$dir || [[ -d \$dir ]]
           echo "160000 commit ${commit}\t\$dir" | git update-index --index-info
           git commit --author='Flatiron Jenkins <jenkins@flatironinstitute.org>' -m 'Autoupdate ${projectName}' -m '${env.BUILD_TAG}'
-          git push origin ${env.BRANCH_NAME}
+          git push origin unstable
         """
       } catch (err) {
         /* Ignore, non-critical -- might not exist on this branch */
