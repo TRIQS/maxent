@@ -1,7 +1,10 @@
 def projectName = "maxent" /* set to app/repo name */
 
+def dockerName = projectName.toLowerCase();
 /* which platform to build documentation on */
 def documentationPlatform = "ubuntu-clang-unstable"
+/* depend on triqs upstream branch/project */
+def triqsProject = '/TRIQS/triqs/unstable'
 /* whether to keep and publish the results */
 def keepInstall = !env.BRANCH_NAME.startsWith("PR-")
 
@@ -11,7 +14,7 @@ properties([
   pipelineTriggers(keepInstall ? [
     upstream(
       threshold: 'SUCCESS',
-      upstreamProjects: '/TRIQS/triqs/unstable'
+      upstreamProjects: triqsProject
     )
   ] : [])
 ])
@@ -36,7 +39,6 @@ for (int i = 0; i < dockerPlatforms.size(); i++) {
     stage("${platform}-${triqsBranch}") { timeout(time: 1, unit: 'HOURS') {
       checkout scm
       /* construct a Dockerfile for this base */
-      def dockerfile = 'Dockerfile'
       sh """
       ( echo "FROM flatironinstitute/triqs:${(triqsBranch == 'notriqs') ? 'unstable' : triqsBranch}-${platform}" ; sed '0,/^FROM /d' Dockerfile ) > Dockerfile.jenkins
         mv -f Dockerfile.jenkins Dockerfile
@@ -53,8 +55,8 @@ for (int i = 0; i < dockerPlatforms.size(); i++) {
 
 /****************** osx builds (on host) */
 def osxPlatforms = [
-  ['unstable', 'gcc', ['CC=gcc-7', 'CXX=g++-7']],
-  ['unstable', 'clang', ['CC=$BREW/opt/llvm/bin/clang', 'CXX=$BREW/opt/llvm/bin/clang++', 'CXXFLAGS=-I$BREW/opt/llvm/include', 'LDFLAGS=-L$BREW/opt/llvm/lib']]
+  ['unstable', 'gcc', ['CC=gcc-9', 'CXX=g++-9', 'FC=gfortran-9']],
+  ['unstable', 'clang', ['CC=$BREW/opt/llvm/bin/clang', 'CXX=$BREW/opt/llvm/bin/clang++', 'FC=gfortran-9', 'CXXFLAGS=-I$BREW/opt/llvm/include', 'LDFLAGS=-L$BREW/opt/llvm/lib']]
 ]
 for (int i = 0; i < osxPlatforms.size(); i++) {
   def platformEnv = osxPlatforms[i]
@@ -65,7 +67,7 @@ for (int i = 0; i < osxPlatforms.size(); i++) {
       def srcDir = pwd()
       def tmpDir = pwd(tmp:true)
       def buildDir = "$tmpDir/build"
-      def installDir = "$tmpDir/install"
+      def installDir = keepInstall ? "${env.HOME}/install/${projectName}/${env.BRANCH_NAME}/${platform}" : "$tmpDir/install"
       def triqsDir = "${env.HOME}/install/triqs/${triqsBranch}/${platform}"
       dir(installDir) {
         deleteDir()
@@ -74,9 +76,9 @@ for (int i = 0; i < osxPlatforms.size(); i++) {
       checkout scm
       dir(buildDir) { withEnv(platformEnv[2].collect { it.replace('\$BREW', env.BREW) } + [
         "PATH=$triqsDir/bin:${env.BREW}/bin:/usr/bin:/bin:/usr/sbin",
-        "CPATH=$triqsDir/include:${env.BREW}/include",
+        "CPLUS_INCLUDE_PATH=$triqsDir/include:${env.BREW}/include",
         "LIBRARY_PATH=$triqsDir/lib:${env.BREW}/lib",
-        "CMAKE_PREFIX_PATH=$triqsDir/share/cmake",
+        "CMAKE_PREFIX_PATH=$triqsDir/lib/cmake/triqs",
         "OMP_NUM_THREADS=2",
         "NUMEXPR_NUM_THREADS=2",
         "MKL_NUM_THREADS=2"]) {
@@ -112,8 +114,13 @@ try {
         def subdir = "${projectName}/${env.BRANCH_NAME}"
         git(url: "ssh://git@github.com/TRIQS/TRIQS.github.io.git", branch: "master", credentialsId: "ssh", changelog: false)
         sh "rm -rf ${subdir}"
-        docker.image("flatironinstitute/${projectName}:${env.BRANCH_NAME}-${documentationPlatform}").inside() {
-          sh "cp -rp \$INSTALL/share/doc/${projectName} ${subdir}"
+        docker.image("flatironinstitute/${dockerName}:${env.BRANCH_NAME}-${documentationPlatform}").inside() {
+          sh """#!/bin/bash -ex
+            base=\$INSTALL/share/doc
+            dir="${projectName}"
+            [[ -d \$base/triqs_\$dir ]] && dir=triqs_\$dir || [[ -d \$base/\$dir ]]
+            cp -rp \$base/\$dir ${subdir}
+          """
         }
         sh "git add -A ${subdir}"
         sh """
