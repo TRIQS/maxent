@@ -1,4 +1,4 @@
-from __future__ import absolute_import, print_function
+
 from triqs_maxent import *
 
 # Generate a 2x2 model Green function

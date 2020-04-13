@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from __future__ import absolute_import, print_function
+
 from triqs_maxent.logtaker import Logtaker, VerbosityFlags
 from triqs_maxent.triqs_support import assert_text_files_equal
 import sys

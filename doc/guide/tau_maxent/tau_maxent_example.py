@@ -38,7 +38,7 @@ plt.xlabel(r'$\omega$')
 plt.tight_layout()
 
 # print the optimal alpha-values
-print('Curvature: ',
-      res.analyzer_results['Chi2CurvatureAnalyzer']['alpha_index'])
-print('LineFit: ', res.analyzer_results['LineFitAnalyzer']['alpha_index'])
-print('Classic: ', res.analyzer_results['ClassicAnalyzer']['alpha_index'])
+print(('Curvature: ',
+      res.analyzer_results['Chi2CurvatureAnalyzer']['alpha_index']))
+print(('LineFit: ', res.analyzer_results['LineFitAnalyzer']['alpha_index']))
+print(('Classic: ', res.analyzer_results['ClassicAnalyzer']['alpha_index']))

@@ -36,8 +36,8 @@ extensions = ['sphinx.ext.autodoc',
 
 source_suffix = '.rst'
 
-project = u'TRIQS Analytic Continuation / MaxEnt'
-copyright = u'2017-2018 G. J. Kraberger and M. Zingl'
+project = 'TRIQS Analytic Continuation / MaxEnt'
+copyright = '2017-2018 G. J. Kraberger and M. Zingl'
 version = '@MAXENT_VERSION@'
 release = '@MAXENT_RELEASE@'
 

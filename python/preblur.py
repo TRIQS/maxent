@@ -25,7 +25,7 @@ This is just a helper function that is called by these classes to get
 the blur matrix :math:`B` from the blur parameter :math:`b`.
 """
 
-from __future__ import absolute_import, print_function
+
 
 import numpy as np
 

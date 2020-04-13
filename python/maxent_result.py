@@ -28,14 +28,14 @@ from that run are documented.
 In :py:class:`MaxEntResultData`, the plot functions for visualizing them
 are documented.
 """
-from __future__ import absolute_import, print_function
+
 import numpy as np
 from .plot_utils import *
 from .omega_meshes import DataOmegaMesh
 from .alpha_meshes import DataAlphaMesh
 from datetime import datetime, timedelta
 from collections import Sequence, OrderedDict
-from itertools import product, izip_longest
+from itertools import product, zip_longest
 import copy
 from functools import wraps
 
@@ -131,7 +131,7 @@ def _find_shape(seq):
     except TypeError:
         return ()
     shapes = [_find_shape(subseq) for subseq in seq]
-    return (len_,) + tuple(max(sizes) for sizes in izip_longest(*shapes,
+    return (len_,) + tuple(max(sizes) for sizes in zip_longest(*shapes,
                                                                 fillvalue=1))
 
 
@@ -149,7 +149,7 @@ def _fill_array(arr, seq):
         arr[:len_] = seq
         arr[len_:] = np.nan
     else:
-        for subarr, subseq in izip_longest(arr, seq, fillvalue=()):
+        for subarr, subseq in zip_longest(arr, seq, fillvalue=()):
             _fill_array(subarr, subseq)
 
 
@@ -299,7 +299,7 @@ class MaxEntResultData(object):
         else:
             # get it in the correct matrix shape
             ret = np.empty(self.effective_matrix_structure, dtype=object)
-            m = map(range, self.effective_matrix_structure)
+            m = list(map(range, self.effective_matrix_structure))
             for elem in product(*m):
                 try:
                     ret[elem] = self._get_element(
@@ -331,7 +331,7 @@ class MaxEntResultData(object):
             for elem in self.zero_elements:
                 A_out[elem] = 0.0
             # loop over all elements in the effective_matrix_structure
-            m = map(range, self.effective_matrix_structure)
+            m = list(map(range, self.effective_matrix_structure))
             for elem in product(*m):
                 # we copy the element index into get_elem because this
                 # is the element we want to get
@@ -631,7 +631,7 @@ class MaxEntResultData(object):
                 return t
             else:
                 ret = [None] * len(t)
-                for i in xrange(len(t)):
+                for i in range(len(t)):
                     ret[i] = convert_timedelta(t[i])
                 return ret
         if 'run_times' in ret:
@@ -652,7 +652,7 @@ class MaxEntResultData(object):
                 return t
             else:
                 ret = copy.deepcopy(t)
-                for i in xrange(len(t)):
+                for i in range(len(t)):
                     ret[i] = convert_timedelta(t[i])
                 return ret
         if 'run_times' in D:
@@ -669,14 +669,14 @@ class MaxEntResultData(object):
 
         def add_maxent_result(x):
             if isinstance(x, dict):
-                for key, value in x.iteritems():
+                for key, value in x.items():
                     value.maxent_result = self
             else:
                 for y in x:
                     add_maxent_result(y)
         if 'analyzer_results' in D:
             add_maxent_result(D['analyzer_results'])
-        for key, val in D.iteritems():
+        for key, val in D.items():
             if isinstance(val, str) and val == 'None':
                 self._saved[key] = None
             else:
@@ -730,7 +730,7 @@ class MaxEntResult(MaxEntResultData):
         _fill_array(arr, li)
 
         if self._use_hermiticity and hermiticity_conjugate and self.matrix_structure is not None:
-            m = map(range, self._matrix_structure)
+            m = list(map(range, self._matrix_structure))
             for elem in product(*m):
                 this_element_is_nan = False
                 try:
@@ -826,7 +826,7 @@ class MaxEntResult(MaxEntResultData):
         if self._matrix_structure is None:
             return len(self._results)
         ret = np.array(self._get_empty(fill_with=lambda: 0))
-        m = map(range, self.effective_matrix_structure)
+        m = list(map(range, self.effective_matrix_structure))
         for elem in product(*m):
             ret[elem] = len(self._get_element(self._results, elem))
         return ret

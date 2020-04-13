@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from __future__ import absolute_import, print_function
+
 from triqs_maxent.kernels import TauKernel
 from triqs_maxent.omega_meshes import DataOmegaMesh
 import numpy as np

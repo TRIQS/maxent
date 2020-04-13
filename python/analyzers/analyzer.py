@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from __future__ import absolute_import, print_function
+
 from ..plot_utils import *
 import sys
 import numpy as np
@@ -45,7 +45,7 @@ class AnalyzerResult(dict):
     def __factory_from_dict__(cls, name, D):
         """ for reading from h5 """
         self = cls()
-        for d, v in D.iteritems():
+        for d, v in D.items():
             self[d] = v
         return self
 

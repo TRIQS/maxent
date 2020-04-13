@@ -17,9 +17,9 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from __future__ import absolute_import, print_function
 
-import Tkinter as tk
+
+import tkinter as tk
 
 import numpy as np
 import matplotlib
@@ -185,7 +185,7 @@ class PlotMaxEnt(object):
         else:
             ar = [(None, self._result.analyzer_results)]
         for ia, a in ar:
-            for key, analyzer in a.iteritems():
+            for key, analyzer in a.items():
                 for function in dir(analyzer):
                     if not function.startswith("plot_"):
                         continue

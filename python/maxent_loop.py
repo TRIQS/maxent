@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from __future__ import absolute_import, print_function
+
 from .alpha_meshes import LogAlphaMesh
 from .cost_functions import MaxEntCostFunction, BryanCostFunction
 from .minimizers import LevenbergMinimizer
@@ -273,7 +273,7 @@ class MaxEntLoop(object):
                 print(' a  continue with alpha analyzer (end alpha loop)')
                 print(' r  return immediately')
                 print(' x  exit code immediately')
-                inp = raw_input('How to proceed? ')
+                inp = input('How to proceed? ')
                 if inp == 'c':
                     pass
                 elif inp == 'a':

@@ -1,4 +1,4 @@
-from __future__ import absolute_import, print_function
+
 from triqs_maxent import *
 from pytriqs.archive import *
 from pytriqs.plot.mpl_interface import oplot

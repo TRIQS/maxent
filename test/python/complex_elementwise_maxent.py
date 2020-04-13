@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from __future__ import absolute_import, print_function
+
 from triqs_maxent import *
 from triqs_maxent.elementwise_maxent import *
 import numpy as np
@@ -137,7 +137,7 @@ pm.set_error(noise)
 result_pm_herm = pm.run()
 
 N_w = len(pm.omega)
-for iw in xrange(N_w):
+for iw in range(N_w):
     A_out = result_pm_herm.A_out
     assert np.all(A_out[..., iw] == A_out[..., iw].conjugate().transpose()), \
         "A is not hermitian"

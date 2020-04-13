@@ -49,7 +49,7 @@ assert_arrays_are_close(gw.data[:, 0, 0].imag,
 
 # Do the same for a matrix-valued GF
 n_size = 2
-gw = GfReFreq(indices=range(n_size), n_points=n_points, window=(w_min, w_max))
+gw = GfReFreq(indices=list(range(n_size)), n_points=n_points, window=(w_min, w_max))
 gw[0, 0] << inverse(Omega + 4j) * inverse(Omega + 3j)
 gw[1, 1] << inverse(Omega + 2j) * inverse(Omega + 3j)
 

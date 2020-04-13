@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from __future__ import absolute_import, print_function
+
 from triqs_maxent import *
 from triqs_maxent.elementwise_maxent import *
 import numpy as np

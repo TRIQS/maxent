@@ -40,7 +40,7 @@ The most important functions defined are
     calculations (see :ref:`preblur`), the :py:class:`.PreblurA_of_H` additionally
     blurs the hidden image :math:`H` to get the spectral function :math:`A`.
 """
-from __future__ import absolute_import, print_function
+
 
 import numpy as np
 from .maxent_util import *

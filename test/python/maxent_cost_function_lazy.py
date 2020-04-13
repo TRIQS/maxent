@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from __future__ import absolute_import, print_function, division
+
 import numpy as np
 from triqs_maxent.cost_functions import MaxEntCostFunction
 from triqs_maxent.functions import NullFunction, IdentityH_of_v
@@ -42,12 +42,12 @@ design_matrix[:, 1] = tau
 solution = [1.0, 2.0, 3.0]
 data = np.dot(design_matrix, solution)
 
-me.chi2.K = DataKernel(tau, DataOmegaMesh(range(3)), design_matrix)
+me.chi2.K = DataKernel(tau, DataOmegaMesh(list(range(3))), design_matrix)
 me.chi2.G = data
 me.chi2.err = 1.e-4 * (0 * data + 1)
 me.chi2.parameter_change()
 
-me.H_of_v.D = DataDefaultModel(solution, DataOmegaMesh(range(3)))
+me.H_of_v.D = DataDefaultModel(solution, DataOmegaMesh(list(range(3))))
 me.H_of_v.parameter_change()
 
 me.A_of_H.omega = me.H_of_v.D.omega

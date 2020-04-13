@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from __future__ import absolute_import, print_function
+
 import numpy as np
 from triqs_maxent.analyzers import *
 from triqs_maxent import MaxEntResult
@@ -88,7 +88,7 @@ def compare(key, a, b, level, precision):
                     (key, list(
                         a.keys()), list(
                         b.keys())))
-            for k in set(a.keys()).intersection(b.keys()):
+            for k in set(a.keys()).intersection(list(b.keys())):
                 compare(key + '/' + k, a[k], b[k], level + 1, precision)
 
         # The TRIQS object which are comparable starts here ....

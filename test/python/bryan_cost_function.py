@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from __future__ import absolute_import, print_function, division
+
 import numpy as np
 from triqs_maxent.triqs_support import *
 if if_triqs_1():

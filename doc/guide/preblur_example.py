@@ -1,4 +1,4 @@
-from __future__ import absolute_import, print_function
+
 from triqs_maxent.analyzers.linefit_analyzer import fit_piecewise
 
 try:
@@ -66,7 +66,7 @@ if save:
 # extract the chi2 value from the optimal alpha for each blur parameter
 chi2s = []
 # we have to reverse-sort it because fit_piecewise expects it in that order
-b_vals = sorted(results_preblur.keys(), reverse=True)
+b_vals = sorted(list(results_preblur.keys()), reverse=True)
 for b in b_vals:
     r = results_preblur[b]
     alpha_index = r.analyzer_results['LineFitAnalyzer']['alpha_index']
