@@ -152,7 +152,7 @@ ml = MaxEntLoop(cost_function=Q, minimizer=minimizer,
 result_complex = ml.run()
 
 if not if_no_triqs():
-    from pytriqs.archive import HDFArchive
+    from h5 import HDFArchive
     with HDFArchive('maxent_loop.h5', 'a') as ar:
         ar['result_complex'] = result_complex.data
 else:
@@ -168,7 +168,7 @@ ml = MaxEntLoop(cost_function=Q, minimizer=minimizer,
 result_rp = ml.run()
 
 if not if_no_triqs():
-    from pytriqs.archive import HDFArchive
+    from h5 import HDFArchive
     with HDFArchive('maxent_loop.h5', 'a') as ar:
         ar['result_rp'] = result_rp.data
 else:
@@ -183,7 +183,7 @@ ml = MaxEntLoop(cost_function=Q, minimizer=minimizer,
 result_ip = ml.run()
 
 if not if_no_triqs():
-    from pytriqs.archive import HDFArchive
+    from h5 import HDFArchive
     with HDFArchive('maxent_loop.h5', 'a') as ar:
         ar['result_ip'] = result_ip.data
 else:
@@ -219,7 +219,7 @@ assert (np.sum(np.abs(result_complex.A - result.A)**2)
         / result.A.size) < 0.1
 
 if not if_no_triqs():
-    from pytriqs.archive import HDFArchive
+    from h5 import HDFArchive
     with HDFArchive('maxent_loop.h5', 'a') as ar:
         ar['result_complex_iw'] = result.data
 else:

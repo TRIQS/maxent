@@ -21,7 +21,7 @@
 import numpy as np
 from triqs_maxent.analyzers import *
 from triqs_maxent import MaxEntResult
-from pytriqs.archive import HDFArchive, HDFArchiveGroup
+from h5 import HDFArchive, HDFArchiveGroup
 #from pytriqs.utility.h5diff import h5diff
 from pytriqs.utility.h5diff import compare
 
@@ -56,7 +56,7 @@ with HDFArchive('analyzers.out.h5', 'w') as ar:
 # h5diff('analyzers.out.h5','analyzers.ref.h5')
 # basically copied the file pytriqs/utility/h5diff.py from the library
 # apart from the lines marked with !!!
-from pytriqs.archive import *
+from h5 import *
 from pytriqs.utility.comparison_tests import *
 try:
     from pytriqs.gf import GfImFreq, GfImTime, GfReFreq, GfReTime, GfLegendre, BlockGf

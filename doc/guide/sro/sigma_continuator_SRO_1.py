@@ -1,6 +1,6 @@
 
 from triqs_maxent import *
-from pytriqs.archive import *
+from h5 import *
 
 # Load self-energy from h5-file
 with HDFArchive('Sr2RuO4_b37.h5', 'r') as ar:

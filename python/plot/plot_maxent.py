@@ -36,7 +36,7 @@ import os.path
 
 from triqs_maxent.triqs_support import *
 try:
-    from pytriqs.archive import HDFArchive
+    from h5 import HDFArchive
 except ImportError:
     pass
 from triqs_maxent.maxent_result import MaxEntResultData

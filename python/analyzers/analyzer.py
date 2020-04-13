@@ -193,7 +193,7 @@ class AnalyzerResult(dict):
                      log_y=True))
 
 try:
-    from pytriqs.archive.hdf_archive_schemes import register_class
+    from h5.formats import register_class
     register_class(AnalyzerResult)
 except ImportError:  # notriqs
     pass

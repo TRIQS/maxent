@@ -19,7 +19,7 @@
 
 
 from triqs_maxent import *
-from pytriqs.archive import HDFArchive
+from h5 import HDFArchive
 from pytriqs.utility.h5diff import h5diff
 from triqs_maxent.maxent_result import _get_empty
 

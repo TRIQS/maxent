@@ -24,7 +24,7 @@ if if_triqs_1():
     from pytriqs.gf.local import *
 elif if_triqs_2():
     from pytriqs.gf import *
-from pytriqs.archive import *
+from h5 import *
 from pytriqs.utility.comparison_tests import *
 
 np_tau = 10000

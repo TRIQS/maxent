@@ -82,7 +82,7 @@ object to a h5-file with:
 
 .. code-block:: python
 
-        from pytriqs.archive import *
+        from h5 import *
         with HDFArchive('srvo3_maxent.h5','w') as ar:
             ar['maxent_result'] = res.data
             ar['maxent_result_pb'] = res_pb.data

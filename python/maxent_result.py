@@ -1080,7 +1080,7 @@ class MaxEntResult(MaxEntResultData):
             raise Exception(e)
 
 try:
-    from pytriqs.archive.hdf_archive_schemes import register_class
+    from h5.formats import register_class
     register_class(MaxEntResultData)
 except ImportError:  # notriqs
     pass

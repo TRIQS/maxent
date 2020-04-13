@@ -109,7 +109,7 @@ Finally, we save the result to a h5-file with
 
 .. code-block:: python
 
-    from pytriqs.archive import HDFArchive
+    from h5 import HDFArchive
 
     with HDFArchive('file_name.h5','w') as ar:
         ar['maxent'] = result.data

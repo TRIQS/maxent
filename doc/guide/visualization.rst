@@ -32,7 +32,7 @@ To this end, first save ``res`` to a h5-file:
 
 .. code-block:: python
 
-        from pytriqs.archive import *
+        from h5 import *
         with HDFArchive('maxent_result.h5','w') as ar:
                 ar['maxent_result'] = res.data
 

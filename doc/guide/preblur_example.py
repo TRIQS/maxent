@@ -58,7 +58,7 @@ for b in [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.4]:
 
 # save the results
 if save:
-    from pytriqs.archive import HDFArchive
+    from h5 import HDFArchive
     with HDFArchive('preblur.h5', 'w') as ar:
         ar['result_normal'] = result_normal.data
         ar['results_preblur'] = [r.data for r in results_preblur]

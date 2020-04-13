@@ -227,7 +227,7 @@ class InversionSigmaContinuator(SigmaContinuator):
 
 
 try:
-    from pytriqs.archive.hdf_archive_schemes import register_class
+    from h5.formats import register_class
     register_class(InversionSigmaContinuator)
     register_class(DirectSigmaContinuator)
 except ImportError:  # notriqs
