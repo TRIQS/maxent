@@ -36,11 +36,11 @@ ew.omega = HyperbolicOmegaMesh(omega_min=-10, omega_max=10, n_points=80)
 ew.alpha_mesh = LogAlphaMesh(1, 1000, n_points=5)
 result_ew = ew.run()
 
-with open('pickle_maxent_result.out.pickle', 'w') as fi:
+with open('pickle_maxent_result.out.pickle', 'wb') as fi:
     pickle.dump(result_ew.data, fi)
 
 
-with open('pickle_maxent_result.out.pickle', 'r') as fi:
+with open('pickle_maxent_result.out.pickle', 'rb') as fi:
     reload_result_ew = pickle.load(fi)
 
 # load from h5
