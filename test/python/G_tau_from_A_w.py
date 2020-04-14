@@ -29,7 +29,7 @@ beta = 20.0
 np_tau = 101
 
 G_tau_1 = GfImTime(beta=beta, indices=[0], n_points=np_tau)
-G_iw_1 = GfImFreq(beta=beta, indices=[0], n_points=np_tau / 2)
+G_iw_1 = GfImFreq(beta=beta, indices=[0], n_points=np_tau // 2)
 G_w = GfReFreq(indices=[0], window=(-1.1, 1.1), n_points=30000)
 G_iw_1 << SemiCircular(1.0)
 G_tau_1 << InverseFourier(G_iw_1)

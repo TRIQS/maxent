@@ -72,7 +72,7 @@ L1 = len(K1.S)
 threshold = np.median(K1.S)
 K1.reduce_singular_space(threshold)
 L2 = len(K1.S)
-assert L2 == L1 / 2, "error in reduce_singular_space"
+assert L2 == L1 // 2, "error in reduce_singular_space"
 
 K3 = TauKernel(tau=tau, omega=omega, beta=beta)
 K3.omega = omega[::2]
