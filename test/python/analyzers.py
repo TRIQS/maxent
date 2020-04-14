@@ -133,7 +133,7 @@ def compare(key, a, b, level, precision):
     except (AssertionError, RuntimeError, ValueError) as e:
         # eliminate the lines starting with .., which are not the main error
         # message
-        mess = '\n'.join([l for l in e.message.split('\n')
+        mess = '\n'.join([l for l in str(e).split('\n')
                           if l.strip() and not l.startswith('..')])
         failures.append("Comparison of key '%s'  has failed:\n "
                         "" % key + mess)
