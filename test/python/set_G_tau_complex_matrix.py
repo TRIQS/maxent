@@ -71,11 +71,11 @@ try:
 except:
     G_iw_rot.set_from_fourier(G_tau)
     try:
-	# this is necessary in TRIQS 2.1 but will fail in 1.4
-	from pytriqs.gf.gf_fnt import replace_by_tail
-	tail, err = G_iw_rot.fit_tail(
-	    known_moments=np.zeros((1, 2, 2), dtype=np.complex_))
-	replace_by_tail(G_iw_rot, tail, 200)
+        # this is necessary in TRIQS 2.1 but will fail in 1.4
+        from pytriqs.gf.gf_fnt import replace_by_tail
+        tail, err = G_iw_rot.fit_tail(
+            known_moments=np.zeros((1, 2, 2), dtype=np.complex_))
+        replace_by_tail(G_iw_rot, tail, 200)
     except:
     	pass
 
