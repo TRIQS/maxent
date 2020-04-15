@@ -80,7 +80,7 @@ else:
     np_tau = len(G_iw_rot.mesh) + 1
     G_tau = GfImTime(beta=G_iw_rot.mesh.beta, indices=G_iw_rot.indices,
                      n_points=np_tau)
-    G_tau.set_from_inverse_fourier(G_iw_rot)
+    G_tau.set_from_fourier(G_iw_rot)
     # add some noise to G_tau
     np.random.seed(666)
     G_tau_noise = G_tau.data[::10].real + noise * \

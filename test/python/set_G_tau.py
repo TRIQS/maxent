@@ -36,7 +36,7 @@ giw << SemiCircular(half_bandwidth=1)
 
 # Create an imaginary-time Green function
 gt = GfImTime(indices=[1], beta=beta)
-gt << InverseFourier(giw)
+gt << Fourier(giw)
 
 # Save G_tau to a file
 skip = 1
@@ -78,7 +78,7 @@ np.testing.assert_almost_equal(M1.tau, M3.tau)
 
 # Create the imaginary-time Green function on a coarse grid
 gt_c = GfImTime(indices=[1], beta=beta, n_points=np_tau_c)
-gt_c << InverseFourier(giw)
+gt_c << Fourier(giw)
 
 # G_tau on coarse grid
 M6 = TauMaxEnt()

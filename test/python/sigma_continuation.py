@@ -36,7 +36,7 @@ giw << SemiCircular(half_bandwidth=1)
 
 # Create an imaginary-time Green function
 gt = GfImTime(indices=[1], beta=beta)
-gt << InverseFourier(giw)
+gt << Fourier(giw)
 
 # set G_tau in MaxEnt
 M = TauMaxEnt()

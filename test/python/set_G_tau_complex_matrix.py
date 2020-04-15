@@ -27,8 +27,9 @@ if if_triqs_1():
 elif if_triqs_2():
     from pytriqs.gf import *
 
-noise = 5e-4
-level = 13
+noise = 1e-6
+level = 11
+
 
 def numpy_assert(a, b, dec): return np.testing.assert_almost_equal(
     a, b, decimal=dec)
@@ -48,7 +49,7 @@ G_iw_rot.from_L_G_R(R, G_iw, R.conjugate().transpose())
 np_tau = 3*len(G_iw_rot.mesh)+1
 G_tau = GfImTime(beta=G_iw_rot.mesh.beta, indices=G_iw_rot.indices,
                  n_points=np_tau)
-G_tau.set_from_inverse_fourier(G_iw_rot)
+G_tau.set_from_fourier(G_iw_rot)
 # add some noise to G_tau
 np.random.seed(666)
 G_tau_noise = G_tau.data + noise * np.random.randn(*np.shape(G_tau.data))
@@ -79,7 +80,7 @@ except:
     except:
     	pass
 
-G_tau.set_from_inverse_fourier(G_iw_rot)
+G_tau.set_from_fourier(G_iw_rot)
 
 save_Gtau = np.zeros((len(tau), 3))
 fn = 'set_G_tau_complex_matrix_'

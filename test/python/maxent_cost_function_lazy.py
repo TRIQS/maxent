@@ -76,7 +76,8 @@ def trace(frame, event, arg):
         if ('function' in filename and
             frame.f_code.co_name != "new_func" and
                 not frame.f_code.co_name.startswith('_') and
-                not frame.f_code.co_name.startswith('get_')):
+                not frame.f_code.co_name.startswith('get_') and
+                'self' in frame.f_locals):
             called_functions.append('{}.{}'.format(
                 frame.f_locals["self"].__class__.__name__,
                 frame.f_code.co_name))
