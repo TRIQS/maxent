@@ -28,7 +28,7 @@ elif if_triqs_2():
     from pytriqs.gf import *
 
 noise = 5e-4
-level = 13
+level = 9
 
 def numpy_assert(a, b, dec): return np.testing.assert_almost_equal(
     a, b, decimal=dec)
@@ -90,7 +90,7 @@ for i in [0, 1]:
         save_Gtau[:, 2] = np.imag(G_tau.data[:, i, j])
         np.savetxt(fn + str(i) + '_' + str(j) + '.dat', save_Gtau)
 
-def check_elementwise(ew, dec=13):
+def check_elementwise(ew, dec=9):
     for i in [0, 1]:
         for j in [0, 1]:
             if i == j:
