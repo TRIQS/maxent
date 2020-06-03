@@ -1,7 +1,7 @@
 
 from triqs_maxent import *
 from h5 import *
-from pytriqs.plot.mpl_interface import oplot
+from triqs.plot.mpl_interface import oplot
 
 # load res and SigmaContinuator from h5-file
 res = {}

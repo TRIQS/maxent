@@ -20,10 +20,10 @@
 from triqs_maxent.maxent_util import *
 from triqs_maxent.triqs_support import *
 if if_triqs_1():
-    from pytriqs.gf.local import *
+    from triqs.gf.local import *
 elif if_triqs_2():
-    from pytriqs.gf import *
-from pytriqs.utility.comparison_tests import *
+    from triqs.gf import *
+from triqs.utility.comparison_tests import *
 
 beta = 20.0
 np_tau = 101

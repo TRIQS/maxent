@@ -23,9 +23,9 @@ from triqs_maxent.elementwise_maxent import *
 import numpy as np
 from triqs_maxent.triqs_support import *
 if if_triqs_1():
-    from pytriqs.gf.local import *
+    from triqs.gf.local import *
 elif if_triqs_2():
-    from pytriqs.gf import *
+    from triqs.gf import *
 
 noise = 1e-3
 

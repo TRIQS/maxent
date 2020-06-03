@@ -1,4 +1,4 @@
-from pytriqs.plot.mpl_interface import oplot
+from triqs.plot.mpl_interface import oplot
 
 fig1 = plt.figure()
 # chi2(alpha) and linefit

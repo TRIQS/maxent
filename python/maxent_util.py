@@ -28,11 +28,11 @@ import numpy as np
 from itertools import product
 from .triqs_support import *
 if if_triqs_1():
-    from pytriqs.gf.local import *
+    from triqs.gf.local import *
 elif if_triqs_2():
-    from pytriqs.gf import *
+    from triqs.gf import *
 try:
-    import pytriqs.utility.mpi as mpi
+    import triqs.utility.mpi as mpi
 except ImportError:  # notriqs
     pass
 from .kernels import TauKernel

@@ -30,7 +30,7 @@ if(${TRIQS_V1})
   find_package(TriqsTest)
 
   if(${TEST_COVERAGE})
-    set(PythonBuildExecutable ${PYTRIQS_COVERAGE_EXECUTABLE})
+    set(PythonBuildExecutable ${TRIQS_COVERAGE_EXECUTABLE})
     include(${CMAKE_SOURCE_DIR}/cmake/triqs_add_python_test_coverage.cmake)
   endif()
 

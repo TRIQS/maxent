@@ -92,7 +92,7 @@ Installation with TRIQS 1.4
 
     In TRIQS 1.4, most TRIQS applications have to be used as (e.g.)::
 
-        from pytriqs.applications.dft_tools import *
+        from triqs.applications.dft_tools import *
 
     However, as ``maxent`` uses the same codebase for all TRIQS versions,
     we follow the "new" application format, i.e.::
@@ -100,8 +100,8 @@ Installation with TRIQS 1.4
         from triqs_maxent import *
 
 
-For running the code, call the ``pytriqs`` executable from your ``path_to_triqs/bin``
-directory or run a Jupyter notebook using ``ipytriqs_notebook``.
+For running the code, call the ``triqs`` executable from your ``path_to_triqs/bin``
+directory or run a Jupyter notebook using ``itriqs_notebook``.
 
 Installation without TRIQS
 --------------------------

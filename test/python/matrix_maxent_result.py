@@ -20,7 +20,7 @@
 
 from triqs_maxent import *
 #from h5 import HDFArchive
-#from pytriqs.utility.h5diff import h5diff
+#from triqs.utility.h5diff import h5diff
 
 # to make it reproducible
 np.random.seed(658436166)

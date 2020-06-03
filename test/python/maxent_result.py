@@ -20,7 +20,7 @@
 
 from triqs_maxent import *
 from h5 import HDFArchive
-from pytriqs.utility.h5diff import h5diff
+from triqs.utility.h5diff import h5diff
 from triqs_maxent.maxent_result import _get_empty
 
 # A(v) depends on the SVD result because it is parametrized
