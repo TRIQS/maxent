@@ -2,7 +2,7 @@
 FROM flatironinstitute/triqs:unstable-ubuntu-clang
 ARG APPNAME=maxent
 
-RUN apt-get install -y python-decorator || yum install -y python-decorator
+RUN apt-get install -y python3-decorator || yum install -y python3-decorator
 COPY requirements.txt /src/$APPNAME/requirements.txt
 RUN pip3 install -r /src/$APPNAME/requirements.txt
 
