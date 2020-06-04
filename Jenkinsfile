@@ -2,9 +2,10 @@ def projectName = "maxent" /* set to app/repo name */
 
 def dockerName = projectName.toLowerCase();
 /* which platform to build documentation on */
-def documentationPlatform = "ubuntu-clang-unstable"
+def documentationPlatform = "ubuntu-clang"
 /* depend on triqs upstream branch/project */
-def triqsProject = '/TRIQS/triqs/unstable'
+def triqsBranch = env.CHANGE_TARGET ?: env.BRANCH_NAME
+def triqsProject = '/TRIQS/triqs/' + triqsBranch.replaceAll('/', '%2F')
 /* whether to keep and publish the results */
 def keepInstall = !env.BRANCH_NAME.startsWith("PR-")
 
@@ -24,29 +25,52 @@ def platforms = [:]
 
 /****************** linux builds (in docker) */
 /* Each platform must have a cooresponding Dockerfile.PLATFORM in triqs/packaging */
-def dockerPlatforms = [
-  ['unstable', 'ubuntu-clang'],
-  ['unstable', 'ubuntu-gcc'],
-  ['notriqs',  'ubuntu-gcc'],
-  ['unstable', 'centos-gcc']
-]
+def dockerPlatforms = ["ubuntu-clang", "ubuntu-gcc", "centos-gcc"]
 /* .each is currently broken in jenkins */
 for (int i = 0; i < dockerPlatforms.size(); i++) {
-  def triqsPlatform = dockerPlatforms[i]
-  def triqsBranch = triqsPlatform[0]
-  def platform = triqsPlatform[1]
-  platforms["${platform}-${triqsBranch}"] = { -> node('docker') {
-    stage("${platform}-${triqsBranch}") { timeout(time: 1, unit: 'HOURS') {
+  def platform = dockerPlatforms[i]
+  platforms[platform] = { -> node('docker') {
+    stage(platform) { timeout(time: 1, unit: 'HOURS') {
       checkout scm
       /* construct a Dockerfile for this base */
       sh """
-      ( echo "FROM flatironinstitute/triqs:${(triqsBranch == 'notriqs') ? 'unstable' : triqsBranch}-${platform}" ; sed '0,/^FROM /d' Dockerfile ) > Dockerfile.jenkins
+      ( echo "FROM flatironinstitute/triqs:${triqsBranch}-${env.STAGE_NAME}" ; sed '0,/^FROM /d' Dockerfile ) > Dockerfile.jenkins
         mv -f Dockerfile.jenkins Dockerfile
       """
       /* build and tag */
-      def img = docker.build("flatironinstitute/${projectName}:${env.BRANCH_NAME}-${env.STAGE_NAME}", "--build-arg APPNAME=${projectName} --build-arg BUILD_DOC=${env.STAGE_NAME==documentationPlatform} --build-arg USE_TRIQS=${(triqsBranch == 'notriqs') ? '' : '1'} .")
-      if (!keepInstall || env.STAGE_NAME != documentationPlatform) {
-        /* but we don't need the tag so clean it up (except for documentation) */
+      def img = docker.build("flatironinstitute/${dockerName}:${env.BRANCH_NAME}-${env.STAGE_NAME}", "--build-arg APPNAME=${projectName} --build-arg BUILD_DOC=${platform==documentationPlatform} --build-arg USE_TRIQS=1 .")
+      catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+        img.inside() {
+          sh "make -C \$BUILD/${projectName} test CTEST_OUTPUT_ON_FAILURE=1"
+        }
+      }
+      if (!keepInstall) {
+        sh "docker rmi --no-prune ${img.imageName()}"
+      }
+    } }
+  } }
+}
+
+def notriqsPlatforms = ['ubuntu-gcc']
+/* .each is currently broken in jenkins */
+for (int i = 0; i < notriqsPlatforms.size(); i++) {
+  def platform = notriqsPlatforms[i]
+  platforms["${platform}-notriqs"] = { -> node('docker') {
+    stage("${platform}-notriqs") { timeout(time: 1, unit: 'HOURS') {
+      checkout scm
+      /* construct a Dockerfile for this base */
+      sh """
+      ( echo "FROM flatironinstitute/triqs:${triqsBranch}-${platform}" ; sed '0,/^FROM /d' Dockerfile ) > Dockerfile.jenkins
+        mv -f Dockerfile.jenkins Dockerfile
+      """
+      /* build and tag */
+      def img = docker.build("flatironinstitute/${dockerName}:${env.BRANCH_NAME}-${env.STAGE_NAME}", "--build-arg APPNAME=${projectName} --build-arg USE_TRIQS= .")
+      catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+        img.inside() {
+          sh "make -C \$BUILD/${projectName} test CTEST_OUTPUT_ON_FAILURE=1"
+        }
+      }
+      if (!keepInstall) {
         sh "docker rmi --no-prune ${img.imageName()}"
       }
     } }
@@ -55,15 +79,14 @@ for (int i = 0; i < dockerPlatforms.size(); i++) {
 
 /****************** osx builds (on host) */
 def osxPlatforms = [
-  ['unstable', 'gcc', ['CC=gcc-9', 'CXX=g++-9', 'FC=gfortran-9']],
-  ['unstable', 'clang', ['CC=$BREW/opt/llvm/bin/clang', 'CXX=$BREW/opt/llvm/bin/clang++', 'FC=gfortran-9', 'CXXFLAGS=-I$BREW/opt/llvm/include', 'LDFLAGS=-L$BREW/opt/llvm/lib']]
+  ["gcc", ['CC=gcc-9', 'CXX=g++-9', 'FC=gfortran-9']],
+  ["clang", ['CC=$BREW/opt/llvm/bin/clang', 'CXX=$BREW/opt/llvm/bin/clang++', 'FC=gfortran-9', 'CXXFLAGS=-I$BREW/opt/llvm/include', 'LDFLAGS=-L$BREW/opt/llvm/lib']]
 ]
 for (int i = 0; i < osxPlatforms.size(); i++) {
   def platformEnv = osxPlatforms[i]
-  def triqsBranch = platformEnv[0]
-  def platform = platformEnv[1]
-  platforms["osx-${platform}-${triqsBranch}"] = { -> node('osx && triqs') {
-    stage("osx-${platform}-${triqsBranch}") { timeout(time: 1, unit: 'HOURS') {
+  def platform = platformEnv[0]
+  platforms["osx-$platform"] = { -> node('osx && triqs') {
+    stage("osx-$platform") { timeout(time: 1, unit: 'HOURS') {
       def srcDir = pwd()
       def tmpDir = pwd(tmp:true)
       def buildDir = "$tmpDir/build"
@@ -74,25 +97,26 @@ for (int i = 0; i < osxPlatforms.size(); i++) {
       }
 
       checkout scm
-      dir(buildDir) { withEnv(platformEnv[2].collect { it.replace('\$BREW', env.BREW) } + [
+      dir(buildDir) { withEnv(platformEnv[1].collect { it.replace('\$BREW', env.BREW) } + [
         "PATH=$triqsDir/bin:${env.BREW}/bin:/usr/bin:/bin:/usr/sbin",
         "CPLUS_INCLUDE_PATH=$triqsDir/include:${env.BREW}/include",
         "LIBRARY_PATH=$triqsDir/lib:${env.BREW}/lib",
+        "PYTHONPATH=$triqsDir/lib/python3.7/site-packages",
         "CMAKE_PREFIX_PATH=$triqsDir/lib/cmake/triqs",
         "OMP_NUM_THREADS=2",
         "NUMEXPR_NUM_THREADS=2",
         "MKL_NUM_THREADS=2"]) {
         deleteDir()
         /* note: this is installing into the parent (triqs) venv (install dir), which is thus shared among apps and so not be completely safe */
-        sh "pip install -r $srcDir/requirements.txt"
+        sh "pip3 install -r $srcDir/requirements.txt"
         sh "cmake $srcDir -DCMAKE_INSTALL_PREFIX=$installDir -DTRIQS_ROOT=$triqsDir"
         sh "make -j2"
-        try {
+        catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') { try {
           sh "make test CTEST_OUTPUT_ON_FAILURE=1"
         } catch (exc) {
           archiveArtifacts(artifacts: 'Testing/Temporary/LastTest.log')
           throw exc
-        }
+        } }
         sh "make install"
       } }
     } }
@@ -131,14 +155,14 @@ try {
       }
       /* Update packaging repo submodule */
       if (release) { dir("$workDir/packaging") { try {
-        git(url: "ssh://git@github.com/TRIQS/packaging.git", branch: "unstable", credentialsId: "ssh", changelog: false)
+        git(url: "ssh://git@github.com/TRIQS/packaging.git", branch: env.BRANCH_NAME, credentialsId: "ssh", changelog: false)
         // note: credentials used above don't work (need JENKINS-28335)
         sh """#!/bin/bash -ex
           dir="${projectName}"
           [[ -d triqs_\$dir ]] && dir=triqs_\$dir || [[ -d \$dir ]]
           echo "160000 commit ${commit}\t\$dir" | git update-index --index-info
           git commit --author='Flatiron Jenkins <jenkins@flatironinstitute.org>' -m 'Autoupdate ${projectName}' -m '${env.BUILD_TAG}'
-          git push origin unstable
+          git push origin ${env.BRANCH_NAME}
         """
       } catch (err) {
         /* Ignore, non-critical -- might not exist on this branch */
