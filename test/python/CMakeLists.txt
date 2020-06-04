@@ -38,7 +38,7 @@ if(${TRIQS_V1})
     triqs_add_python_test(${t})
   endforeach()
 else() #TRIQS 2.1 and USE_TRIQS=OFF
-  set(python_executable python)
+  set(python_executable python3)
 
   if(${TEST_COVERAGE})
       set(python_executable ${PYTHON_COVERAGE} run --append --source "${CMAKE_BINARY_DIR}/" )
