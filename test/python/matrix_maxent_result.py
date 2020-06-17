@@ -17,10 +17,10 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from __future__ import absolute_import, print_function
+
 from triqs_maxent import *
-#from pytriqs.archive import HDFArchive
-#from pytriqs.utility.h5diff import h5diff
+#from h5 import HDFArchive
+#from triqs.utility.h5diff import h5diff
 
 # to make it reproducible
 np.random.seed(658436166)

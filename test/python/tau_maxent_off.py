@@ -17,14 +17,14 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from __future__ import absolute_import, print_function
+
 from triqs_maxent import *
 from triqs_maxent.tau_maxent import *
 from triqs_maxent.triqs_support import *
 if if_triqs_1():
-    from pytriqs.gf.local import *
+    from triqs.gf.local import *
 elif if_triqs_2():
-    from pytriqs.gf import *
+    from triqs.gf import *
 import numpy as np
 import copy
 

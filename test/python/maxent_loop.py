@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from __future__ import absolute_import, print_function
+
 import numpy as np
 from triqs_maxent import *
 from triqs_maxent.triqs_support import *
@@ -76,7 +76,7 @@ ml = MaxEntLoop(cost_function=Q, minimizer=minimizer,
 result = ml.run()
 
 if not if_no_triqs():
-    from pytriqs.archive import HDFArchive
+    from h5 import HDFArchive
     with HDFArchive('maxent_loop.h5', 'a') as ar:
         ar['result'] = result.data
 else:

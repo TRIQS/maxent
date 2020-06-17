@@ -28,8 +28,8 @@ maxent_hash = "@MAXENT_GIT_HASH@"
 
 
 def show_version():
-    print "\nYou are using the maxent version %s\n" % version
+    print("\nYou are using the maxent version %s\n" % version)
 
 
 def show_git_hash():
-    print "\nYou are using the maxent git hash %s based on triqs git hash %s\n" % (maxent_hash, triqs_hash)
+    print("\nYou are using the maxent git hash %s based on triqs git hash %s\n" % (maxent_hash, triqs_hash))

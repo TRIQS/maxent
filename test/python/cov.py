@@ -17,12 +17,12 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from __future__ import absolute_import, print_function
+
 from triqs_maxent.triqs_support import *
 if if_triqs_1():
-    from pytriqs.gf.local import *
+    from triqs.gf.local import *
 elif if_triqs_2():
-    from pytriqs.gf import *
+    from triqs.gf import *
 import numpy as np
 from triqs_maxent import *
 from triqs_maxent.tau_maxent import *
@@ -38,7 +38,7 @@ else:
     G_iw = GfImFreq(beta=40, indices=[0], n_points=100)
     G_iw << SemiCircular(1)
     G_tau = GfImTime(beta=40, indices=[0], n_points=201)
-    G_tau.set_from_inverse_fourier(G_iw)
+    G_tau.set_from_fourier(G_iw)
     # fix for TRIQS 2.1
     G_tau.data[:] -= G_tau.data.imag * 1.0j
     tm.set_G_tau(G_tau)

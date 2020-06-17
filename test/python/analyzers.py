@@ -17,13 +17,13 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from __future__ import absolute_import, print_function
+
 import numpy as np
 from triqs_maxent.analyzers import *
 from triqs_maxent import MaxEntResult
-from pytriqs.archive import HDFArchive, HDFArchiveGroup
-#from pytriqs.utility.h5diff import h5diff
-from pytriqs.utility.h5diff import compare
+from h5 import HDFArchive, HDFArchiveGroup
+#from triqs.utility.h5diff import h5diff
+from triqs.utility.h5diff import compare
 
 # to ensure reproducibility
 np.random.seed(658436166)
@@ -54,16 +54,16 @@ with HDFArchive('analyzers.out.h5', 'w') as ar:
 
 # h5diff does not work with custom types
 # h5diff('analyzers.out.h5','analyzers.ref.h5')
-# basically copied the file pytriqs/utility/h5diff.py from the library
+# basically copied the file triqs/utility/h5diff.py from the library
 # apart from the lines marked with !!!
-from pytriqs.archive import *
-from pytriqs.utility.comparison_tests import *
+from h5 import *
+from triqs.utility.comparison_tests import *
 try:
-    from pytriqs.gf import GfImFreq, GfImTime, GfReFreq, GfReTime, GfLegendre, BlockGf
+    from triqs.gf import GfImFreq, GfImTime, GfReFreq, GfReTime, GfLegendre, BlockGf
 except:
-    from pytriqs.gf.local import GfImFreq, GfImTime, GfReFreq, GfReTime, GfLegendre, BlockGf
-from pytriqs.operators import *
-from pytriqs.arrays import BlockMatrix
+    from triqs.gf.local import GfImFreq, GfImTime, GfReFreq, GfReTime, GfLegendre, BlockGf
+from triqs.operators import *
+from triqs.arrays import BlockMatrix
 import sys
 import numpy
 failures = []
@@ -88,7 +88,7 @@ def compare(key, a, b, level, precision):
                     (key, list(
                         a.keys()), list(
                         b.keys())))
-            for k in set(a.keys()).intersection(b.keys()):
+            for k in set(a.keys()).intersection(list(b.keys())):
                 compare(key + '/' + k, a[k], b[k], level + 1, precision)
 
         # The TRIQS object which are comparable starts here ....
@@ -133,7 +133,7 @@ def compare(key, a, b, level, precision):
     except (AssertionError, RuntimeError, ValueError) as e:
         # eliminate the lines starting with .., which are not the main error
         # message
-        mess = '\n'.join([l for l in e.message.split('\n')
+        mess = '\n'.join([l for l in str(e).split('\n')
                           if l.strip() and not l.startswith('..')])
         failures.append("Comparison of key '%s'  has failed:\n "
                         "" % key + mess)

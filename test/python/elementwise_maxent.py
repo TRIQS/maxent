@@ -16,15 +16,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from __future__ import absolute_import, print_function
+
 from triqs_maxent import *
 from triqs_maxent.elementwise_maxent import *
 import numpy as np
 from triqs_maxent.triqs_support import *
 if if_triqs_1():
-    from pytriqs.gf.local import *
+    from triqs.gf.local import *
 elif if_triqs_2():
-    from pytriqs.gf import *
+    from triqs.gf import *
 
 
 noise = 1e-3
@@ -80,7 +80,7 @@ else:
     np_tau = len(G_iw_rot.mesh) + 1
     G_tau = GfImTime(beta=G_iw_rot.mesh.beta, indices=G_iw_rot.indices,
                      n_points=np_tau)
-    G_tau.set_from_inverse_fourier(G_iw_rot)
+    G_tau.set_from_fourier(G_iw_rot)
     # add some noise to G_tau
     np.random.seed(666)
     G_tau_noise = G_tau.data[::10].real + noise * \

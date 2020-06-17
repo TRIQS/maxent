@@ -17,9 +17,9 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from __future__ import absolute_import, print_function
+
 from triqs_maxent import *
-from pytriqs.archive import *
+from h5 import *
 import numpy as np
 
 # This test runs TauMaxEnt for srvo3 at beta = 37.5.

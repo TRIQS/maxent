@@ -17,12 +17,12 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from __future__ import absolute_import, print_function
+
 from triqs_maxent.triqs_support import *
 if if_triqs_1():
-    from pytriqs.gf.local import *
+    from triqs.gf.local import *
 elif if_triqs_2():
-    from pytriqs.gf import *
+    from triqs.gf import *
 
 from triqs_maxent import *
 from triqs_maxent.elementwise_maxent import *
@@ -39,7 +39,7 @@ if not if_no_triqs():
     G_iw[0, 0] << inverse(Omega - 1)
     G_iw[1, 1] << inverse(Omega + 1)
     G_tau = GfImTime(beta=40, indices=[0, 1], n_points=2051)
-    G_tau.set_from_inverse_fourier(G_iw)
+    G_tau.set_from_fourier(G_iw)
 
     em.set_G_iw(G_iw, np_tau=len(G_tau.mesh))
     for element in product(range(2), range(2)):

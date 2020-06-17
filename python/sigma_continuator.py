@@ -17,12 +17,12 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from __future__ import absolute_import, print_function
+
 from .triqs_support import *
 if if_triqs_1():
-    from pytriqs.gf.local import *
+    from triqs.gf.local import *
 elif if_triqs_2():
-    from pytriqs.gf import *
+    from triqs.gf import *
 from .maxent_util import *
 
 
@@ -164,7 +164,7 @@ class DirectSigmaContinuator(SigmaContinuator):
             g[1] << (g[1] - self._constant_shift[g[0]]) / self._norm[g[0]]
 
         self.Gaux_iw = self.S_iw.copy()
-        map(_calculate_gaux_iw, self.Gaux_iw) if self._BlockGf else _calculate_gaux_iw(
+        list(map(_calculate_gaux_iw, self.Gaux_iw)) if self._BlockGf else _calculate_gaux_iw(
             ('0', self.Gaux_iw))
 
     def _calculate_S_w(self):
@@ -175,7 +175,7 @@ class DirectSigmaContinuator(SigmaContinuator):
             s[1] << s[1] * self._norm[s[0]] + self._constant_shift[s[0]]
 
         self.S_w = self.Gaux_w.copy()
-        map(_calculate_s_w, self.S_w) if self._BlockGf else _calculate_s_w(
+        list(map(_calculate_s_w, self.S_w)) if self._BlockGf else _calculate_s_w(
             ('0', self.S_w))
 
 
@@ -214,7 +214,7 @@ class InversionSigmaContinuator(SigmaContinuator):
             g[1].invert()
 
         self.Gaux_iw = self.S_iw.copy()
-        map(_calculate_gaux_iw, self.Gaux_iw) if self._BlockGf else _calculate_gaux_iw(
+        list(map(_calculate_gaux_iw, self.Gaux_iw)) if self._BlockGf else _calculate_gaux_iw(
             ('0', self.Gaux_iw))
 
     def _calculate_S_w(self):
@@ -222,12 +222,12 @@ class InversionSigmaContinuator(SigmaContinuator):
             s[1] << Omega + self._constant_shift[s[0]] - inverse(s[1])
 
         self.S_w = self.Gaux_w.copy()
-        map(_calculate_s_w, self.S_w) if self._BlockGf else _calculate_s_w(
+        list(map(_calculate_s_w, self.S_w)) if self._BlockGf else _calculate_s_w(
             ('0', self.S_w))
 
 
 try:
-    from pytriqs.archive.hdf_archive_schemes import register_class
+    from h5.formats import register_class
     register_class(InversionSigmaContinuator)
     register_class(DirectSigmaContinuator)
 except ImportError:  # notriqs

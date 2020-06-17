@@ -17,10 +17,10 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from __future__ import absolute_import, print_function
+
 from triqs_maxent import *
-from pytriqs.archive import HDFArchive
-from pytriqs.utility.h5diff import h5diff
+from h5 import HDFArchive
+from triqs.utility.h5diff import h5diff
 from triqs_maxent.maxent_result import _get_empty
 
 # A(v) depends on the SVD result because it is parametrized

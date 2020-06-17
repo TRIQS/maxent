@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from __future__ import absolute_import, print_function
+
 
 import numpy as np
 from triqs_maxent.maxent_result import MaxEntResult
@@ -61,7 +61,7 @@ class JupyterPlotMaxEnt(object):
         else:
             ar = [(None, self.result.analyzer_results)]
         for ia, a in ar:
-            for key, analyzer in a.iteritems():
+            for key, analyzer in a.items():
                 for function in dir(analyzer):
                     if not function.startswith("plot_"):
                         continue
@@ -164,16 +164,16 @@ class JupyterPlotMaxEnt(object):
             with self.out:
                 clear_output(wait=True)
                 arguments = dict()
-                for key, widget in additional_widgets.iteritems():
+                for key, widget in additional_widgets.items():
                     arguments[key] = widget.value
                 self.plotfunction(quantity, **arguments)
                 show_inline_matplotlib_plots()
 
-        for key, widget in additional_widgets.iteritems():
+        for key, widget in additional_widgets.items():
             widget.observe(lambda change: widget_change(),
                            names='value',
                            type='change')
-        children = [value for key, value in additional_widgets.iteritems()]
+        children = [value for key, value in additional_widgets.items()]
         self.w = widgets.VBox(children=children)
         display(self.w)
         try:

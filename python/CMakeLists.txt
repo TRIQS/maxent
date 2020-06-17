@@ -7,8 +7,8 @@ if(${TRIQS_V1})
   # site_customize for build
   set(package_name "triqs_maxent")
   #configure_file(${CMAKE_SOURCE_DIR}/cmake/sitecustomize.py ${CMAKE_CURRENT_BINARY_DIR}/sitecustomize.py @ONLY)
-  # make a local pytriqs copy to be able to run in the current dir without installation
-  triqs_prepare_local_pytriqs(${python_destination})
+  # make a local triqs copy to be able to run in the current dir without installation
+  triqs_prepare_local_triqs(${python_destination})
   install(FILES ${CMAKE_CURRENT_BINARY_DIR}/triqs_maxent/version.py DESTINATION ${PYTHON_LIB_DEST})
   install(FILES ${CMAKE_CURRENT_BINARY_DIR}/triqs_maxent/triqs_support.py DESTINATION ${PYTHON_LIB_DEST})
 else() #TRIQS 2.1 and USE_TRIQS=OFF

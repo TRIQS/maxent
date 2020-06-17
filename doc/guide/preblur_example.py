@@ -1,13 +1,13 @@
-from __future__ import absolute_import, print_function
+
 from triqs_maxent.analyzers.linefit_analyzer import fit_piecewise
 
 try:
     # TRIQS 2.1
-    from pytriqs.gf import *
+    from triqs.gf import *
     GfImFreq
 except NameError:
     # TRIQS 1.4
-    from pytriqs.gf.local import *
+    from triqs.gf.local import *
 from triqs_maxent import *
 from triqs_maxent.analyzers.linefit_analyzer import fit_piecewise
 
@@ -58,7 +58,7 @@ for b in [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.4]:
 
 # save the results
 if save:
-    from pytriqs.archive import HDFArchive
+    from h5 import HDFArchive
     with HDFArchive('preblur.h5', 'w') as ar:
         ar['result_normal'] = result_normal.data
         ar['results_preblur'] = [r.data for r in results_preblur]
@@ -66,7 +66,7 @@ if save:
 # extract the chi2 value from the optimal alpha for each blur parameter
 chi2s = []
 # we have to reverse-sort it because fit_piecewise expects it in that order
-b_vals = sorted(results_preblur.keys(), reverse=True)
+b_vals = sorted(list(results_preblur.keys()), reverse=True)
 for b in b_vals:
     r = results_preblur[b]
     alpha_index = r.analyzer_results['LineFitAnalyzer']['alpha_index']
@@ -79,7 +79,7 @@ print('Ideal b value = ', b_ideal)
 
 if plot:
     import matplotlib.pyplot as plt
-    from pytriqs.plot.mpl_interface import oplot
+    from triqs.plot.mpl_interface import oplot
     oplot(G_w, mode='S')
     result_normal.analyzer_results['LineFitAnalyzer'].plot_A_out()
     results_preblur[b_ideal].analyzer_results['LineFitAnalyzer'].plot_A_out()

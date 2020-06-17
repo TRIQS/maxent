@@ -20,19 +20,19 @@
 from triqs_maxent.maxent_util import *
 from triqs_maxent.triqs_support import *
 if if_triqs_1():
-    from pytriqs.gf.local import *
+    from triqs.gf.local import *
 elif if_triqs_2():
-    from pytriqs.gf import *
-from pytriqs.utility.comparison_tests import *
+    from triqs.gf import *
+from triqs.utility.comparison_tests import *
 
 beta = 20.0
 np_tau = 101
 
 G_tau_1 = GfImTime(beta=beta, indices=[0], n_points=np_tau)
-G_iw_1 = GfImFreq(beta=beta, indices=[0], n_points=np_tau / 2)
+G_iw_1 = GfImFreq(beta=beta, indices=[0], n_points=np_tau // 2)
 G_w = GfReFreq(indices=[0], window=(-1.1, 1.1), n_points=30000)
 G_iw_1 << SemiCircular(1.0)
-G_tau_1 << InverseFourier(G_iw_1)
+G_tau_1 << Fourier(G_iw_1)
 G_w << SemiCircular(1.0)
 
 w_points = np.array([w.real for w in G_w.mesh])

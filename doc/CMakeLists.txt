@@ -12,7 +12,7 @@ file(GLOB_RECURSE doc_sources *.rst)
 set(sphinx_top ${CMAKE_CURRENT_BINARY_DIR}/html/index.html)
 if(${TRIQS_V1})
   add_custom_command(OUTPUT ${sphinx_top} DEPENDS ${doc_sources} py_copy
-    COMMAND ${CMAKE_BINARY_DIR}/build_pytriqs ${TRIQS_SPHINXBUILD_EXECUTABLE} -c . -b html ${CMAKE_CURRENT_BINARY_DIR} html)
+    COMMAND ${CMAKE_BINARY_DIR}/build_triqs ${TRIQS_SPHINXBUILD_EXECUTABLE} -c . -b html ${CMAKE_CURRENT_BINARY_DIR} html)
   add_custom_target(doc_sphinx ALL DEPENDS ${sphinx_top})
 else() # TRIQS 2.1 and DOC_WITH_TRIQS=OFF
   add_custom_command(OUTPUT ${sphinx_top} DEPENDS ${doc_sources}

@@ -17,12 +17,12 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from __future__ import absolute_import, print_function
+
 from .triqs_support import *
 if if_triqs_1():
-    from pytriqs.gf.local import *
+    from triqs.gf.local import *
 elif if_triqs_2():
-    from pytriqs.gf import *
+    from triqs.gf import *
 from .tau_maxent import TauMaxEnt
 from .default_models import *
 from .maxent_result import MaxEntResult
@@ -233,7 +233,7 @@ class ElementwiseMaxEnt(object):
 
         self.maxent_diagonal.logtaker.message(VerbosityFlags.ElementInfo,
                                               "Calculating diagonal elements.")
-        for i in xrange(self.shape[0]):
+        for i in range(self.shape[0]):
             self.run_element((i, i))
             if self.use_complex and \
                     (i, i, 1) not in self.maxent_result.zero_elements:
@@ -259,8 +259,8 @@ class ElementwiseMaxEnt(object):
         self.maxent_offdiagonal.logtaker.message(
             VerbosityFlags.ElementInfo,
             "Calculating off-diagonal elements.")
-        for i in xrange(self.shape[0]):
-            for j in xrange(self.shape[1]):
+        for i in range(self.shape[0]):
+            for j in range(self.shape[1]):
                 if i == j:
                     continue
                 for ri in ([True, False] if self.use_complex else [True]):
@@ -630,8 +630,8 @@ class PoormanMaxEnt(ElementwiseMaxEnt):
         self.maxent_offdiagonal.logtaker.message(
             VerbosityFlags.ElementInfo,
             "Calculating off-diagonal elements using default model from diagonal solution")
-        for i in xrange(self.shape[0]):
-            for j in xrange(self.shape[1]):
+        for i in range(self.shape[0]):
+            for j in range(self.shape[1]):
                 if i == j:
                     continue
                 if self.use_complex:

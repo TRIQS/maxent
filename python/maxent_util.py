@@ -22,17 +22,17 @@ This file defines a bunch of functions that facilitate the use of
 MaxEnt.
 """
 
-from __future__ import absolute_import, print_function
+
 
 import numpy as np
 from itertools import product
 from .triqs_support import *
 if if_triqs_1():
-    from pytriqs.gf.local import *
+    from triqs.gf.local import *
 elif if_triqs_2():
-    from pytriqs.gf import *
+    from triqs.gf import *
 try:
-    import pytriqs.utility.mpi as mpi
+    import triqs.utility.mpi as mpi
 except ImportError:  # notriqs
     pass
 from .kernels import TauKernel
@@ -86,7 +86,7 @@ def get_G_w_from_A_w(A_w,
         indices = [0]
         matrix_valued = False
     elif (len(shape_A) == 3) and (shape_A[0] == shape_A[1]):
-        indices = range(0, shape_A[0])
+        indices = list(range(0, shape_A[0]))
         matrix_valued = True
     else:
         raise Exception('A_w has wrong shape, must be n x n x n_w')
@@ -111,7 +111,7 @@ def get_G_w_from_A_w(A_w,
     G_w = GfReFreq(indices=indices, window=(w_min, w_max), n_points=np_omega)
     G_w.zero()
 
-    iw_points = np.array(range(len(w_points)))
+    iw_points = np.array(list(range(len(w_points))))
 
     for iw in mpi.slice_array(iw_points):
         domega = (w_points[min(len(w_points) - 1, iw + 1)] -

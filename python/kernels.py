@@ -29,7 +29,7 @@ For any kernel the preblur version can be used by the :py:class:`.PreblurKernel`
 (see :ref:`preblur`).
 """
 
-from __future__ import absolute_import, print_function
+
 import numpy as np
 from .preblur import *
 

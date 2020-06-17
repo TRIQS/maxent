@@ -4,8 +4,8 @@ Continuation of a 1x1 Green Function
 For continuing a single diagonal element of a Green function,
 the :py:class:`~.tau_maxent.TauMaxEnt` class is the right tool.
 The Green function can be given as
-:py:class:`~triqslibs:pytriqs.gf.GfImTime` (use
-:py:meth:`~.tau_maxent.TauMaxEnt.set_G_tau`) or as :py:class:`~triqslibs:pytriqs.gf.GfImFreq`
+:py:class:`~triqslibs:triqs.gf.GfImTime` (use
+:py:meth:`~.tau_maxent.TauMaxEnt.set_G_tau`) or as :py:class:`~triqslibs:triqs.gf.GfImFreq`
 (use :py:meth:`~.tau_maxent.TauMaxEnt.set_G_iw`). Additionally, it is possible to set
 :math:`G(\tau)` directly with a data array (:py:meth:`~.tau_maxent.TauMaxEnt.set_G_tau_data`) or
 load it from a file (:py:meth:`~.tau_maxent.TauMaxEnt.set_G_tau_file`).
@@ -20,9 +20,9 @@ example an insulating mock :math:`G(\tau)`, using
 .. code-block:: python
 
     #TRIQS 2.1
-    from pytriqs.gf import *
+    from triqs.gf import *
     #TRIQS 1.4
-    from pytriqs.gf.local import *
+    from triqs.gf.local import *
     import numpy as np
 
     err = 1.e-5
@@ -109,7 +109,7 @@ Finally, we save the result to a h5-file with
 
 .. code-block:: python
 
-    from pytriqs.archive import HDFArchive
+    from h5 import HDFArchive
 
     with HDFArchive('file_name.h5','w') as ar:
         ar['maxent'] = result.data

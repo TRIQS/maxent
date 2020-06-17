@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from __future__ import absolute_import, print_function
+
 from ..functions import DoublyDerivableFunction, cached, \
     NormalChi2, NormalEntropy, NormalH_of_v, IdentityA_of_H
 

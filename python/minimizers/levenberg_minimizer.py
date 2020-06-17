@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from __future__ import absolute_import, print_function, division
+
 import numpy as np
 from .minimizer import Minimizer
 from .convergence_methods import *
@@ -152,7 +152,7 @@ class LevenbergMinimizer(Minimizer):
         Q0 = np.nan
 
         # the main iteration
-        for i in xrange(self.maxiter):
+        for i in range(self.maxiter):
             # here, f is the Jacobian of the function wrt v
             f = func_val.d()
             # the Jacobian of f

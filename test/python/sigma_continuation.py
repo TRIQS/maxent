@@ -21,11 +21,11 @@ from triqs_maxent.sigma_continuator import *
 from triqs_maxent.tau_maxent import *
 from triqs_maxent.triqs_support import *
 if if_triqs_1():
-    from pytriqs.gf.local import *
+    from triqs.gf.local import *
 elif if_triqs_2():
-    from pytriqs.gf import *
-from pytriqs.archive import *
-from pytriqs.utility.comparison_tests import *
+    from triqs.gf import *
+from h5 import *
+from triqs.utility.comparison_tests import *
 
 np_tau = 10000
 beta = 50.0
@@ -36,7 +36,7 @@ giw << SemiCircular(half_bandwidth=1)
 
 # Create an imaginary-time Green function
 gt = GfImTime(indices=[1], beta=beta)
-gt << InverseFourier(giw)
+gt << Fourier(giw)
 
 # set G_tau in MaxEnt
 M = TauMaxEnt()

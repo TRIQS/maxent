@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from __future__ import absolute_import, print_function
+
 import matplotlib.pyplot as plt
 from functools import wraps
 import numpy as np
@@ -70,7 +70,7 @@ def plot_function(func):
             to_plot = [to_plot]
         for qty in to_plot:
             x, y, default = qty
-            for key, val in default.iteritems():
+            for key, val in default.items():
                 if key not in kwargs:
                     kwargs[key] = val
             _plotter(x, y, **kwargs)

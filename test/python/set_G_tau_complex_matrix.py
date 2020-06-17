@@ -17,18 +17,18 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from __future__ import absolute_import, print_function
+
 from triqs_maxent import *
 from triqs_maxent.elementwise_maxent import *
 import numpy as np
 from triqs_maxent.triqs_support import *
 if if_triqs_1():
-    from pytriqs.gf.local import *
+    from triqs.gf.local import *
 elif if_triqs_2():
-    from pytriqs.gf import *
+    from triqs.gf import *
 
-noise = 5e-4
-level = 9
+noise = 1e-6
+level = 11
 
 def numpy_assert(a, b, dec): return np.testing.assert_almost_equal(
     a, b, decimal=dec)
@@ -48,7 +48,7 @@ G_iw_rot.from_L_G_R(R, G_iw, R.conjugate().transpose())
 np_tau = 3*len(G_iw_rot.mesh)+1
 G_tau = GfImTime(beta=G_iw_rot.mesh.beta, indices=G_iw_rot.indices,
                  n_points=np_tau)
-G_tau.set_from_inverse_fourier(G_iw_rot)
+G_tau.set_from_fourier(G_iw_rot)
 # add some noise to G_tau
 np.random.seed(666)
 G_tau_noise = G_tau.data + noise * np.random.randn(*np.shape(G_tau.data))
@@ -71,15 +71,15 @@ try:
 except:
     G_iw_rot.set_from_fourier(G_tau)
     try:
-	# this is necessary in TRIQS 2.1 but will fail in 1.4
-	from pytriqs.gf.gf_fnt import replace_by_tail
-	tail, err = G_iw_rot.fit_tail(
-	    known_moments=np.zeros((1, 2, 2), dtype=np.complex_))
-	replace_by_tail(G_iw_rot, tail, 200)
+        # this is necessary in TRIQS 2.1 but will fail in 1.4
+        from triqs.gf.gf_fnt import replace_by_tail
+        tail, err = G_iw_rot.fit_tail(
+            known_moments=np.zeros((1, 2, 2), dtype=np.complex_))
+        replace_by_tail(G_iw_rot, tail, 200)
     except:
     	pass
 
-G_tau.set_from_inverse_fourier(G_iw_rot)
+G_tau.set_from_fourier(G_iw_rot)
 
 save_Gtau = np.zeros((len(tau), 3))
 fn = 'set_G_tau_complex_matrix_'

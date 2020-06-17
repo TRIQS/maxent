@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from __future__ import absolute_import, print_function
+
 import numpy as np
 from triqs_maxent import *
 import matplotlib.pyplot as plt
@@ -46,7 +46,7 @@ omega_grids = [
 for test_A in [lambda omega: omega / omega, lambda omega: np.exp(-omega**2)]:
     c2 = []
     s = []
-    for iom in xrange(len(omega_grids)):
+    for iom in range(len(omega_grids)):
         omega = omega_grids[iom]
         K = TauKernel(tau=tau, omega=omega, beta=beta)
         # here we construct the G(tau)

@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from __future__ import absolute_import
+
 from .levenberg_minimizer import LevenbergMinimizer
 # yes, it looks strange, but this is the only way the automatic addition
 # to __all__ works

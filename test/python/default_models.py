@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from __future__ import absolute_import, print_function
+
 import numpy as np
 from triqs_maxent.omega_meshes import *
 from triqs_maxent.default_models import *

@@ -17,14 +17,14 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from __future__ import absolute_import, print_function
+
 import numpy as np
 from triqs_maxent.tau_maxent import *
 from triqs_maxent.triqs_support import *
 if if_triqs_1():
-    from pytriqs.gf.local import *
+    from triqs.gf.local import *
 elif if_triqs_2():
-    from pytriqs.gf import *
+    from triqs.gf import *
 
 np_tau = 10000
 np_tau_c = 2500
@@ -36,7 +36,7 @@ giw << SemiCircular(half_bandwidth=1)
 
 # Create an imaginary-time Green function
 gt = GfImTime(indices=[1], beta=beta)
-gt << InverseFourier(giw)
+gt << Fourier(giw)
 
 # Save G_tau to a file
 skip = 1
@@ -78,7 +78,7 @@ np.testing.assert_almost_equal(M1.tau, M3.tau)
 
 # Create the imaginary-time Green function on a coarse grid
 gt_c = GfImTime(indices=[1], beta=beta, n_points=np_tau_c)
-gt_c << InverseFourier(giw)
+gt_c << Fourier(giw)
 
 # G_tau on coarse grid
 M6 = TauMaxEnt()

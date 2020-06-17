@@ -91,7 +91,7 @@ With TRIQS, a :py:class:`.MaxEntResult` object can be saved to file using::
     # let res be the result, e.g. res = tau_maxent.run()
     # let file_name_of_h5_file be a str with the file name
     # let name_of_result be the desired name of the group in the file
-    from pytriqs.archive import HDFArchive
+    from h5 import HDFArchive
     with HDFArchive(file_name_of_h5_file, 'w') as ar:
         ar[name_of_result] = res.data
 

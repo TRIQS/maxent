@@ -17,12 +17,12 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from __future__ import absolute_import, print_function
+
 from .triqs_support import *
 if if_triqs_1():
-    from pytriqs.gf.local import *
+    from triqs.gf.local import *
 elif if_triqs_2():
-    from pytriqs.gf import *
+    from triqs.gf import *
 from .maxent_loop import MaxEntLoop
 from .omega_meshes import HyperbolicOmegaMesh
 from .default_models import FlatDefaultModel
@@ -164,7 +164,7 @@ class TauMaxEnt(object):
 
         if np_tau < 0:
             # this is the shortest mesh that does not provoke an error
-            # in set_from_inverse_fourier
+            # in set_from_fourier
             np_tau = 3*len(G_iw.mesh)+1
         try:
             # this will work in TRIQS 2.1
@@ -175,7 +175,7 @@ class TauMaxEnt(object):
             # this will work in TRIQS 1.4
             G_tau = GfImTime(beta=G_iw.mesh.beta, indices=G_iw.indices,
                              n_points=np_tau)
-        G_tau.set_from_inverse_fourier(G_iw)
+        G_tau.set_from_fourier(G_iw)
         self.set_G_tau(G_tau, **kwargs)
 
     def set_G_tau_data(self, tau, G_tau):

@@ -1,4 +1,4 @@
-from __future__ import absolute_import, print_function
+
 from triqs_maxent import *
 
 # Generate a 2x2 model Green function
@@ -51,7 +51,7 @@ result_pm = pm.run()
 import matplotlib
 matplotlib.rcParams['figure.figsize'] = (12, 12)
 matplotlib.rcParams.update({'font.size': 16})
-from pytriqs.plot.mpl_interface import oplot
+from triqs.plot.mpl_interface import oplot
 
 fig = plt.figure()
 for i in range(G_iw_rot.N1):
