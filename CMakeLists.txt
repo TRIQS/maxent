@@ -30,9 +30,8 @@ elseif(${USE_TRIQS}) # search for TRIQS 2.1 - if not found default to USE_TRIQS=
   # Try to find TRIQS and Cpp2Py
   project(maxent CXX)
   option(BUILD_SHARED_LIBS "Build shared libraries" ON)
-  find_package(TRIQS 2.0 QUIET)
-  find_package(Cpp2Py 1.5 QUIET)
-  if ((TRIQS_FOUND) AND (Cpp2Py_FOUND))
+  find_package(TRIQS 3.0 QUIET)
+  if (TRIQS_FOUND)
 	message(STATUS "--------- Installing as TRIQS ${TRIQS_VERSION} package ---------")
 	set(TRIQS_V1 OFF)
 	set(TRIQS_V2 ON)
