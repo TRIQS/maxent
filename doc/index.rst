@@ -5,9 +5,9 @@
 Analytic Continuation / MaxEnt
 ==============================
 
-.. sidebar:: TRIQS/maxent 0.9.1
+.. sidebar:: TRIQS/maxent 1.0.0
 
-   This is the homepage TRIQS/maxent Version 0.9.1
+   This is the homepage TRIQS/maxent Version 1.0.0
    For the changes in maxent, Cf the :ref:`changelog <changelog>`
 
 The goal of this :ref:`TRIQS <triqslibs:welcome>` application

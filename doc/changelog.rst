@@ -5,12 +5,14 @@ Changelog
 
 This document describes the main changes in maxent.
 
-Changes since the last release
-------------------------------
+The newest version, including changes since the last release, can be obtained using ``git checkout unstable``.
 
-There are no changes beyond the last release.
+Version 1.0.0
+-------------
 
-The newest version, including changes since the last release, can be obtained using ``git checkout master``.
+Version 1.0.0 is a compatibility release for TRIQS version 3.0.0 that
+introduces compatibility with Python 3 (Python 2 no longer supported)
+
 
 Version 0.9.1, 2019-05-22
 -------------------------
