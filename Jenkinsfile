@@ -4,7 +4,7 @@ def dockerName = projectName.toLowerCase();
 /* which platform to build documentation on */
 def documentationPlatform = "ubuntu-clang"
 /* depend on triqs upstream branch/project */
-def triqsBranch = env.CHANGE_TARGET ?: env.BRANCH_NAME
+def triqsBranch = "3.0.x"
 def triqsProject = '/TRIQS/triqs/' + triqsBranch.replaceAll('/', '%2F')
 /* whether to keep and publish the results */
 def keepInstall = !env.BRANCH_NAME.startsWith("PR-")
@@ -130,7 +130,7 @@ try {
     /* Publish results */
     stage("publish") { timeout(time: 5, unit: 'MINUTES') {
       def commit = sh(returnStdout: true, script: "git rev-parse HEAD").trim()
-      def release = env.BRANCH_NAME == "master"
+      def release = env.BRANCH_NAME == "master" || env.BRANCH_NAME == "unstable" || sh(returnStdout: true, script: "git describe --exact-match HEAD || true").trim()
       def workDir = pwd(tmp:true)
       lock('triqs_publish') {
       /* Update documention on gh-pages branch */
@@ -155,14 +155,14 @@ try {
       }
       /* Update packaging repo submodule */
       if (release) { dir("$workDir/packaging") { try {
-        git(url: "ssh://git@github.com/TRIQS/packaging.git", branch: env.BRANCH_NAME, credentialsId: "ssh", changelog: false)
+        git(url: "ssh://git@github.com/TRIQS/packaging.git", branch: triqsBranch, credentialsId: "ssh", changelog: false)
         // note: credentials used above don't work (need JENKINS-28335)
         sh """#!/bin/bash -ex
           dir="${projectName}"
           [[ -d triqs_\$dir ]] && dir=triqs_\$dir || [[ -d \$dir ]]
           echo "160000 commit ${commit}\t\$dir" | git update-index --index-info
           git commit --author='Flatiron Jenkins <jenkins@flatironinstitute.org>' -m 'Autoupdate ${projectName}' -m '${env.BUILD_TAG}'
-          git push origin ${env.BRANCH_NAME}
+          git push origin ${triqsBranch}
         """
       } catch (err) {
         /* Ignore, non-critical -- might not exist on this branch */
