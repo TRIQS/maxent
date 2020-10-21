@@ -65,7 +65,7 @@ assert np.max(np.abs(K1.K - K2)) < 1.e-15, "kernel not the same"
 
 maxdiff = np.max(np.abs(K1.K -
                         np.dot(K1.U, np.dot(np.diag(K1.S), K1.V.transpose()))))
-assert  maxdiff < 1.e-14, \
+assert  maxdiff < 1.e-13, \
     "Kernel is not the same as its SVD U*S*V^T (diff = {})".format(maxdiff)
 
 L1 = len(K1.S)
