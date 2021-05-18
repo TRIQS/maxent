@@ -26,7 +26,7 @@ G_iw << SemiCircular(1)
 
 # we inverse Fourier-transform G(iw) to G(tau)
 G_tau = GfImTime(beta=G_iw.beta, indices=[0], n_points=102)
-G_tau.set_from_inverse_fourier(G_iw)
+G_tau.set_from_fourier(G_iw)
 # and add some noise (MaxEnt does not work without noise)
 G_tau.data[:, 0, 0] = G_tau.data[:, 0, 0] + \
     1.e-4 * np.random.randn(len(G_tau.data))

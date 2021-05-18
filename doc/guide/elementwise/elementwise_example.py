@@ -25,7 +25,7 @@ G_w_rot.from_L_G_R(R, G_w, R.transpose())
 
 # Calculate G(tau) and add some noise
 G_tau_rot = GfImTime(beta=G_iw_rot.beta, indices=G_iw_rot.indices)
-G_tau_rot.set_from_inverse_fourier(G_iw_rot)
+G_tau_rot.set_from_fourier(G_iw_rot)
 G_tau_rot.data[:, :, :] = G_tau_rot.data.real + 1.e-4 * np.reshape(
     np.random.randn(np.size(G_tau_rot.data)),
     np.shape(G_tau_rot.data))

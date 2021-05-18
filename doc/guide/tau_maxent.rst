@@ -31,7 +31,7 @@ example an insulating mock :math:`G(\tau)`, using
     G_iw << SemiCircular(1)-0.5*SemiCircular(0.5)
     G_w << SemiCircular(1)-0.5*SemiCircular(0.5)
     G_tau = GfImTime(beta=10, indices=[0], n_points=2501)
-    G_tau.set_from_inverse_fourier(G_iw)
+    G_tau.set_from_fourier(G_iw)
     G_tau.data[:, 0, 0] += err * np.random.randn(len(G_tau.data))
 
 Here, we added random Gaussian noise to the :math:`G(\tau)`.
