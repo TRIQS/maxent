@@ -63,7 +63,6 @@ try:
 except:
     from triqs.gf.local import GfImFreq, GfImTime, GfReFreq, GfReTime, GfLegendre, BlockGf
 from triqs.operators import *
-from triqs.arrays import BlockMatrix
 import sys
 import numpy
 failures = []
@@ -100,10 +99,6 @@ def compare(key, a, b, level, precision):
 
         elif t in [Operator]:
             assert (a - b).is_zero(), "Many body operators not equal"
-
-        elif t in [BlockMatrix]:
-            for i in range(len(a.matrix_vec)):
-                assert_arrays_are_close(a(i), b(i))
 
         # ... until here
         elif isinstance(a, numpy.ndarray):
