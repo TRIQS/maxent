@@ -60,7 +60,7 @@ def notriqsPlatforms = ['ubuntu-gcc']
 /* .each is currently broken in jenkins */
 for (int i = 0; i < notriqsPlatforms.size(); i++) {
   def platform = notriqsPlatforms[i]
-  platforms["${platform}-notriqs"] = { -> node('docker') {
+  platforms["${platform}-notriqs"] = { -> node('linux && docker && triqs') {
     stage("${platform}-notriqs") { timeout(time: 1, unit: 'HOURS') {
       checkout scm
       /* construct a Dockerfile for this base */
