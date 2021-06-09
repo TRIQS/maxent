@@ -121,7 +121,7 @@ for (int i = 0; i < osxPlatforms.size(); i++) {
         } }
         sh "make install"
       } }
-    } }
+    } } }
   } }
 }
 
