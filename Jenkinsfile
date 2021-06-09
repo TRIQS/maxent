@@ -29,8 +29,8 @@ def dockerPlatforms = ["ubuntu-clang", "ubuntu-gcc", "centos-gcc"]
 /* .each is currently broken in jenkins */
 for (int i = 0; i < dockerPlatforms.size(); i++) {
   def platform = dockerPlatforms[i]
-  platforms[platform] = { -> node('docker') {
-    stage(platform) { timeout(time: 1, unit: 'HOURS') {
+  platforms[platform] = { -> node('linux && docker && triqs') {
+    stage(platform) { timeout(time: 1, unit: 'HOURS') { ansiColor('xterm') {
       checkout scm
       /* construct a Dockerfile for this base */
       sh """
@@ -47,7 +47,7 @@ for (int i = 0; i < dockerPlatforms.size(); i++) {
       if (!keepInstall) {
         sh "docker rmi --no-prune ${img.imageName()}"
       }
-    } }
+    } } }
   } }
 }
 
@@ -55,7 +55,7 @@ def notriqsPlatforms = ['ubuntu-gcc']
 /* .each is currently broken in jenkins */
 for (int i = 0; i < notriqsPlatforms.size(); i++) {
   def platform = notriqsPlatforms[i]
-  platforms["${platform}-notriqs"] = { -> node('docker') {
+  platforms["${platform}-notriqs"] = { -> node('linux && docker && triqs') {
     stage("${platform}-notriqs") { timeout(time: 1, unit: 'HOURS') {
       checkout scm
       /* construct a Dockerfile for this base */
@@ -86,12 +86,14 @@ for (int i = 0; i < osxPlatforms.size(); i++) {
   def platformEnv = osxPlatforms[i]
   def platform = platformEnv[0]
   platforms["osx-$platform"] = { -> node('osx && triqs') {
-    stage("osx-$platform") { timeout(time: 1, unit: 'HOURS') {
+    stage("osx-$platform") { timeout(time: 1, unit: 'HOURS') { ansiColor('xterm') {
       def srcDir = pwd()
       def tmpDir = pwd(tmp:true)
       def buildDir = "$tmpDir/build"
+      /* install real branches in a fixed predictable place so apps can find them */
       def installDir = keepInstall ? "${env.HOME}/install/${projectName}/${env.BRANCH_NAME}/${platform}" : "$tmpDir/install"
       def triqsDir = "${env.HOME}/install/triqs/${triqsBranch}/${platform}"
+      def venv = triqsDir
       dir(installDir) {
         deleteDir()
       }
@@ -108,7 +110,7 @@ for (int i = 0; i < osxPlatforms.size(); i++) {
         "MKL_NUM_THREADS=2"]) {
         deleteDir()
         /* note: this is installing into the parent (triqs) venv (install dir), which is thus shared among apps and so not be completely safe */
-        sh "pip3 install -r $srcDir/requirements.txt"
+        sh "pip3 install -U -r $srcDir/requirements.txt"
         sh "cmake $srcDir -DCMAKE_INSTALL_PREFIX=$installDir -DTRIQS_ROOT=$triqsDir"
         sh "make -j2"
         catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') { try {
@@ -124,9 +126,10 @@ for (int i = 0; i < osxPlatforms.size(); i++) {
 }
 
 /****************** wrap-up */
+def error = null
 try {
   parallel platforms
-  if (keepInstall) { node("docker") {
+  if (keepInstall) { node('linux && docker && triqs') {
     /* Publish results */
     stage("publish") { timeout(time: 5, unit: 'MINUTES') {
       def commit = sh(returnStdout: true, script: "git rev-parse HEAD").trim()
@@ -172,12 +175,12 @@ try {
     } }
   } }
 } catch (err) {
+  error = err
+} finally {
   /* send email on build failure (declarative pipeline's post section would work better) */
-  if (env.BRANCH_NAME != "jenkins") emailext(
+  if ((error != null || currentBuild.currentResult != 'SUCCESS') && env.BRANCH_NAME != "jenkins") emailext(
     subject: "\$PROJECT_NAME - Build # \$BUILD_NUMBER - FAILED",
     body: """\$PROJECT_NAME - Build # \$BUILD_NUMBER - FAILED
-
-$err
 
 Check console output at \$BUILD_URL to view full results.
 
@@ -196,5 +199,5 @@ End of build log:
     ],
     replyTo: '$DEFAULT_REPLYTO'
   )
-  throw err
+  if (error != null) throw error
 }
