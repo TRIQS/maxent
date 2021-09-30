@@ -43,7 +43,7 @@ imaginary parts of :math:`G` and :math:`A` are coupled due to the fact that
 .. math::
    :label: eq:Gtau-from-Aw
 
-   G_{ab}(\tau) = \int d\omega  \; \frac{e^{-\omega\tau}}{1+e^{-\omega\beta}}A_{ab}(\omega).
+   G_{ab}(\tau) = \int d\omega  \; \frac{-e^{-\omega\tau}}{1+e^{-\omega\beta}}A_{ab}(\omega).
 
 The real part of the spectral function is only connected to the real
 part of :math:`G(\tau)`, and analogous for the imaginary part. In the
@@ -64,7 +64,7 @@ Eq. :eq:`eq:Gtau-from-Aw` can be formulated as
 
 where the matrix
 
-.. math:: K_{nm} = \frac{e^{-\omega_m\tau_n}}{1+e^{-\omega_m\beta}} \Delta \omega_m
+.. math:: K_{nm} = \frac{-e^{-\omega_m\tau_n}}{1+e^{-\omega_m\beta}} \Delta \omega_m
 
 is the kernel of the transformation [#kernel]_. It seems that inverting Eq. :eq:`eq:Gtau-from-Aw-matrix`,
 i.e. calculating :math:`\mathbf{A}` via :math:`\mathbf{A} = K^{-1}\mathbf{G}`, is just
