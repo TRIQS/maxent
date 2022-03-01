@@ -7,6 +7,12 @@ This document describes the main changes in maxent.
 
 The newest version, including changes since the last release, can be obtained using ``git checkout unstable``.
 
+Version 1.1.0
+-------------
+
+Version 1.1.0 is a compatibility release for TRIQS version 3.1.0.
+
+
 Version 1.0.0
 -------------
 
