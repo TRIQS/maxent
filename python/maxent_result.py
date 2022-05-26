@@ -34,7 +34,8 @@ from .plot_utils import *
 from .omega_meshes import DataOmegaMesh
 from .alpha_meshes import DataAlphaMesh
 from datetime import datetime, timedelta
-from collections import Sequence, OrderedDict
+from collections.abc import Sequence
+from collections import OrderedDict
 from itertools import product, zip_longest
 import copy
 from functools import wraps

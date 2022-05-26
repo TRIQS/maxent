@@ -7,6 +7,11 @@ This document describes the main changes in maxent.
 
 The newest version, including changes since the last release, can be obtained using ``git checkout unstable``.
 
+Version 1.1.1
+-------------
+
+Fix an import issue for Python 3.10: Sequence should be imported from collections.abc
+
 Version 1.1.0
 -------------
 
