@@ -3,7 +3,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 message( STATUS "-------- BUILD-TYPE: ${CMAKE_BUILD_TYPE} -------------")
 
-set (MAXENT_VERSION "1.1.0")
+set (MAXENT_VERSION "1.1.1")
 
 # start configuration
 cmake_minimum_required(VERSION 2.8)
