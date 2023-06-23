@@ -26,11 +26,11 @@ if(TRIQS_PATH) # TRIQS 1.4
   set(TRIQS_V2 OFF)
   set(python_destination triqs_maxent)
   set(PYTHON_LIB_DEST ${TRIQS_PYTHON_LIB_DEST_ROOT}/${python_destination})
-elseif(${USE_TRIQS}) # search for TRIQS 3.1 - if not found default to USE_TRIQS=OFF
+elseif(${USE_TRIQS}) # search for TRIQS 3.2 - if not found default to USE_TRIQS=OFF
   # Try to find TRIQS and Cpp2Py
   project(maxent CXX)
   option(BUILD_SHARED_LIBS "Build shared libraries" ON)
-  find_package(TRIQS 3.1 QUIET)
+  find_package(TRIQS 3.2 QUIET)
   if (TRIQS_FOUND)
 	message(STATUS "--------- Installing as TRIQS ${TRIQS_VERSION} package ---------")
 	set(TRIQS_V1 OFF)
@@ -181,7 +181,7 @@ if(BUILD_DEBIAN_PACKAGE)
   set(CPACK_PACKAGE_VERSION ${MAXENT_VERSION})
   set(CPACK_PACKAGE_CONTACT "https://github.com/TRIQS/maxent")
   execute_process(COMMAND dpkg --print-architecture OUTPUT_VARIABLE CMAKE_DEBIAN_PACKAGE_ARCHITECTURE OUTPUT_STRIP_TRAILING_WHITESPACE)
-  set(CPACK_DEBIAN_PACKAGE_DEPENDS "triqs (>= 3.1)")
+  set(CPACK_DEBIAN_PACKAGE_DEPENDS "triqs (>= 3.2)")
   set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
   set(CPACK_DEBIAN_PACKAGE_GENERATE_SHLIBS ON)
   include(CPack)
