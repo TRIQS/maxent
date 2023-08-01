@@ -125,7 +125,7 @@ def get_G_w_from_A_w(A_w,
             G_w << G_w + A_w[iw] * \
                 inverse(Omega - w_points[iw] + 1j * domega * broadening_factor) * domega
 
-    G_w << mpi.all_reduce(mpi.world, G_w, lambda x, y: x + y)
+    G_w << mpi.all_reduce(G_w)
     mpi.barrier()
 
     return G_w

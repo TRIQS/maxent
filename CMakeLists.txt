@@ -6,7 +6,8 @@ message( STATUS "-------- BUILD-TYPE: ${CMAKE_BUILD_TYPE} -------------")
 set (MAXENT_VERSION "1.1.0")
 
 # start configuration
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.20 FATAL_ERROR)
+cmake_policy(VERSION 3.20)
 # We use TRIQS by default
 option(USE_TRIQS "Use TRIQS" ON)
 
