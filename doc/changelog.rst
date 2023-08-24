@@ -7,6 +7,35 @@ This document describes the main changes in maxent.
 
 The newest version, including changes since the last release, can be obtained using ``git checkout unstable``.
 
+Version 1.2.0
+-------------
+
+Version 1.2.0 is a compatibility release for TRIQS version 3.2.0
+
+We thank all contributors: Alexander Hampel, Dylan Simon, Nils Wentzell
+
+Find below an itemized list of changes in this release.
+
+### General
+* Fix issue in DataDefaultModel constructor for omegas of different length
+* Fix import issue for Python 3.10: Sequence should be imported from collections.abc
+* Synchronize Jenkinsfile and Dockerfile with app4triqs@a27e231c
+* Bump tolerance in SVD check of tau_kernel test from 1e-14 to 1e-13
+* Porting to triqs 3.2
+
+### cmake
+* Bump maxent version to 1.2 and use triqs version 3.2
+
+### doc
+* Fix incorrect sign in expression for imaginary time Green function and kernel
+
+### jenkins
+* Use gcc 13 on osx
+* remove bouncing email address
+* add CMAKE_ARGS in Dockerfile; fix node label for notriqs
+* use triqs unstable branch?
+
+
 Version 1.1.1
 -------------
 
