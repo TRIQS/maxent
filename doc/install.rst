@@ -37,7 +37,6 @@ Installation steps
 
 #. Compile the code, run the tests and install the application::
 
-     $ make
      $ make test
      $ make install
 

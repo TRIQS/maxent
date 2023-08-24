@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["python"]
+
+[project]
+name = "app4triqs"
+version = "@PROJECT_VERSION@"
+authors = [
+  { name="TRIQS", email="triqs@flatironinstitute.org" }
+]
+description = "PROVIDE HERE A DESCRIPTION OF YOUR APPLICATION"
+readme = "README.md"
+keywords = [triqs"]
+requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "numpy",
+    "scipy"
+]
+
+[project.urls]
+"Homepage" = "https://triqs.github.io/app4triqs"
+"Bug Tracker" = "https://github.com/triqs/app4triqs/issues"
+
+# in case you want an executable hook of your app
+# [project.scripts]
+# solid_dmft = "solid_dmft.main:main"
+

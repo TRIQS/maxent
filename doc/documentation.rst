@@ -10,14 +10,6 @@ Documentation
               &=  a^2 + 2ab + b^2
 
 
-C++ reference manual
-====================
-
-.. toctree::
-   :maxdepth: 5
-
-   cpp2rst_generated/contents
-
 Python reference manual
 =======================
 
