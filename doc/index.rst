@@ -27,6 +27,7 @@ Learn how to use this package in the :ref:`documentation`.
    install
    documentation
    issues
+   ChangeLog.md
    about
 
 .. note::

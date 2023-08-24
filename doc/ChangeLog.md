@@ -1,14 +1,13 @@
-.. _changelog:
+(changelog)=
 
-Changelog
-=========
+# Changelog
 
 This document describes the main changes in maxent.
 
 The newest version, including changes since the last release, can be obtained using ``git checkout unstable``.
 
-Version 1.2.0
--------------
+
+## Version 1.2.0
 
 Version 1.2.0 is a compatibility release for TRIQS version 3.2.0
 
@@ -36,26 +35,23 @@ Find below an itemized list of changes in this release.
 * use triqs unstable branch?
 
 
-Version 1.1.1
--------------
+## Version 1.1.1
 
 Fix an import issue for Python 3.10: Sequence should be imported from collections.abc
 
-Version 1.1.0
--------------
+
+## Version 1.1.0
 
 Version 1.1.0 is a compatibility release for TRIQS version 3.1.0.
 
 
-Version 1.0.0
--------------
+## Version 1.0.0
 
 Version 1.0.0 is a compatibility release for TRIQS version 3.0.0 that
 introduces compatibility with Python 3 (Python 2 no longer supported)
 
 
-Version 0.9.1, 2019-05-22
--------------------------
+## Version 0.9.1
 
 * :py:class:`.IOmegaKernel` for continuing :math:`G(i\omega)`
   (an object corresponding to :py:class:`.TauMaxEnt` is still missing)
@@ -75,8 +71,7 @@ It has been checked to work with the following TRIQS releases:
 but it probably also works with other commits.
 
 
-Version 0.9.0, 2018-08-24
--------------------------
+## Version 0.9.0
 
 This is the initial version that was published.
 

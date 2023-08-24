@@ -8,6 +8,6 @@ Table of contents
    install
    documentation
    issues
-   changelog
+   ChangeLog.md
    versions
    about
