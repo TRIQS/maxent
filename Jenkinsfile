@@ -1,4 +1,4 @@
-def projectName = "maxent" /* set to app/repo name */
+def projectName = "app4triqs" /* set to app/repo name */
 
 def dockerName = projectName.toLowerCase();
 /* which platform to build documentation on */
@@ -25,7 +25,7 @@ def platforms = [:]
 
 /****************** linux builds (in docker) */
 /* Each platform must have a cooresponding Dockerfile.PLATFORM in triqs/packaging */
-def dockerPlatforms = ["ubuntu-clang", "ubuntu-gcc"]
+def dockerPlatforms = ["ubuntu-clang", "ubuntu-gcc", "sanitize"]
 /* .each is currently broken in jenkins */
 for (int i = 0; i < dockerPlatforms.size(); i++) {
   def platform = dockerPlatforms[i]
@@ -45,7 +45,7 @@ for (int i = 0; i < dockerPlatforms.size(); i++) {
         args = '-DASAN=ON -DUBSAN=ON'
       def img = docker.build("flatironinstitute/${dockerName}:${env.BRANCH_NAME}-${env.STAGE_NAME}", "--build-arg APPNAME=${projectName} --build-arg BUILD_ID=${env.BUILD_TAG} --build-arg CMAKE_ARGS='${args}' .")
       catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
-        img.inside() {
+        img.inside("--shm-size=4gb") {
           sh "make -C \$BUILD/${projectName} test CTEST_OUTPUT_ON_FAILURE=1"
         }
       }
@@ -53,32 +53,6 @@ for (int i = 0; i < dockerPlatforms.size(); i++) {
         sh "docker rmi --no-prune ${img.imageName()}"
       }
     } } }
-  } }
-}
-
-def notriqsPlatforms = ['ubuntu-gcc']
-/* .each is currently broken in jenkins */
-for (int i = 0; i < notriqsPlatforms.size(); i++) {
-  def platform = notriqsPlatforms[i]
-  platforms["${platform}-notriqs"] = { -> node('linux && docker && triqs') {
-    stage("${platform}-notriqs") { timeout(time: 1, unit: 'HOURS') {
-      checkout scm
-      /* construct a Dockerfile for this base */
-      sh """
-      ( echo "FROM flatironinstitute/triqs:${triqsBranch}-${platform}" ; sed '0,/^FROM /d' Dockerfile ) > Dockerfile.jenkins
-        mv -f Dockerfile.jenkins Dockerfile
-      """
-      /* build and tag */
-      def img = docker.build("flatironinstitute/${dockerName}:${env.BRANCH_NAME}-${env.STAGE_NAME}", "--build-arg APPNAME=${projectName} --build-arg USE_TRIQS= .")
-      catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
-        img.inside() {
-          sh "make -C \$BUILD/${projectName} test CTEST_OUTPUT_ON_FAILURE=1"
-        }
-      }
-      if (!keepInstall) {
-        sh "docker rmi --no-prune ${img.imageName()}"
-      }
-    } }
   } }
 }
 
@@ -115,9 +89,7 @@ for (int i = 0; i < osxPlatforms.size(); i++) {
           "LD_LIBRARY_PATH=$hdf5/lib",
           "PYTHONPATH=$installDir/lib/python3.9/site-packages",
           "CMAKE_PREFIX_PATH=$venv/lib/cmake/triqs",
-          "OMP_NUM_THREADS=2",
-          "NUMEXPR_NUM_THREADS=2",
-          "MKL_NUM_THREADS=2"]) {
+          "OMP_NUM_THREADS=2"]) {
         deleteDir()
         /* note: this is installing into the parent (triqs) venv (install dir), which is thus shared among apps and so not be completely safe */
         sh "pip3 install -U -r $srcDir/requirements.txt"

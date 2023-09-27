@@ -1,46 +1,81 @@
-# generate the conf.py
-if(${DOC_WITH_TRIQS})
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/conf.py.in ${CMAKE_CURRENT_BINARY_DIR}/conf.py @ONLY)
-else()
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/conf_notriqs.py.in ${CMAKE_CURRENT_BINARY_DIR}/conf.py @ONLY)
-endif()
+# Generate the sphinx config file
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/conf.py.in ${CMAKE_CURRENT_BINARY_DIR}/conf.py @ONLY)
 
-# all rst files of the documentation
-file(GLOB_RECURSE doc_sources *.rst)
+# -----------------------------------------------------------------------------
+# Create an optional target that allows us to regenerate the C++ doc with c++2rst
+# -----------------------------------------------------------------------------
+add_custom_target(${PROJECT_NAME}_docs_cpp2rst)
+include(${PROJECT_SOURCE_DIR}/share/cmake/extract_flags.cmake)
+extract_flags(${PROJECT_NAME}_c BUILD_INTERFACE)
+separate_arguments(${PROJECT_NAME}_c_CXXFLAGS)
+macro(generate_docs header_file)
+  add_custom_command(
+    TARGET ${PROJECT_NAME}_docs_cpp2rst
+    COMMAND rm -rf ${CMAKE_CURRENT_SOURCE_DIR}/cpp2rst_generated
+    COMMAND
+      PYTHONPATH=${CPP2PY_BINARY_DIR}:$ENV{PYTHONPATH}
+      PATH=${CPP2PY_BINARY_DIR}/bin:${CPP2PY_ROOT}/bin:$ENV{PATH}
+      c++2rst
+      ${header_file}
+      -N ${PROJECT_NAME}
+      --output_directory ${CMAKE_CURRENT_SOURCE_DIR}/cpp2rst_generated
+      -I${PROJECT_SOURCE_DIR}/c++
+      --cxxflags="${${PROJECT_NAME}_c_CXXFLAGS}"
+  )
+endmacro(generate_docs)
 
-# create documentation target
-set(sphinx_top ${CMAKE_CURRENT_BINARY_DIR}/html/index.html)
-if(${TRIQS_V1})
-  add_custom_command(OUTPUT ${sphinx_top} DEPENDS ${doc_sources} py_copy
-    COMMAND ${CMAKE_BINARY_DIR}/build_triqs ${TRIQS_SPHINXBUILD_EXECUTABLE} -c . -b html ${CMAKE_CURRENT_BINARY_DIR} html)
-  add_custom_target(doc_sphinx ALL DEPENDS ${sphinx_top})
-else() # TRIQS 2.1 and DOC_WITH_TRIQS=OFF
-  add_custom_command(OUTPUT ${sphinx_top} DEPENDS ${doc_sources}
-    COMMAND env PYTHONPATH=${CMAKE_BINARY_DIR}/python:$ENV{PYTHONPATH} ${TRIQS_SPHINXBUILD_EXECUTABLE} -c . -j8 -b html ${CMAKE_CURRENT_BINARY_DIR} html)
-  add_custom_target(doc_message
-           COMMAND ${CMAKE_COMMAND} -E echo ""
-           COMMAND ${CMAKE_COMMAND} -E echo "   Documentation can be found at"
-           COMMAND ${CMAKE_COMMAND} -E echo "   ${sphinx_top}"
-           COMMAND ${CMAKE_COMMAND} -E echo "   and will be installed to"
-           COMMAND ${CMAKE_COMMAND} -E echo "   ${CMAKE_INSTALL_PREFIX}/${DOC_DEST}"
-           COMMAND ${CMAKE_COMMAND} -E echo ""
-           DEPENDS ${sphinx_top})
-  add_custom_target(doc_sphinx ALL DEPENDS ${sphinx_top} ${CMAKE_CURRENT_BINARY_DIR} doc_message)
-endif()
+generate_docs(${PROJECT_SOURCE_DIR}/c++/${PROJECT_NAME}/${PROJECT_NAME}.hpp)
 
-# ------------------------------------------------------------------------------------------------
-# Copy the directory substructure and link all files with relevant extensions
-# ------------------------------------------------------------------------------------------------
-FILE(GLOB_RECURSE DOCFILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.*)
-foreach(f ${DOCFILES})
-    get_filename_component(fd ${CMAKE_CURRENT_BINARY_DIR}/${f} DIRECTORY)
-    file(MAKE_DIRECTORY ${fd})
-    execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink "${CMAKE_CURRENT_SOURCE_DIR}/${f}" "${CMAKE_CURRENT_BINARY_DIR}/${f}")
+# --------------------------------------------------------
+# Build & Run the C++ doc examples and capture the output
+# --------------------------------------------------------
+
+add_custom_target(${PROJECT_NAME}_docs_example_output)
+file(GLOB_RECURSE ExampleList RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.cpp)
+foreach(example ${ExampleList})
+  get_filename_component(f ${example} NAME_WE)
+  get_filename_component(d ${example} DIRECTORY)
+  add_executable(${PROJECT_NAME}_doc_${f} EXCLUDE_FROM_ALL ${example})
+  set_property(TARGET ${PROJECT_NAME}_doc_${f} PROPERTY RUNTIME_OUTPUT_DIRECTORY ${d})
+  target_link_libraries(${PROJECT_NAME}_doc_${f} triqs)
+  add_custom_command(TARGET ${PROJECT_NAME}_doc_${f}
+   COMMAND ${PROJECT_NAME}_doc_${f} > ${CMAKE_CURRENT_SOURCE_DIR}/${d}/${f}.output 2>/dev/null
+   WORKING_DIRECTORY ${d}
+  )
+  add_dependencies(${PROJECT_NAME}_docs_example_output ${PROJECT_NAME}_doc_${f})
 endforeach()
 
-# install
-install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/html/ COMPONENT documentation DESTINATION ${DOC_DEST}
- FILES_MATCHING
- REGEX "\\.(html|pdf|png|gif|jpg|js|xsl|css|py|txt|inv|bib|dat|h5)$"
- PATTERN "_*"
+# ---------------------------------
+# Top Sphinx target
+# ---------------------------------
+if(NOT DEFINED SPHINXBUILD_EXECUTABLE)
+  find_package(Sphinx)
+endif()
+
+# Sphinx has internal caching, always run it
+add_custom_target(${PROJECT_NAME}_docs_sphinx ALL)
+add_custom_command(
+  TARGET ${PROJECT_NAME}_docs_sphinx
+  COMMAND PYTHONPATH=${PROJECT_BINARY_DIR}/python:$ENV{PYTHONPATH} ${SPHINXBUILD_EXECUTABLE} -j auto -c . -b html ${CMAKE_CURRENT_SOURCE_DIR} html
+)
+
+option(Sphinx_Only "When building the documentation, skip the Python Modules and the generation of C++ Api and example outputs" OFF)
+if(NOT Sphinx_Only)
+  # Autodoc usage requires the python modules to be built first
+  get_property(CPP2PY_MODULES_LIST GLOBAL PROPERTY CPP2PY_MODULES_LIST)
+  if(CPP2PY_MODULES_LIST)
+    add_dependencies(${PROJECT_NAME}_docs_sphinx ${CPP2PY_MODULES_LIST})
+  endif()
+
+  # Generation of C++ Api and Example Outputs
+  add_dependencies(${PROJECT_NAME}_docs_sphinx ${PROJECT_NAME}_docs_cpp2rst ${PROJECT_NAME}_docs_example_output)
+endif()
+
+# ---------------------------------
+# Install
+# ---------------------------------
+install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/html/ COMPONENT documentation DESTINATION share/doc/${PROJECT_NAME}
+  FILES_MATCHING
+  REGEX "\\.(html|pdf|png|gif|jpg|svg|ico|js|xsl|css|py|txt|inv|bib|ttf|woff2|eot|sh)$"
+  PATTERN "_*"
 )
