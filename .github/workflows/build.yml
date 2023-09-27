@@ -83,7 +83,7 @@ jobs:
         make -j1 install VERBOSE=1
         cd ../
 
-    - name: Build app4triqs
+    - name: Build triqs_maxent
       env:
         CC: ${{ matrix.cc }}
         CXX: ${{ matrix.cxx }}
@@ -93,7 +93,7 @@ jobs:
         mkdir build && cd build && cmake ..
         make -j2 || make -j1 VERBOSE=1
 
-    - name: Test app4triqs
+    - name: Test triqs_maxent
       env:
         DYLD_FALLBACK_LIBRARY_PATH: /usr/local/opt/llvm/lib
       run: |

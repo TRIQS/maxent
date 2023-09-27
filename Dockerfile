@@ -1,6 +1,6 @@
 # See ../triqs/packaging for other options
 FROM flatironinstitute/triqs:unstable-ubuntu-clang
-ARG APPNAME=app4triqs
+ARG APPNAME=triqs_maxent
 
 COPY requirements.txt /src/$APPNAME/requirements.txt
 RUN pip3 install -r /src/$APPNAME/requirements.txt

@@ -1,21 +1,21 @@
 easyblock = 'CMakeMake'
 
-name = 'TRIQS-app4triqs'
+name = 'TRIQS-triqs_maxent'
 version = '@PROJECT_VERSION@'
 
-homepage = 'https://triqs.github.io/app4triqs/'
+homepage = 'https://triqs.github.io/triqs_maxent/'
 description = """
  PROVIDE HERE A DESCRIPTION OF YOUR APPLICATION
 """
 
-docurls = ['https://triqs.github.io/app4triqs/%(version_major_minor)s.x/']
+docurls = ['https://triqs.github.io/triqs_maxent/%(version_major_minor)s.x/']
 software_license = 'LicenseGPLv3'
 
 toolchain = {'name': 'foss', 'version': '2021b'}
 toolchainopts = {'pic': True, 'usempi': True}
 
-source_urls = ['https://github.com/TRIQS/app4triqs/releases/download/%(version)s/']
-sources = ['app4triqs-%(version)s.tar.gz']
+source_urls = ['https://github.com/TRIQS/triqs_maxent/releases/download/%(version)s/']
+sources = ['triqs_maxent-%(version)s.tar.gz']
 checksums = ['PUT HERE THE SHA256 OF THE RELEASE TARBALL']
 
 dependencies = [
@@ -40,21 +40,21 @@ separate_build_dir = True
 runtest = 'test'
 
 sanity_check_paths = {
-    'files': ['lib/libapp4triqs_c.a'],
-    'dirs': ['include/app4triqs', 'lib', 'share',
-             'lib/python%(pyshortver)s/site-packages/app4triqs'],
+    'files': ['lib/libtriqs_maxent_c.a'],
+    'dirs': ['include/triqs_maxent', 'lib', 'share',
+             'lib/python%(pyshortver)s/site-packages/triqs_maxent'],
 }
 
-sanity_check_commands = ["python -c 'import app4triqs'"]
+sanity_check_commands = ["python -c 'import triqs_maxent'"]
 
 modextrapaths = {
     'CPLUS_INCLUDE_PATH': 'include',
     'PYTHONPATH': 'lib/python%(pyshortver)s/site-packages',
-    'CMAKE_PREFIX_PATH': 'lib/cmake/app4triqs',
+    'CMAKE_PREFIX_PATH': 'lib/cmake/triqs_maxent',
 }
 modextravars = {
-    'APP4TRIQS_ROOT': '%(installdir)s',
-    'APP4TRIQS_VERSION': '%(version)s',
+    'TRIQS_MAXENT_ROOT': '%(installdir)s',
+    'TRIQS_MAXENT_VERSION': '%(version)s',
 }
 
 moduleclass = 'phys'
