@@ -1,0 +1,3 @@
+#!/bin/bash
+
+@TRIQS_PYTHON_EXECUTABLE@ -m triqs_maxent.plot.plot_maxent "$@"

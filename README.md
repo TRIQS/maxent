@@ -1,3 +1,5 @@
+[![build](https://github.com/TRIQS/triqs_maxent/workflows/build/badge.svg)](https://github.com/TRIQS/triqs_maxent/actions?query=workflow%3Abuild)
+
 # MaxEnt
 
 The goal of this TRIQS application is to provide a modular Maximum Entropy program to perform analytic continuation.
