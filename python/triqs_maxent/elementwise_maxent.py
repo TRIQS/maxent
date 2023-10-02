@@ -18,11 +18,7 @@
 
 
 
-from .triqs_support import *
-if if_triqs_1():
-    from triqs.gf.local import *
-elif if_triqs_2():
-    from triqs.gf import *
+from triqs.gf import *
 from .tau_maxent import TauMaxEnt
 from .default_models import *
 from .maxent_result import MaxEntResult
@@ -312,7 +308,6 @@ class ElementwiseMaxEnt(object):
         self.determine_shape = determine_shape
         self.maxent_result = None
 
-    @require_triqs
     def set_G_tau(self, G_tau, *args, **kwargs):
         r""" Set matrix-valued :math:`G(\tau)` as TRIQS GfImTime
 
@@ -341,7 +336,6 @@ class ElementwiseMaxEnt(object):
         G_mat = G_tau
         self.set_G(G_mat, set_G_element, determine_shape)
 
-    @require_triqs
     def set_G_iw(self, G_iw, *args, **kwargs):
         r""" Set matrix-valued :math:`G(i\omega_n)` as TRIQS GfImFreq
 

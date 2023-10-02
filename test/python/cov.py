@@ -18,11 +18,7 @@
 
 
 
-from triqs_maxent.triqs_support import *
-if if_triqs_1():
-    from triqs.gf.local import *
-elif if_triqs_2():
-    from triqs.gf import *
+from triqs.gf import *
 import numpy as np
 from triqs_maxent import *
 from triqs_maxent.tau_maxent import *
@@ -31,19 +27,16 @@ np.random.seed(3466983071)
 
 tm = TauMaxEnt()
 
-if if_no_triqs():
-    tm.set_G_tau_file('g_tau_semicircular.dat')
-else:
-    # First, generate an exact G(tau)
-    G_iw = GfImFreq(beta=40, indices=[0], n_points=100)
-    G_iw << SemiCircular(1)
-    G_tau = GfImTime(beta=40, indices=[0], n_points=201)
-    G_tau.set_from_fourier(G_iw)
-    # fix for TRIQS 2.1
-    G_tau.data[:] -= G_tau.data.imag * 1.0j
-    tm.set_G_tau(G_tau)
-    assert np.max(np.abs(tm.G - G_tau.data[:, 0, 0])) < 1.e-14, \
-        "G(tau) inconsistency"
+# First, generate an exact G(tau)
+G_iw = GfImFreq(beta=40, indices=[0], n_points=100)
+G_iw << SemiCircular(1)
+G_tau = GfImTime(beta=40, indices=[0], n_points=201)
+G_tau.set_from_fourier(G_iw)
+# fix for TRIQS 2.1
+G_tau.data[:] -= G_tau.data.imag * 1.0j
+tm.set_G_tau(G_tau)
+assert np.max(np.abs(tm.G - G_tau.data[:, 0, 0])) < 1.e-14, \
+    "G(tau) inconsistency"
 # we assume that the error is proportional to G(tau)
 err = -1.e-3 * tm.G
 # we calculate some noise to add to G(tau)
@@ -63,10 +56,7 @@ tm.set_cov(C)
 assert np.max(np.abs(np.sort(tm.err) - np.sort(err))) < 1.e-14, \
     "err is different"
 result_C = tm.run()
-if if_no_triqs():
-    tm.set_G_tau_file('g_tau_semicircular.dat')
-else:
-    tm.set_G_tau(G_tau)
+tm.set_G_tau(G_tau)
 result_C2 = tm.run()
 
 T = tm._T.copy()

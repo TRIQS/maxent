@@ -34,11 +34,7 @@ import argparse
 import sys
 import os.path
 
-from triqs_maxent.triqs_support import *
-try:
-    from h5 import HDFArchive
-except ImportError:
-    pass
+from h5 import HDFArchive
 from triqs_maxent.maxent_result import MaxEntResultData
 import pickle
 
@@ -356,7 +352,7 @@ if __name__ == "__main__":
                         '--pickle',
                         action='store_true',
                         help='use pickle instead of HDF to load data',
-                        default=if_no_triqs())
+                        default=false)
     args = parser.parse_args()
 
     pme = PlotMaxEnt(args.input, pickle_mode=args.pickle)

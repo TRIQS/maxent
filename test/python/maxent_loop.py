@@ -20,7 +20,6 @@
 
 import numpy as np
 from triqs_maxent import *
-from triqs_maxent.triqs_support import *
 import matplotlib.pyplot as plt
 
 import sys
@@ -75,9 +74,6 @@ ml = MaxEntLoop(cost_function=Q, minimizer=minimizer,
                 alpha_mesh=alpha_values, logtaker=logtaker)
 result = ml.run()
 
-if not if_no_triqs():
-    from h5 import HDFArchive
-    with HDFArchive('maxent_loop.h5', 'a') as ar:
-        ar['result'] = result.data
-else:
-    result.data
+from h5 import HDFArchive
+with HDFArchive('maxent_loop.h5', 'a') as ar:
+    ar['result'] = result.data

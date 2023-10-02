@@ -19,31 +19,19 @@
 
 
 import numpy as np
-from triqs_maxent.triqs_support import *
-if if_triqs_1():
-    from triqs.gf.local import *
-elif if_triqs_2():
-    from triqs.gf import *
+from triqs.gf import *
 from triqs_maxent.tau_maxent import TauMaxEnt
 from triqs_maxent.alpha_meshes import *
 
 np.random.seed(298347923)
 
-if if_no_triqs():
-    G_tau_data = np.loadtxt('g_tau_semicircular.dat')
-    tau = G_tau_data[:, 0]
-    G_tau_data = G_tau_data[:, 1]
-else:
-    # First, generate an exact G(tau)
-    G_iw = GfImFreq(beta=40, indices=[0], n_points=100)
-    G_iw << SemiCircular(1)
-    G_tau = GfImTime(beta=40, indices=[0], n_points=201)
-    G_tau.set_from_fourier(G_iw)
-    try:
-        tau = np.array(list(G_tau.mesh.values()))
-    except:
-        tau = np.array(list(G_tau.mesh))
-    G_tau_data = G_tau.data[:, 0, 0].real
+# First, generate an exact G(tau)
+G_iw = GfImFreq(beta=40, indices=[0], n_points=100)
+G_iw << SemiCircular(1)
+G_tau = GfImTime(beta=40, indices=[0], n_points=201)
+G_tau.set_from_fourier(G_iw)
+tau = np.array(list(G_tau.mesh.values()))
+G_tau_data = G_tau.data[:, 0, 0].real
 # we assume that the error is proportional to G(tau)
 err = -1.e-3 * G_tau_data
 # we calculate some noise to add to G(tau)

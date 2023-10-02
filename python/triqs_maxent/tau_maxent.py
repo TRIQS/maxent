@@ -18,11 +18,7 @@
 
 
 
-from .triqs_support import *
-if if_triqs_1():
-    from triqs.gf.local import *
-elif if_triqs_2():
-    from triqs.gf import *
+from triqs.gf import *
 from .maxent_loop import MaxEntLoop
 from .omega_meshes import HyperbolicOmegaMesh
 from .default_models import FlatDefaultModel
@@ -76,7 +72,6 @@ class TauMaxEnt(object):
         else:
             object.__setattr__(self, name, value)
 
-    @require_triqs
     def set_G_tau(self, G_tau, re=True, tau_new=None):
         r""" Set :math:`G(\tau)` from TRIQS GfImTime
 
@@ -137,7 +132,6 @@ class TauMaxEnt(object):
 
         self._transform(self._T, G_original_basis=True)
 
-    @require_triqs
     def set_G_iw(self, G_iw, np_tau=-1, **kwargs):
         r""" Set :math:`G(\tau)` from TRIQS GfImFreq
 

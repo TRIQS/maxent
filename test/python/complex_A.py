@@ -20,7 +20,6 @@
 
 import numpy as np
 from triqs_maxent import *
-from triqs_maxent.triqs_support import *
 
 import traceback
 import warnings
@@ -151,12 +150,9 @@ ml = MaxEntLoop(cost_function=Q, minimizer=minimizer,
                 alpha_mesh=alpha_values, logtaker=logtaker)
 result_complex = ml.run()
 
-if not if_no_triqs():
-    from h5 import HDFArchive
-    with HDFArchive('maxent_loop.h5', 'a') as ar:
-        ar['result_complex'] = result_complex.data
-else:
-    result_complex.data
+from h5 import HDFArchive
+with HDFArchive('maxent_loop.h5', 'a') as ar:
+    ar['result_complex'] = result_complex.data
 
 #######################################################################
 # MaxEnt with real part of G(tau)
@@ -167,12 +163,9 @@ ml = MaxEntLoop(cost_function=Q, minimizer=minimizer,
                 alpha_mesh=alpha_values, logtaker=logtaker)
 result_rp = ml.run()
 
-if not if_no_triqs():
-    from h5 import HDFArchive
-    with HDFArchive('maxent_loop.h5', 'a') as ar:
-        ar['result_rp'] = result_rp.data
-else:
-    result_rp.data
+from h5 import HDFArchive
+with HDFArchive('maxent_loop.h5', 'a') as ar:
+    ar['result_rp'] = result_rp.data
 
 #######################################################################
 # MaxEnt with imag part of G(tau)
@@ -182,12 +175,9 @@ ml = MaxEntLoop(cost_function=Q, minimizer=minimizer,
                 alpha_mesh=alpha_values, logtaker=logtaker)
 result_ip = ml.run()
 
-if not if_no_triqs():
-    from h5 import HDFArchive
-    with HDFArchive('maxent_loop.h5', 'a') as ar:
-        ar['result_ip'] = result_ip.data
-else:
-    result_ip.data
+from h5 import HDFArchive
+with HDFArchive('maxent_loop.h5', 'a') as ar:
+    ar['result_ip'] = result_ip.data
 
 # due to differences in the optimization space, we get different results
 # therefore we have to use a weak criterion
@@ -218,9 +208,6 @@ result = ml.run()
 assert (np.sum(np.abs(result_complex.A - result.A)**2)
         / result.A.size) < 0.1
 
-if not if_no_triqs():
-    from h5 import HDFArchive
-    with HDFArchive('maxent_loop.h5', 'a') as ar:
-        ar['result_complex_iw'] = result.data
-else:
-    result.data
+from h5 import HDFArchive
+with HDFArchive('maxent_loop.h5', 'a') as ar:
+    ar['result_complex_iw'] = result.data

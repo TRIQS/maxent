@@ -2,3 +2,5 @@
 mako
 numpy
 scipy
+decorator
+matplotlib

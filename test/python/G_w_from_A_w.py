@@ -18,11 +18,7 @@
 
 
 from triqs_maxent.maxent_util import *
-from triqs_maxent.triqs_support import *
-if if_triqs_1():
-    from triqs.gf.local import *
-elif if_triqs_2():
-    from triqs.gf import *
+from triqs.gf import *
 from triqs.utility.comparison_tests import *
 import copy
 

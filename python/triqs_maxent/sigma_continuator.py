@@ -18,23 +18,17 @@
 
 
 
-from .triqs_support import *
-if if_triqs_1():
-    from triqs.gf.local import *
-elif if_triqs_2():
-    from triqs.gf import *
+from triqs.gf import *
 from .maxent_util import *
 
 
 class SigmaContinuator(object):
     """ Base class for the analytic continuation of self-energies"""
 
-    @require_triqs
     def __init__(self):
         self._BlockGf = False
         self._constant_shift = {}
 
-    @require_triqs
     def set_S_iw(self, S_iw):
         """ Set Matsubara self-energy """
         self.check_S_iw(S_iw)
@@ -64,7 +58,6 @@ class SigmaContinuator(object):
             raise NotImplementedError(
                 'SigmaContinuator takes only TRIQS Green functions.')
 
-    @require_triqs
     def set_Gaux_w_from_Aaux_w(self, Aaux_w, w_points, *args, **kwargs):
         r""" Calculate the auxiliary Green function :math:`G_{aux}(\omega)` from
         the auxiliary spectral function :math:`A_{aux}(\omega)` with :py:func:`.get_G_w_from_A_w()`
@@ -94,7 +87,6 @@ class SigmaContinuator(object):
             self.set_Gaux_w(get_G_w_from_A_w(
                 Aaux_w, w_points, *args, **kwargs))
 
-    @require_triqs
     def set_Gaux_w(self, Gaux_w):
         r""" Set the auxiliary real-frequency Green function :math:`G_{aux}(\omega)` and calculate
         the real-frequency self-energy :math:`\Sigma(\omega)`. The result is stored as S_w.
@@ -141,7 +133,6 @@ class DirectSigmaContinuator(SigmaContinuator):
         TRIQS Matsubara Green function
     """
 
-    @require_triqs
     def __init__(self, S_iw):
         super(DirectSigmaContinuator, self).__init__()
         self.set_S_iw(S_iw)
@@ -193,7 +184,6 @@ class InversionSigmaContinuator(SigmaContinuator):
         Constant C (usually set to the double counting)
     """
 
-    @require_triqs
     def __init__(self, S_iw, constant_shift=0):
         super(InversionSigmaContinuator, self).__init__()
         self.set_S_iw(S_iw)

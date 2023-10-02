@@ -17,27 +17,17 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
+import hashlib
 
-from triqs_maxent import *
-from triqs_maxent.tau_maxent import *
-from triqs.gf import *
-import numpy as np
+def assert_text_files_equal(fname1, fname2):
 
-# This test checks if for a huge alpha the default model is reproduced
+    def md5(fname):
+        hash_md5 = hashlib.md5()
+        with open(fname, "rb") as f:
+            for chunk in iter(lambda: f.read(4096), b""):
+                hash_md5.update(chunk)
+        return hash_md5.hexdigest()
 
-tm = TauMaxEnt()
-
-G_iw = GfImFreq(beta=40, indices=[0], n_points=200)
-G_iw << SemiCircular(1.0)
-tm.set_G_iw(G_iw)
-tm.set_G_tau_data(tm.tau, tm.G + 1.e-4 * np.random.randn(len(tm.G)))
-tm.maxent_loop.cost_function.d_dv = False
-# Trick use huge alpha in mesh
-tm.alpha_mesh = LogAlphaMesh(alpha_min=1e10 - 1, alpha_max=1e10, n_points=5)
-tm.set_error(5.e-4)
-tm.reduce_singular_space = 1.e-16
-result = tm.run()
-result._all_fields.append('H')
-
-assert np.max(result.H - tm.D.D) < 1e-6,\
-    'For a huge alpha default model is not reproduced (err = {}).'.format(np.max(result.H - tm.D.D))
+    md5_1 = md5(fname1)
+    md5_2 = md5(fname2)
+    assert md5_1 == md5_2, "files {} and {} differ".format(fname1, fname2)

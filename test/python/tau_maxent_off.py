@@ -20,11 +20,7 @@
 
 from triqs_maxent import *
 from triqs_maxent.tau_maxent import *
-from triqs_maxent.triqs_support import *
-if if_triqs_1():
-    from triqs.gf.local import *
-elif if_triqs_2():
-    from triqs.gf import *
+from triqs.gf import *
 import numpy as np
 import copy
 

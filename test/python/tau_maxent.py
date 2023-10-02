@@ -20,11 +20,7 @@
 
 from triqs_maxent import *
 from triqs_maxent.tau_maxent import *
-from triqs_maxent.triqs_support import *
-if if_triqs_1():
-    from triqs.gf.local import *
-elif if_triqs_2():
-    from triqs.gf import *
+from triqs.gf import *
 import numpy as np
 import matplotlib.pyplot as plt
 import copy
@@ -32,12 +28,9 @@ import copy
 np.random.seed(9)
 
 tm = TauMaxEnt(probability='normal')
-if if_no_triqs():
-    tm.set_G_tau_file('g_tau_semicircular.dat')
-else:
-    G_iw = GfImFreq(beta=40, indices=[0], n_points=100)
-    G_iw << SemiCircular(1)
-    tm.set_G_iw(G_iw, np_tau=201)
+G_iw = GfImFreq(beta=40, indices=[0], n_points=100)
+G_iw << SemiCircular(1)
+tm.set_G_iw(G_iw, np_tau=201)
 # this just adds some artificial noise, usually we wouldn't do that
 tm.set_G_tau_data(tm.tau, tm.G + 1.e-3 * np.random.randn(len(tm.G)))
 # use a thinner alpha mesh for test purposes

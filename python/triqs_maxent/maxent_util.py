@@ -26,20 +26,12 @@ MaxEnt.
 
 import numpy as np
 from itertools import product
-from .triqs_support import *
-if if_triqs_1():
-    from triqs.gf.local import *
-elif if_triqs_2():
-    from triqs.gf import *
-try:
-    import triqs.utility.mpi as mpi
-except ImportError:  # notriqs
-    pass
+from triqs.gf import *
+from triqs.utility import mpi
 from .kernels import TauKernel
 from .omega_meshes import DataOmegaMesh
 
 
-@require_triqs
 def get_G_w_from_A_w(A_w,
                      w_points,
                      np_interp_A=None,
@@ -131,7 +123,6 @@ def get_G_w_from_A_w(A_w,
     return G_w
 
 
-@require_triqs
 def get_G_tau_from_A_w(A_w, w_points, beta, np_tau):
     r""" Calculate :math:`G(\tau)` for a given :math:`A(\omega)`.
 

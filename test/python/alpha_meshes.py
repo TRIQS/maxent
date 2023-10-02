@@ -19,7 +19,7 @@
 
 
 from triqs_maxent.alpha_meshes import *
-from triqs_maxent.triqs_support import assert_text_files_equal
+from triqs_maxent.test_util import assert_text_files_equal
 import sys
 
 with open('alpha_meshes.out', 'w') as out:

@@ -1,11 +1,6 @@
 # Configure the version
 configure_file(version.py.in version.py)
 
-set(USE_TRIQS ON)
-set(TRIQS_V1 OFF)
-set(TRIQS_V2 ON)
-configure_file(triqs_support.py.in triqs_support.py)
-
 # All Python files. Copy them in the build dir to have a complete package for the tests.
 file(GLOB_RECURSE python_sources RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.py)
 file(GLOB_RECURSE wrap_generators RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *_desc.py)

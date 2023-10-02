@@ -18,12 +18,7 @@
 
 
 
-from triqs_maxent.triqs_support import *
-if if_triqs_1():
-    from triqs.gf.local import *
-elif if_triqs_2():
-    from triqs.gf import *
-
+from triqs.gf import *
 from triqs_maxent import *
 from triqs_maxent.elementwise_maxent import *
 from itertools import product
@@ -33,30 +28,28 @@ level = 1.e-13
 
 em = ElementwiseMaxEnt()
 
-if not if_no_triqs():
+G_iw = GfImFreq(beta=40, indices=[0, 1])
+G_iw[0, 0] << inverse(Omega - 1)
+G_iw[1, 1] << inverse(Omega + 1)
+G_tau = GfImTime(beta=40, indices=[0, 1], n_points=2051)
+G_tau.set_from_fourier(G_iw)
 
-    G_iw = GfImFreq(beta=40, indices=[0, 1])
-    G_iw[0, 0] << inverse(Omega - 1)
-    G_iw[1, 1] << inverse(Omega + 1)
-    G_tau = GfImTime(beta=40, indices=[0, 1], n_points=2051)
-    G_tau.set_from_fourier(G_iw)
+em.set_G_iw(G_iw, np_tau=len(G_tau.mesh))
+for element in product(range(2), range(2)):
+    em.set_G_element(em.maxent_diagonal,
+                     em.G_mat, element, True)
 
-    em.set_G_iw(G_iw, np_tau=len(G_tau.mesh))
-    for element in product(range(2), range(2)):
-        em.set_G_element(em.maxent_diagonal,
-                         em.G_mat, element, True)
+    assert np.max(np.abs(em.maxent_diagonal.G -
+                         G_tau.data[:, element[0], element[1]])) < level,\
+        "set_G_iw not correct"
 
-        assert np.max(np.abs(em.maxent_diagonal.G -
-                             G_tau.data[:, element[0], element[1]])) < level,\
-            "set_G_iw not correct"
-
-    em.set_G_tau(G_tau)
-    for element in product(range(2), range(2)):
-        em.set_G_element(em.maxent_diagonal,
-                         em.G_mat, element, True)
-        assert np.max(np.abs(em.maxent_diagonal.G -
-                             G_tau.data[:, element[0], element[1]])) < level,\
-            "set_G_tau not correct"
+em.set_G_tau(G_tau)
+for element in product(range(2), range(2)):
+    em.set_G_element(em.maxent_diagonal,
+                     em.G_mat, element, True)
+    assert np.max(np.abs(em.maxent_diagonal.G -
+                         G_tau.data[:, element[0], element[1]])) < level,\
+        "set_G_tau not correct"
 
 tau = np.linspace(0, 40, 10)
 G_elems = dict()

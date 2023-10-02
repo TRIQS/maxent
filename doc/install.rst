@@ -3,29 +3,47 @@
 .. _install:
 
 Install triqs_maxent
-*******************
+********************
+
+Packaged Versions of TRIQS/maxent
+=================================
+
+.. _ubuntu_debian:
+Ubuntu Debian packages
+----------------------
+
+We provide a Debian package for the Ubuntu LTS Version 22.04 (jammy), which can be installed by following the steps outlined :ref:`here <triqslibs:ubuntu_debian>`, and the subsequent command::
+
+        sudo apt-get install -y triqs_maxent
+
+.. _docker:
+Docker
+------
+
+A Docker image including the latest version of triqs_maxent is available `here <https://hub.docker.com/r/flatironinstitute/triqs>`_. For more information, please see the page on :ref:`TRIQS Docker <triqslibs:triqs_docker>`.
+
 
 Compiling triqs_maxent from source
-===============================
+==================================
 
 .. note:: To guarantee reproducibility in scientific calculations we strongly recommend the use of a stable `release <https://github.com/TRIQS/triqs/releases>`_ of both TRIQS and its applications.
 
 Prerequisites
 -------------
 
-#. The :ref:`TRIQS <triqslibs:welcome>` library, see :ref:`TRIQS installation instruction <triqslibs:installation>`.
-   In the following, we assume that TRIQS is installed in the directory ``path_to_triqs``.
+For using this package, you need the :ref:`TRIQS <triqslibs:welcome>` toolbox. In the following, we will suppose that it is installed in the ``path_to_triqs`` directory.
+The code is compatible with TRIQS versions ``3.2``.
 
 Installation steps
 ------------------
 
-#. Download the source code of the latest stable version by cloning the ``TRIQS/triqs_maxent`` repository from GitHub::
+#. Download the source code of the latest stable version by cloning the ``TRIQS/maxent`` repository from GitHub::
 
-     $ git clone https://github.com/TRIQS/triqs_maxent triqs_maxent.src
+     $ git clone https://github.com/TRIQS/maxent maxent.src
 
 #. Create and move to a new directory where you will compile the code::
 
-     $ mkdir triqs_maxent.build && cd triqs_maxent.build
+     $ mkdir maxent.build && cd maxent.build
 
 #. Ensure that your shell contains the TRIQS environment variables by sourcing the ``triqsvars.sh`` file from your TRIQS installation::
 
@@ -33,7 +51,7 @@ Installation steps
 
 #. In the build directory call cmake, including any additional custom CMake options, see below::
 
-     $ cmake ../triqs_maxent.src
+     $ cmake ../maxent.src
 
 #. Compile the code, run the tests and install the application::
 

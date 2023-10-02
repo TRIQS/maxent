@@ -21,7 +21,7 @@
 from triqs_maxent.omega_meshes import *
 import numpy as np
 import copy
-from triqs_maxent.triqs_support import assert_text_files_equal
+from triqs_maxent.test_util import assert_text_files_equal
 import sys
 
 

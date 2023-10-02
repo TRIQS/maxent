@@ -20,11 +20,7 @@
 
 import numpy as np
 from triqs_maxent.tau_maxent import *
-from triqs_maxent.triqs_support import *
-if if_triqs_1():
-    from triqs.gf.local import *
-elif if_triqs_2():
-    from triqs.gf import *
+from triqs.gf import *
 
 np_tau = 10000
 np_tau_c = 2500
