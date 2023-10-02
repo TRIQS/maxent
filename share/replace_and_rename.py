@@ -45,6 +45,7 @@ for root, dirs, files in os.walk(app4triqs_root):
 
             # Replace app4triqs and APP4TRIQS in all files
             with open(fpath, 'r') as f:
+                print(fpath)
                 s = f.read()
             if "app4triqs" in s or "APP4TRIQS" in s:
                 with open(fpath, 'w') as f:

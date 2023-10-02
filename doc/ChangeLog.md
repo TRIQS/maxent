@@ -11,6 +11,7 @@ The newest version, including changes since the last release, can be obtained us
 
 Merge app4triqs skeleton into triqs_maxent
 
+
 ## Version 1.2.0
 
 Version 1.2.0 is a compatibility release for TRIQS version 3.2.0

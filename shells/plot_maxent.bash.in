@@ -1,5 +1,0 @@
-#!/bin/bash
-
-TRIQS=@TRIQS_PATH@
-
-$TRIQS -m triqs_maxent.plot.plot_maxent "$@"

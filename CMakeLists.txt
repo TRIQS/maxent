@@ -67,59 +67,18 @@ if(NOT IS_SUBPROJECT)
 endif()
 
 # Python Support
-option(PythonSupport "Build with Python support" ON)
-if(PythonSupport AND NOT TRIQS_WITH_PYTHON_SUPPORT)
+if(NOT TRIQS_WITH_PYTHON_SUPPORT)
   message(FATAL_ERROR "TRIQS was installed without Python support. Cannot build the Python Interface. Disable the build with -DPythonSupport=OFF")
 endif()
 
 # Documentation
 option(Build_Documentation "Build documentation" OFF)
-if(NOT IS_SUBPROJECT AND (Build_Documentation AND NOT PythonSupport))
-  message(FATAL_ERROR "Build_Documentation=ON requires PythonSupport to be enabled")
-endif()
 
 # Testing
 option(Build_Tests "Build tests" ON)
 if(Build_Tests)
   enable_testing()
 endif()
-
-# Build static libraries by default
-option(BUILD_SHARED_LIBS "Enable compilation of shared libraries" OFF)
-
-# ############
-# Global Compilation Settings
-
-# Export the list of compile-commands into compile_commands.json
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-
-# Disable compiler extensions
-set(CMAKE_CXX_EXTENSIONS OFF)
-
-# Provide additional debugging information for Debug builds
-add_compile_options($<$<CONFIG:Debug>:-ggdb3>)
-
-# Create an Interface target for compiler warnings
-add_library(${PROJECT_NAME}_warnings INTERFACE)
-target_compile_options(${PROJECT_NAME}_warnings
-  INTERFACE
-    -Wall
-    -Wextra
-    -Wfloat-conversion
-    -Wpedantic
-    -Wno-sign-compare
-    $<$<CXX_COMPILER_ID:GNU>:-Wno-comma-subscript>
-    $<$<CXX_COMPILER_ID:GNU>:-Wshadow=local>
-    $<$<CXX_COMPILER_ID:GNU>:-Wno-attributes>
-    $<$<CXX_COMPILER_ID:GNU>:-Wno-deprecated-declarations>
-    $<$<CXX_COMPILER_ID:AppleClang,Clang,IntelLLVM>:-Wno-deprecated-comma-subscript>
-    $<$<CXX_COMPILER_ID:AppleClang,Clang,IntelLLVM>:-Wno-unknown-warning-option>
-    $<$<CXX_COMPILER_ID:AppleClang,Clang,IntelLLVM>:-Wshadow>
-    $<$<CXX_COMPILER_ID:AppleClang,Clang,IntelLLVM>:-Wno-gcc-compat>
-    $<$<CXX_COMPILER_ID:AppleClang,Clang,IntelLLVM>:-Wno-c++20-extensions>
-    $<$<CXX_COMPILER_ID:AppleClang,Clang,IntelLLVM>:-Wno-c++20-compat>
-    $<$<CXX_COMPILER_ID:IntelLLVM>:-Wno-tautological-constant-compare>
-)
 
 # #############
 # Build Project
@@ -129,13 +88,11 @@ add_subdirectory(deps)
 
 # Tests
 if(Build_Tests)
-  add_subdirectory(test)
+  add_subdirectory(test/python)
 endif()
 
 # Python
-if(PythonSupport)
-  add_subdirectory(python/${PROJECT_NAME})
-endif()
+add_subdirectory(python/${PROJECT_NAME})
 
 # Docs
 if(NOT IS_SUBPROJECT AND Build_Documentation)
@@ -144,6 +101,12 @@ endif()
 
 # Additional configuration files
 add_subdirectory(share)
+
+# add packaging for automatic versioning
+add_subdirectory(packaging)
+
+# Binary directory
+add_subdirectory(bin)
 
 # #############
 # Debian Package

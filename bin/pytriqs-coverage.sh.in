@@ -1,0 +1,2 @@
+#!/bin/sh
+@TRIQS_PYTHON_EXECUTABLE@ @PYTHON_COVERAGE@ run --append --source "@CMAKE_BINARY_DIR@/" "$@"

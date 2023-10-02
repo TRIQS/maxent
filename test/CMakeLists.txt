@@ -1,3 +1,1 @@
-if(PythonSupport)
- add_subdirectory(python)
-endif()
+add_subdirectory(python)
