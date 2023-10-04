@@ -1,4 +1,4 @@
-def projectName = "triqs_maxent" /* set to app/repo name */
+def projectName = "maxent" /* set to app/repo name */
 
 def dockerName = projectName.toLowerCase();
 /* which platform to build documentation on */
