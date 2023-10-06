@@ -15,7 +15,7 @@ add_custom_command(
   COMMAND PYTHONPATH=${PROJECT_BINARY_DIR}/python:$ENV{PYTHONPATH} ${SPHINXBUILD_EXECUTABLE} -j auto -c . -b html ${CMAKE_CURRENT_SOURCE_DIR} html
 )
 
-option(Sphinx_Only "When building the documentation, skip the Python Modules and the generation of C++ Api and example outputs" OFF)
+option(Sphinx_Only "When building the documentation, skip the Python Modules and the generation of C++ Api and example outputs" ON)
 if(NOT Sphinx_Only)
   # Autodoc usage requires the python modules to be built first
   get_property(CPP2PY_MODULES_LIST GLOBAL PROPERTY CPP2PY_MODULES_LIST)

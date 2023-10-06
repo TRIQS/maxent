@@ -1,29 +1,69 @@
+.. module:: triqs_maxent
+
 .. _documentation:
 
 Documentation
-*************
+=============
 
-
-.. math::
-
-   (a + b)^2  &=  (a + b)(a + b) \\
-              &=  a^2 + 2ab + b^2
-
-
-C++ reference manual
-====================
+Basic notions
+-------------
 
 .. toctree::
-   :maxdepth: 5
+   :maxdepth: 2
 
-   cpp2rst_generated/contents
+   basicnotions/mathematics
+   basicnotions/maxentflavors
+   basicnotions/concepts
+   basicnotions/shoulders_giants
 
-Python reference manual
-=======================
+User guide
+----------
 
-.. autosummary::
-   :toctree: _autosummary
-   :template: autosummary_module_template.rst
-   :recursive:
+.. toctree::
+   :maxdepth: 2
 
-   triqs_maxent
+   guide/tau_maxent
+   guide/visualization
+   guide/preblur
+   guide/elementwise
+   guide/srvo3
+   guide/blockgf
+   guide/sigma_continuator
+   guide/program_overview
+   guide/customization
+
+Reference manual
+----------------
+
+This is the reference manual for the python routines.
+
+.. toctree::
+   :maxdepth: 2
+   :glob:
+
+   reference/elementwise_maxent
+   reference/tau_maxent
+   reference/maxent_loop
+   reference/cost_functions
+   reference/minimizers/*
+   reference/analyzers/*
+   reference/probabilities
+   reference/logtaker
+   reference/functions
+   reference/kernels
+   reference/default_models
+   reference/omega_meshes
+   reference/alpha_meshes
+   reference/maxent_result
+   reference/sigma_continuator
+   reference/maxent_util
+   reference/preblur
+   reference/plot_utils
+
+FAQs
+----
+
+.. toctree::
+   :maxdepth: 2
+
+   faqs/faqs

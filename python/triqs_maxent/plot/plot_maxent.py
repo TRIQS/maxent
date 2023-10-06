@@ -25,7 +25,7 @@ import numpy as np
 import matplotlib
 matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
+from matplotlib.backends.backend_tkagg import FigureCanvasTk, NavigationToolbar2Tk
 from matplotlib.backend_bases import key_press_handler
 from itertools import product
 from collections import OrderedDict
@@ -330,10 +330,10 @@ class PlotMaxEnt(object):
             self.quantity_getattr(quantity, elem)[0](
                 maxent_result=self._result, **kwargs)
             plt.tight_layout()
-        self.canvas = FigureCanvasTkAgg(self.figure, master=self.master)
+        self.canvas = FigureCanvasTk(self.figure, master=self.master)
         self.canvas.show()
         self.canvas.get_tk_widget().pack(fill=tk.BOTH, expand=1)
-        self.toolbar = NavigationToolbar2TkAgg(self.canvas, self.master)
+        self.toolbar = NavigationToolbar2Tk(self.canvas, self.master)
         self.toolbar.update()
         self.canvas._tkcanvas.pack(fill=tk.BOTH, expand=1)
 
