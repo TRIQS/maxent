@@ -59,6 +59,7 @@ jobs:
         python3-scipy
         python3-sphinx
         python3-nbsphinx
+        && python3 -c "import matplotlib.pyplot"
 
     - name: Install homebrew dependencies
       if: matrix.os == 'macos-12'
