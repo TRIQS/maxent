@@ -86,7 +86,7 @@ class DataDefaultModel(BaseDefaultModel):
         self._fill_values()
 
     def _fill_values(self):
-        if np.all(self.omega_in == self.omega):
+        if len(self.omega_in) == len(self.omega) and np.all(self.omega_in == self.omega):
             self._D = self.default
         else:
             self._D = np.interp(self.omega, self.omega_in, self.default)
