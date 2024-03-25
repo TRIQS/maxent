@@ -2,8 +2,7 @@
 FROM flatironinstitute/triqs:unstable-ubuntu-clang
 ARG APPNAME=triqs_maxent
 
-COPY requirements.txt /src/$APPNAME/requirements.txt
-RUN pip3 install -r /src/$APPNAME/requirements.txt
+RUN apt-get install -y python3-decorator
 
 COPY --chown=build . $SRC/$APPNAME
 WORKDIR $BUILD/$APPNAME

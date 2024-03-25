@@ -4,3 +4,10 @@ numpy
 scipy
 decorator
 matplotlib
+# For documentation builds we additionaly require
+#sphinx
+#numpydoc
+#nbsphinx
+#sphinx_rtd_theme
+#myst_parser
+#linkify-it-py
