@@ -2,9 +2,27 @@
 
 # Changelog
 
-This document describes the main changes in maxent.
+## Version 3.3.0
 
-The newest version, including changes since the last release, can be obtained using ``git checkout unstable``.
+maxent version 3.3.0 is a compatibility release for TRIQS version 3.3.0
+
+We thank all contributors: Thomas Hahn, Alexander Hampel, Henri Menke, Dylan Simon, Nils Wentzell
+
+Find below an itemized list of changes in this release.
+
+### General
+* Try to speed up tests on macOS
+* Create font cache ahead of time
+* Fix documentation build
+* Removing no-triqs support
+
+### doc
+* Minor corrections to sideb.html and conf.py.in
+* Remove redundant doc/sphinxext/numpydoc
+
+### jenkins
+* Rename project to maxent
+* Disable sanitize build
 
 
 ## Version 3.2.0
