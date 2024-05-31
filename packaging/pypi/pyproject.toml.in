@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["python"]
+
+[project]
+name = "triqs_maxent"
+version = "@PROJECT_VERSION@"
+authors = [
+  { name="TRIQS", email="triqs@flatironinstitute.org" }
+]
+description = "TRIQS application providing a modular Maximum Entropy progra to perform analytic continuation based on the TRIQS library (triqs.github.io)"
+readme = "README.md"
+keywords = ["triqs", "analytic-continuation", "maximum-entropy"]
+requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "numpy",
+    "scipy",
+    "matplotlib"
+]
+
+[project.urls]
+"Homepage" = "https://triqs.github.io/maxent"
+"Bug Tracker" = "https://github.com/triqs/maxent/issues"
+
+# in case you want an executable hook of your app
+# [project.scripts]
+# solid_dmft = "solid_dmft.main:main"
+
