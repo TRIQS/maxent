@@ -1,4 +1,4 @@
-[![build](https://github.com/TRIQS/triqs_maxent/workflows/build/badge.svg)](https://github.com/TRIQS/triqs_maxent/actions?query=workflow%3Abuild)
+[![build](https://github.com/TRIQS/maxent/workflows/build/badge.svg)](https://github.com/TRIQS/maxent/actions?query=workflow%3Abuild)
 
 # MaxEnt
 
