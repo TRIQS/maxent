@@ -7,11 +7,11 @@ triqs_maxent
 
    This is the homepage of triqs_maxent |PROJECT_VERSION|.
    For changes see the :ref:`changelog page <changelog>`.
-      
+
       .. image:: _static/logo_github.png
          :width: 75%
          :align: center
-         :target: https://github.com/triqs/triqs_maxent
+         :target: https://github.com/triqs/maxent
 
 
 The goal of this :ref:`TRIQS <triqslibs:welcome>` application
