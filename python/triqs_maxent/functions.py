@@ -58,8 +58,8 @@ def safelog(A):
 
 def view_complex(A, reshape=True):
     if not reshape:
-        return A.view(np.complex_)
-    return A.view(np.complex_).reshape(A.shape[:-1])
+        return A.view(np.complex128)
+    return A.view(np.complex128).reshape(A.shape[:-1])
 
 
 def view_real(A, reshape=True):

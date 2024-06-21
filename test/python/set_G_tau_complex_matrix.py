@@ -70,7 +70,7 @@ except:
         # this is necessary in TRIQS 2.1 but will fail in 1.4
         from triqs.gf.gf_fnt import replace_by_tail
         tail, err = G_iw_rot.fit_tail(
-            known_moments=np.zeros((1, 2, 2), dtype=np.complex_))
+            known_moments=np.zeros((1, 2, 2), dtype=np.complex128))
         replace_by_tail(G_iw_rot, tail, 200)
     except:
     	pass
