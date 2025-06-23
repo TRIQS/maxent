@@ -23,3 +23,13 @@ Learn how to use this package in the [documentation](https://triqs.github.io/max
 
 - Gernot J. Kraberger, Graz University of Technology
 - Manuel Zingl, CCQ, Flatiron Institute, Simons Foundation and previously Graz University of Technology
+
+## Support
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" width="20%" srcset="doc/_static/CCQ-dark.png">
+  <img alt="Flatiron Center for Computational Quantum Physics logo." width="20%" src="doc/_static/CCQ.png">
+</picture>
+
+TRIQS/maxent is supported by the Flatiron Institute, a division of the Simons Foundation.
+
