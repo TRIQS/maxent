@@ -304,7 +304,7 @@ class MaxEntLoop(object):
     ####### Helper functions #######
 
     def check_consistency(self):
-        """ check whether all child objects are consistent
+        r""" check whether all child objects are consistent
 
         e.g., whether they all have the same ``omega`` values etc.
 

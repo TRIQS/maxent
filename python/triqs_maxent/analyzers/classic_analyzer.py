@@ -23,7 +23,7 @@ from .analyzer import Analyzer, AnalyzerResult
 
 
 class ClassicAnalyzer(Analyzer):
-    """ Analyzer using the classic MaxEnt method
+    r""" Analyzer using the classic MaxEnt method
 
     This returns the spectrum :math:`A_\\alpha(\\omega)` that has the
     maximum probability (see :py:class:`.BryanAnalyzer` for a plot of

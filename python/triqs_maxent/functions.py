@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-"""
+r"""
 This file defines a bunch of functions that represent physical
 functions in the MaxEnt formalism.
 
@@ -489,7 +489,7 @@ class Entropy(DoublyDerivableFunction):
 
 
 class NormalEntropy(Entropy):
-    """ The usual entropy
+    r""" The usual entropy
 
     This calculates the entropy as
 
@@ -521,7 +521,7 @@ class NormalEntropy(Entropy):
 
 
 class PlusMinusEntropy(NormalEntropy):
-    """ The Plus-Minus entropy
+    r""" The Plus-Minus entropy
 
     This calculates the entropy as
 
@@ -565,7 +565,7 @@ class PlusMinusEntropy(NormalEntropy):
 
 
 class ComplexPlusMinusEntropy(PlusMinusEntropy):
-    """ The Plus-Minus entropy for complex A
+    r""" The Plus-Minus entropy for complex A
 
     This calculates the entropy as
 
@@ -718,7 +718,7 @@ class GenericH_of_v(DoublyDerivableFunction, InvertibleFunction):
 
 
 class NormalH_of_v(GenericH_of_v):
-    """ Bryan's parametrization H(v)
+    r""" Bryan's parametrization H(v)
 
     This parametrization uses
 
@@ -935,7 +935,7 @@ class GenericA_of_H(DoublyDerivableFunction, InvertibleFunction):
 
 
 class IdentityA_of_H(GenericA_of_H):
-    """ Parametrization A(H)=H
+    r""" Parametrization A(H)=H
 
     For non-uniform omega meshes, this takes care of the :math:`\Delta \omega`.
     Use this whenever you don't use the :py:class:`.PreblurKernel`
@@ -965,7 +965,7 @@ class IdentityA_of_H(GenericA_of_H):
 
 
 class PreblurA_of_H(GenericA_of_H):
-    """ A_of_H using preblur
+    r""" A_of_H using preblur
 
     With preblur, we have :math:`A(H) = BH` (up to a :math:`\Delta\omega`
     for non-uniform omega meshes).

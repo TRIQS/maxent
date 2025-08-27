@@ -51,7 +51,7 @@ class KernelSVD(object):
         self._last_threshold = None
 
     def svd(self):
-        """ Perform the SVD if not yet performed
+        r""" Perform the SVD if not yet performed
 
         Usually, this function does not need to be called by the user.
 
@@ -133,7 +133,7 @@ class Kernel(KernelSVD):
 
     @property
     def K_delta(self):
-        """ The kernel including a :math:`\Delta\omega`.
+        r""" The kernel including a :math:`\Delta\omega`.
 
         Use this to get the reconstructed Green function as
         :math:`G_{rec} = K_{delta} A`.
@@ -347,7 +347,7 @@ class IOmegaKernel(Kernel):
 
 
 class PreblurKernel(Kernel):
-    """ A kernel for the preblur formalism
+    r""" A kernel for the preblur formalism
 
     In the preblur formalism, the equation :math:`G = KA` is replaced
     by :math:`G = KBH`, with a hidden image :math:`H` and a blur matrix

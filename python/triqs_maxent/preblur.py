@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-"""
+r"""
 In the preblur formalism, use :py:class:`.PreblurKernel` and
 :py:class:`.PreblurA_of_H`. For a description, see :ref:`preblur`.
 

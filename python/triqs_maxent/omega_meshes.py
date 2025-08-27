@@ -110,7 +110,7 @@ class DataOmegaMesh(BaseOmegaMesh):
 
 
 class LorentzianOmegaMesh(BaseOmegaMesh):
-    """ Omega mesh with Lorentzian spacing
+    r""" Omega mesh with Lorentzian spacing
 
     This mesh is a lot denser than the linear mesh around :math:`\\omega=0`
     and far less denser for high :math:`|\omega|`.
@@ -153,7 +153,7 @@ class LorentzianOmegaMesh(BaseOmegaMesh):
 
 
 class LorentzianSmallerOmegaMesh(BaseOmegaMesh):
-    """ Omega mesh with Lorentzian spacing
+    r""" Omega mesh with Lorentzian spacing
 
     This mesh is a lot denser than the linear mesh around :math:`\\omega=0`
     and far less denser for high :math:`|\omega|`.
