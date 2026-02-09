@@ -21,6 +21,9 @@
 from triqs_maxent import *
 #from h5 import HDFArchive
 #from triqs.utility.h5diff import h5diff
+from scipy.integrate import trapezoid
+
+import numpy as np
 
 # to make it reproducible
 np.random.seed(658436166)
@@ -34,7 +37,7 @@ K.reduce_singular_space()
 
 # next, we construct the G(tau)
 A = np.exp(-omega**2)
-A /= np.trapz(A, omega)
+A /= trapezoid(A, omega)
 G = np.dot(K.K, A)
 G += 1.e-4 * np.random.randn(len(G))
 err = 1.e-4 * np.ones(len(G))

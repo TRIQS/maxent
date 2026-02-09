@@ -20,6 +20,7 @@
 
 from triqs_maxent.omega_meshes import *
 import numpy as np
+from scipy.integrate import trapezoid
 import copy
 from triqs_maxent.test_util import assert_text_files_equal
 import sys
@@ -59,7 +60,7 @@ def testfunction():
         assert maxdiff < 1.e-15, "delta not correct (diff {})".format(maxdiff)
 
         func = np.random.rand(len(m))
-        integral1 = np.trapz(func, m)
+        integral1 = trapezoid(func, m)
         integral2 = np.sum(func * m.delta)
         assert np.abs(integral1 - integral2) < 1.e-14,\
             "integration does not match"

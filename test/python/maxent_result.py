@@ -22,6 +22,9 @@ from triqs_maxent import *
 from h5 import HDFArchive
 from triqs.utility.h5diff import h5diff
 from triqs_maxent.maxent_result import _get_empty
+from scipy.integrate import trapezoid
+
+import numpy as np
 
 # A(v) depends on the SVD result because it is parametrized
 # using the matrix K.V. However, K.V is not uniquely defined
@@ -55,7 +58,7 @@ for i in range(2):
 
     # next, we construct the G(tau)
     A = np.exp(-omega**2)
-    A /= np.trapz(A, omega)
+    A /= trapezoid(A, omega)
     G = np.dot(K.K, A)
     G += 1.e-4 * np.random.randn(len(G))
     err = 1.e-4 * np.ones(len(G))

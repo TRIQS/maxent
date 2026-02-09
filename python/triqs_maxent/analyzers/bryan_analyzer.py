@@ -19,6 +19,7 @@
 
 
 import numpy as np
+from scipy.integrate import trapezoid
 from .analyzer import Analyzer, AnalyzerResult
 
 
@@ -135,7 +136,7 @@ class BryanAnalyzer(Analyzer):
         prob_L = np.where(np.logical_not(np.isnan(prob)))
         # normalize probability
         if self.average_by_integration:
-            prob[prob_L] /= np.trapz(prob[prob_L], maxent_result.alpha[prob_L])
+            prob[prob_L] /= trapezoid(prob[prob_L], maxent_result.alpha[prob_L])
             delta_alpha = np.full(len(prob), np.nan)
             delta_alpha[prob_L] = get_delta(maxent_result.alpha[prob_L])
         else:

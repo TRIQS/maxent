@@ -19,6 +19,7 @@
 
 
 import numpy as np
+from scipy.integrate import trapezoid
 from triqs_maxent.analyzers import *
 from triqs_maxent import MaxEntResult
 from h5 import HDFArchive, HDFArchiveGroup
@@ -35,7 +36,7 @@ res._saved['alpha'] = alpha
 res._saved['chi2'] = 1.0 - 1.0 / (1 + np.exp((alpha - 100) / 10.0))
 res._saved['A'] = np.random.rand(20, 100)
 for i in range(20):
-    res._saved['A'][i, :] /= np.trapz(res._saved['A'][i, :])
+    res._saved['A'][i, :] /= trapezoid(res._saved['A'][i, :])
 res._saved['S'] = (np.log(alpha) - 0.1)**3.0
 res._saved['probability'] = -((np.log(alpha) - 1) / 1.0)**2
 
@@ -44,7 +45,7 @@ results = []
 for ana in [LineFitAnalyzer(), Chi2CurvatureAnalyzer(), EntropyAnalyzer(),
             BryanAnalyzer(average_by_integration=False), ClassicAnalyzer()]:
     result = ana.analyze(res)
-    assert np.abs(np.trapz(result['A_out']) - 1.0) < 1.e-10, \
+    assert np.abs(trapezoid(result['A_out']) - 1.0) < 1.e-10, \
         "{}: Norm of A(w) not one".format(result['name'])
     results.append(result)
 
@@ -81,13 +82,13 @@ def compare(key, a, b, level, precision):
 
         # !!! added AnalyzerResult in the following line
         if t == dict or isinstance(a, (HDFArchiveGroup, AnalyzerResult)):
-            if list(a.keys()) != list(b.keys()):
+            a_keys = set(a.keys())
+            b_keys = set(b.keys())
+            if a_keys != b_keys:
                 failures.append(
                     "Two archive groups '%s' with different keys \n %s \n vs\n %s" %
-                    (key, list(
-                        a.keys()), list(
-                        b.keys())))
-            for k in set(a.keys()).intersection(list(b.keys())):
+                    (key, sorted(a_keys), sorted(b_keys)))
+            for k in sorted(a_keys.intersection(b_keys)):
                 compare(key + '/' + k, a[k], b[k], level + 1, precision)
 
         # The TRIQS object which are comparable starts here ....
