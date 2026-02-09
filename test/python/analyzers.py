@@ -81,13 +81,13 @@ def compare(key, a, b, level, precision):
 
         # !!! added AnalyzerResult in the following line
         if t == dict or isinstance(a, (HDFArchiveGroup, AnalyzerResult)):
-            if list(a.keys()) != list(b.keys()):
+            a_keys = set(a.keys())
+            b_keys = set(b.keys())
+            if a_keys != b_keys:
                 failures.append(
                     "Two archive groups '%s' with different keys \n %s \n vs\n %s" %
-                    (key, list(
-                        a.keys()), list(
-                        b.keys())))
-            for k in set(a.keys()).intersection(list(b.keys())):
+                    (key, sorted(a_keys), sorted(b_keys)))
+            for k in sorted(a_keys.intersection(b_keys)):
                 compare(key + '/' + k, a[k], b[k], level + 1, precision)
 
         # The TRIQS object which are comparable starts here ....
