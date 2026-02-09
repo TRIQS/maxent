@@ -20,6 +20,7 @@
 
 import numpy as np
 from triqs_maxent import *
+from scipy.integrate import trapezoid
 
 import traceback
 import warnings
@@ -44,7 +45,8 @@ K = TauKernel(tau=tau, omega=omega, beta=beta)
 # here we construct the G(tau)
 A = np.exp(-(omega - 1)**2) - np.exp(-(omega + 1)**2) + \
     (-1.0j) * (np.exp(-(omega - 1)**2) - np.exp(-(omega + 1)**2))
-assert np.abs(np.trapz(A, omega)) < 1.e-14, "A not normalized to 0"
+assert np.abs(trapezoid(A, omega)) < 1.e-14, "A not normalized to 0"
+
 
 G = np.dot(K.K, A)
 G += 1.e-4 * np.random.randn(len(G))

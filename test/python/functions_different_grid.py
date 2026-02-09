@@ -21,6 +21,7 @@
 import numpy as np
 from triqs_maxent import *
 import matplotlib.pyplot as plt
+from scipy.integrate import trapezoid
 
 """In this test we check if a function evaluated on different
 omega-grids gives the same chi2 and S."""
@@ -34,7 +35,7 @@ tau = np.linspace(0, beta, 100)
 omega = LinearOmegaMesh(omega_min=-10, omega_max=10, n_points=100)
 K = TauKernel(tau=tau, omega=omega, beta=beta)
 A = np.exp(-omega**2)
-A /= np.trapz(A, omega)
+A /= trapezoid(A, omega)
 G = np.dot(K.K_delta, A)
 err = np.ones(len(G))
 
@@ -51,7 +52,7 @@ for test_A in [lambda omega: omega / omega, lambda omega: np.exp(-omega**2)]:
         K = TauKernel(tau=tau, omega=omega, beta=beta)
         # here we construct the G(tau)
         A = test_A(omega)
-        A /= np.trapz(A, omega)
+        A /= trapezoid(A, omega)
         D = FlatDefaultModel(omega=omega)
         chi2 = NormalChi2(K=K, G=G, err=err)
         S = NormalEntropy(D=D)

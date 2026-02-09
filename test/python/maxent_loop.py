@@ -21,6 +21,7 @@
 import numpy as np
 from triqs_maxent import *
 import matplotlib.pyplot as plt
+from scipy.integrate import trapezoid
 
 import sys
 import traceback
@@ -51,7 +52,7 @@ omega = HyperbolicOmegaMesh(omega_min=-10, omega_max=10, n_points=100)
 K = TauKernel(tau=tau, omega=omega, beta=beta)
 # here we construct the G(tau)
 A = np.exp(-omega**2)
-A /= np.trapz(A, omega)
+A /= trapezoid(A, omega)
 G = np.dot(K.K, A)
 G += 1.e-4 * np.random.randn(len(G))
 err = 1.e-4 * np.ones(len(G))
