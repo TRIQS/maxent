@@ -21,6 +21,7 @@ from triqs_maxent import *
 from triqs_maxent.elementwise_maxent import *
 import numpy as np
 from triqs.gf import *
+from scipy.integrate import trapezoid
 
 
 noise = 1e-3
@@ -63,7 +64,7 @@ for i in [0, 1]:
         dta = G_w_rot[i, j].data[:]
         if len(dta.shape) > 1:
             dta = dta[:, 0, 0]
-        numpy_assert(np.trapz(-1.0 / (np.pi) *
+        numpy_assert(trapezoid(-1.0 / (np.pi) *
                               np.imag(dta), w), float(i == j), 3)
 
 np_tau = len(G_iw_rot.mesh) + 1
@@ -164,7 +165,7 @@ assert (np.sum(np.abs(A_w_data - np.interp(w, w_pm, A_01_pm))) - \
         np.sum(np.abs(A_w_data - np.interp(w, w_ew, A_01_ew)))) < 0, 'Poorman did worse.'
 
 # Check normalization of A
-numpy_assert(np.trapz(A_01_pm, w_pm), 0, 2)
-numpy_assert(np.trapz(A_01_ew, w_ew), 0, 2)
-numpy_assert(np.trapz(A_00_ew, w_ew), 1, 2)
-numpy_assert(np.trapz(A_11_ew, w_ew), 1, 2)
+numpy_assert(trapezoid(A_01_pm, w_pm), 0, 2)
+numpy_assert(trapezoid(A_01_ew, w_ew), 0, 2)
+numpy_assert(trapezoid(A_00_ew, w_ew), 1, 2)
+numpy_assert(trapezoid(A_11_ew, w_ew), 1, 2)

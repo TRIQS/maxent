@@ -21,6 +21,7 @@
 import numpy as np
 from triqs_maxent.omega_meshes import *
 from triqs_maxent.default_models import *
+from scipy.integrate import trapezoid
 
 w = HyperbolicOmegaMesh(omega_min=-10, omega_max=10, n_points=100)
 
@@ -48,7 +49,7 @@ D5 = DataDefaultModel([-9, 11], w_2p, w)
 # the definite integral in the interval [-10,10] is 20.0
 # note that the trapezoidal rule is exact for a linear function
 assert np.abs(np.sum(D5.D) - 20.0) < 1.e-13, \
-    "data default model integral is wrong {}".format(np.abs(np.trapz(D5.D, w) - 20.0))
+    "data default model integral is wrong {}".format(np.abs(trapezoid(D5.D, w) - 20.0))
 
 D5.omega = w_2p
 assert len(D5.D) == len(w), "parameter change without parameter_change"
