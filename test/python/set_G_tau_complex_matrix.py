@@ -21,7 +21,7 @@
 from triqs_maxent import *
 from triqs_maxent.elementwise_maxent import *
 import numpy as np
-from triqs.gf import *
+from triqs.gfs import *
 
 noise = 1e-6
 level = 11
@@ -68,7 +68,7 @@ except:
     G_iw_rot.set_from_fourier(G_tau)
     try:
         # this is necessary in TRIQS 2.1 but will fail in 1.4
-        from triqs.gf.gf_fnt import replace_by_tail
+        from triqs.gfs.gf_fnt import replace_by_tail
         tail, err = G_iw_rot.fit_tail(
             known_moments=np.zeros((1, 2, 2), dtype=np.complex128))
         replace_by_tail(G_iw_rot, tail, 200)

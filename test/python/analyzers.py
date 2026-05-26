@@ -59,10 +59,7 @@ with HDFArchive('analyzers.out.h5', 'w') as ar:
 # apart from the lines marked with !!!
 from h5 import *
 from triqs.utility.comparison_tests import *
-try:
-    from triqs.gf import GfImFreq, GfImTime, GfReFreq, GfReTime, GfLegendre, BlockGf
-except:
-    from triqs.gf.local import GfImFreq, GfImTime, GfReFreq, GfReTime, GfLegendre, BlockGf
+from triqs.gfs import GfImFreq, GfImTime, GfReFreq, GfReTime, GfLegendre, BlockGf
 from triqs.operators import *
 import sys
 import numpy

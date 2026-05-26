@@ -20,7 +20,7 @@
 
 from triqs_maxent import *
 from triqs_maxent.tau_maxent import *
-from triqs.gf import *
+from triqs.gfs import *
 import numpy as np
 import matplotlib.pyplot as plt
 import copy

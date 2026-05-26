@@ -18,7 +18,7 @@
 
 
 
-from triqs.gf import *
+from triqs.gfs import *
 from .maxent_loop import MaxEntLoop
 from .omega_meshes import HyperbolicOmegaMesh
 from .default_models import FlatDefaultModel

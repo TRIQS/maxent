@@ -26,7 +26,7 @@ MaxEnt.
 
 import numpy as np
 from itertools import product
-from triqs.gf import *
+from triqs.gfs import *
 from triqs.utility import mpi
 from .kernels import TauKernel
 from .omega_meshes import DataOmegaMesh

@@ -18,7 +18,7 @@
 
 
 
-from triqs.gf import *
+from triqs.gfs import *
 from .tau_maxent import TauMaxEnt
 from .default_models import *
 from .maxent_result import MaxEntResult

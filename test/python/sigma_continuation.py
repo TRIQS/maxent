@@ -19,7 +19,7 @@
 
 from triqs_maxent.sigma_continuator import *
 from triqs_maxent.tau_maxent import *
-from triqs.gf import *
+from triqs.gfs import *
 from h5 import *
 from triqs.utility.comparison_tests import *
 

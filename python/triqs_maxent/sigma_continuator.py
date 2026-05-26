@@ -18,7 +18,7 @@
 
 
 
-from triqs.gf import *
+from triqs.gfs import *
 from .maxent_util import *
 
 

@@ -21,7 +21,7 @@
 from triqs_maxent import *
 from triqs_maxent.elementwise_maxent import *
 import numpy as np
-from triqs.gf import *
+from triqs.gfs import *
 from scipy.integrate import trapezoid
 
 noise = 1e-3

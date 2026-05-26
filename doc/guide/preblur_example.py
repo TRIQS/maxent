@@ -3,11 +3,11 @@ from triqs_maxent.analyzers.linefit_analyzer import fit_piecewise
 
 try:
     # TRIQS 2.1
-    from triqs.gf import *
+    from triqs.gfs import *
     GfImFreq
 except NameError:
     # TRIQS 1.4
-    from triqs.gf.local import *
+    from triqs.gfs.local import *
 from triqs_maxent import *
 from triqs_maxent.analyzers.linefit_analyzer import fit_piecewise
 

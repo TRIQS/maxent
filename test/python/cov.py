@@ -18,7 +18,7 @@
 
 
 
-from triqs.gf import *
+from triqs.gfs import *
 import numpy as np
 from triqs_maxent import *
 from triqs_maxent.tau_maxent import *

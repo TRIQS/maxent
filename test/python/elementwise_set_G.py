@@ -18,7 +18,7 @@
 
 
 
-from triqs.gf import *
+from triqs.gfs import *
 from triqs_maxent import *
 from triqs_maxent.elementwise_maxent import *
 from itertools import product

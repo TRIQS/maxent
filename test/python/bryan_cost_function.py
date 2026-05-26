@@ -19,7 +19,7 @@
 
 
 import numpy as np
-from triqs.gf import *
+from triqs.gfs import *
 from triqs_maxent.tau_maxent import TauMaxEnt
 from triqs_maxent.alpha_meshes import *
 
