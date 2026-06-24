@@ -1,4 +1,4 @@
-triqs_maxent - An example application using triqs and cpp2py
+triqs_maxent - An example application using triqs
 
 Copyright (C) 2017-2018, N. Wentzell, O. Parcollet
 Copyright (C) 2018-2019, The Simons Foundation

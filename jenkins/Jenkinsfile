@@ -2,8 +2,6 @@ def projectName = "maxent" /* set to app/repo name */
 
 /* which platform to build documentation on */
 def documentationPlatform = "ubuntu-clang"
-/* maxent is pure-Python with no bindings to regenerate. */
-def regenPlatforms = []
 /* depend on triqs upstream branch/project */
 def triqsBranch = env.BRANCH_NAME == "jenkins" ? "jenkins" : "unstable"
 def triqsProject = '/CCQ/TRIQS/triqs/' + triqsBranch.replaceAll('/', '%2F')
@@ -26,7 +24,6 @@ def mounts = ["triqs": installBase]
 
 def runBuild = { String platform, String prefix, List<String> envs ->
   def macos = platform.startsWith("macos-")
-  def regen = regenPlatforms.contains(platform)
   def buildDir = "$WORKSPACE_TMP/build"
   /* install real branches in a fixed predictable place so apps can find them */
   def installDir = keepInstall ? "$prefix/install/$JOB_NAME/$platform" : "$WORKSPACE_TMP/install"
@@ -70,7 +67,7 @@ def runBuild = { String platform, String prefix, List<String> envs ->
     envs << "PATH=$triqsDir/bin:$path"
   }
   withEnv(envs) {
-    def args = regen ? '-DUpdate_Python_Bindings=ON' : ''
+    def args = ''
     if (platform == documentationPlatform)
       args += ' -DBuild_Documentation=ON'
     else if (platform == "sanitize")
