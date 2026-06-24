@@ -18,7 +18,6 @@
 
 
 
-import matplotlib.pyplot as plt
 from functools import wraps
 import numpy as np
 
@@ -83,6 +82,9 @@ def _plotter(x, y, label=None, x_label=None, y_label=None,
     """ actually plotting a curve
 
     a small wrapper over matplotlib"""
+
+    # imported lazily so that 'import triqs_maxent' does not pull in matplotlib
+    import matplotlib.pyplot as plt
 
     plot_command = plt.plot
     if log_x and log_y:
