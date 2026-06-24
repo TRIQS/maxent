@@ -45,9 +45,9 @@ class BaseAlphaMesh(np.ndarray):
 
 
 class DataAlphaMesh(BaseAlphaMesh):
-    """ Alpha mesh from data array
+    r""" Alpha mesh from data array
 
-    The :math:`\\alpha`-points are picked from a user-supplied array.
+    The :math:`\alpha`-points are picked from a user-supplied array.
 
     Parameters
     ----------

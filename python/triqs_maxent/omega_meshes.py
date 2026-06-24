@@ -63,13 +63,13 @@ class BaseOmegaMesh(np.ndarray):
 
 
 class LinearOmegaMesh(BaseOmegaMesh):
-    """ Omega mesh with linear spacing
+    r""" Omega mesh with linear spacing
 
-    The :math:`i`-th :math:`\\omega`-point is given by
+    The :math:`i`-th :math:`\omega`-point is given by
 
     .. math::
 
-        \\omega_i = \\omega_{min} + i \\frac{\\omega_{max}-\\omega_{min}}{n_{max}-1},
+        \omega_i = \omega_{min} + i \frac{\omega_{max}-\omega_{min}}{n_{max}-1},
 
     where :math:`i` runs from :math:`0` to :math:`n_{max}-1`.
 
@@ -89,9 +89,9 @@ class LinearOmegaMesh(BaseOmegaMesh):
 
 
 class DataOmegaMesh(BaseOmegaMesh):
-    """ Omega mesh from data array
+    r""" Omega mesh from data array
 
-    The :math:`\\omega`-points are picked from a user-supplied array.
+    The :math:`\omega`-points are picked from a user-supplied array.
 
     Parameters
     ----------
@@ -197,10 +197,10 @@ class LorentzianSmallerOmegaMesh(BaseOmegaMesh):
 
 
 class HyperbolicOmegaMesh(BaseOmegaMesh):
-    """ Omega mesh with hyperbolic spacing
+    r""" Omega mesh with hyperbolic spacing
 
-    This mesh is denser than the linear mesh around :math:`\\omega=0`
-    and behaves like a sparser variant of a linear mesh at :math:`|\\omega|\\to\\infty`.
+    This mesh is denser than the linear mesh around :math:`\omega=0`
+    and behaves like a sparser variant of a linear mesh at :math:`|\omega|\to\infty`.
 
     Parameters
     ----------
