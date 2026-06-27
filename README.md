@@ -32,4 +32,3 @@ Learn how to use this package in the [documentation](https://triqs.github.io/max
 </picture>
 
 TRIQS/maxent is supported by the Flatiron Institute, a division of the Simons Foundation.
-
