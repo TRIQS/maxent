@@ -1,5 +1,36 @@
 # Changelog
 
+## Version 4.0.0
+
+maxent version 4.0.0 is a compatibility release for TRIQS version 4.0.0. It
+requires an update to the latest app4triqs skeleton and the application of the
+`port_to_triqs4` porting script for the TRIQS 4.0 API changes.
+
+We thank all contributors: Jennifer Coulter, Thomas Hahn, Alexander Hampel, Henri Menke, Dylan Simon, Nils Wentzell
+
+Find below an itemized list of changes in this release.
+
+### General
+* Run `port_to_triqs4` script for the TRIQS 4.0 API changes (`triqs.gf` -> `triqs.gfs`)
+* Use the latest app4triqs/4.0.x skeleton, now in a python-only flavor
+* Fix compatibility against numpy 2.0
+* Replace the deprecated `np.trapz` with `scipy.integrate.trapezoid`
+* Import matplotlib lazily in `plot_utils` to avoid an eager import on package load
+* Use raw strings for docstrings with LaTeX expressions
+
+### doc
+* Add Flatiron Institute support notice to README.md
+* Fix broken links to the TRIQS installation page in the documentation
+* Add the numpydoc option to `doc/conf.py.in`
+
+### jenkins
+* Migrate to the new k8s-based Jenkins system (#26)
+
+### ghactions
+* Modernize and simplify the build workflow (ninja parallel builds, updated runner images and compilers)
+* Finalize the PyPI publishing workflow
+
+
 ## Version 3.3.0
 
 maxent version 3.3.0 is a compatibility release for TRIQS version 3.3.0
