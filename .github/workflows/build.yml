@@ -28,8 +28,8 @@ jobs:
         include:
           - { os: ubuntu-24.04, cxx: clang++-20 }
           - { os: ubuntu-24.04, cxx: g++-14 }
-          - { os: macos-15, cxx: clang++ }
-          - { os: macos-15, cxx: g++ }
+          - { os: macos-26, cxx: clang++ }
+          - { os: macos-26, cxx: g++ }
 
     runs-on: ${{ matrix.os }}
 
