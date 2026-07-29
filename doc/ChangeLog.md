@@ -1,5 +1,21 @@
 # Changelog
 
+## Version 4.0.1
+
+maxent version 4.0.1 is a patch-release that introduces minor documentation and GitHub action workflow updates.
+
+We thank all contributors: Thomas Hahn, Alexander Hampel, Nils Wentzell
+
+Find below an itemized list of changes in this release.
+
+### ghaction
+* Synchronize publish-to-pypi.yml with app4triqs
+
+### doc
+* Add a version switcher flyout to the sphinx docs
+* Add canonical URL pointing to latest/ for SEO
+
+
 ## Version 4.0.0
 
 maxent version 4.0.0 is a compatibility release for TRIQS version 4.0.0. It
