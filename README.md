@@ -1,5 +1,5 @@
 [![build](https://github.com/TRIQS/maxent/workflows/build/badge.svg)](https://github.com/TRIQS/maxent/actions?query=workflow%3Abuild)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21691474.svg)](https://doi.org/10.5281/zenodo.21691474)
+[![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.21691474-blue.svg)](https://doi.org/10.5281/zenodo.21691474)
 
 # MaxEnt
 
