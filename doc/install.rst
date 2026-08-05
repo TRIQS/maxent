@@ -9,6 +9,7 @@ Packaged Versions of TRIQS/maxent
 =================================
 
 .. _ubuntu_debian:
+
 Ubuntu Debian packages
 ----------------------
 
@@ -30,6 +31,7 @@ Note that the PyPI package requires a TRIQS installation with a matching major.m
 See also `pypi.org/project/triqs_maxent <https://pypi.org/project/triqs_maxent/>`_.
 
 .. _docker:
+
 Docker
 ------
 
