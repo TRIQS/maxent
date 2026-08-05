@@ -16,6 +16,19 @@ We provide a Debian package for the Ubuntu LTS Version 22.04 (jammy), which can 
 
         sudo apt-get install -y triqs_maxent
 
+.. _pypi:
+
+PyPI
+----
+
+We provide a Python package through the `Python Package Index <https://pypi.org/>`_ (PyPI). After :ref:`installing TRIQS <triqslibs:triqs_install>` you can install triqs_maxent with::
+
+        pip install triqs_maxent
+
+Note that the PyPI package requires a TRIQS installation with a matching major.minor version number.
+
+See also `pypi.org/project/triqs_maxent <https://pypi.org/project/triqs_maxent/>`_.
+
 .. _docker:
 Docker
 ------
